@@ -16,7 +16,7 @@ def build(out,compiler):
     out=out.resolve();out.parent.mkdir(parents=True,exist_ok=True)
     name="OpenExhibit Studio"
     content=['Unicode true','RequestExecutionLevel user','ManifestDPIAware true','SetCompressor zlib',
-             'Name "OpenExhibit Studio 0.2.0"',f'OutFile "{out}"',f'InstallDir "$LOCALAPPDATA\\Programs\\{name}"',
+             'Name "OpenExhibit Studio 0.3.0"',f'OutFile "{out}"',f'InstallDir "$LOCALAPPDATA\\Programs\\{name}"',
              'Page license','Page directory','Page instfiles','UninstPage uninstConfirm','UninstPage instfiles',
              f'LicenseData "{ROOT/"LICENSE"}"','ShowInstDetails show','Section "OpenExhibit Studio and Player"']
     entries=list(files("windows"));dirs=set()
@@ -29,7 +29,7 @@ def build(out,compiler):
                 f'CreateShortcut "$SMPROGRAMS\\{name}\\Player.lnk" "$INSTDIR\\Player.cmd"',
                 'WriteUninstaller "$INSTDIR\\Uninstall.exe"','SetRegView 64',
                 'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenExhibitStudio" "DisplayName" "OpenExhibit Studio"',
-                'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenExhibitStudio" "DisplayVersion" "0.2.0"',
+                'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenExhibitStudio" "DisplayVersion" "0.3.0"',
                 '''WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenExhibitStudio" "UninstallString" '"$INSTDIR\\Uninstall.exe"' ''',
                 'SectionEnd','Section "Uninstall"','SetRegView 64','DeleteRegKey HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenExhibitStudio"']
     content += [f'Delete "$INSTDIR\\{PureWindowsPath(rel)}"' for _,rel in entries]
@@ -45,5 +45,5 @@ def build(out,compiler):
     print(out.name,out.stat().st_size,flush=True)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--makensis',default='makensis');p.add_argument('--out',type=Path,default=ROOT/'dist/OpenExhibit-Studio-0.2.0-Windows-x64-Setup.exe')
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--makensis',default='makensis');p.add_argument('--out',type=Path,default=ROOT/'dist/OpenExhibit-Studio-0.3.0-Windows-x64-Setup.exe')
     a=p.parse_args();build(a.out,a.makensis)

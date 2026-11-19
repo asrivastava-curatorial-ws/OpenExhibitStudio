@@ -8,7 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-VERSION="0.2.0"
+VERSION="0.3.0"
 
 def run(argv):
     result=subprocess.run(argv,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
@@ -49,8 +49,8 @@ application/modify_resources=false
 def build(engine, dest, mode, platform):
     engine=str(Path(shutil.which(engine) or engine).resolve(strict=True))
     version=subprocess.check_output([engine,"--version"],text=True).strip()
-    if not version.startswith("4.6.3."):
-        print(f"Building with {version}; the recorded reference build uses 4.6.3.",file=sys.stderr)
+    if not version.startswith(("4.7.1.","4.6.3.")):
+        print(f"Building with {version}; 0.3.0 was verified with 4.7.1 (and 4.6.3).",file=sys.stderr)
     dest=dest.resolve();dest.mkdir(parents=True,exist_ok=True)
     target="Windows Desktop" if platform=="windows" else "Linux"
     with tempfile.TemporaryDirectory(prefix="openexhibit-build-") as tmp:

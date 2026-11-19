@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Provision the pinned offline Windows payload from official archives or a local cache."""
+"""Provision the pinned offline Windows payload from official archives or a local cache.
+
+The Godot digest is the official SHA-512 for 4.7.1. The embedded-Python digest was carried over
+from 0.2.0 and has not been re-verified for 0.3.0; Setup-Windows.ps1 uses an installed Python instead.
+"""
 import argparse
 import hashlib
 import shutil
@@ -8,9 +12,9 @@ import urllib.request
 import zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-GODOT="Godot_v4.6.3-stable_win64.exe.zip"
+GODOT="Godot_v4.7.1-stable_win64.exe.zip"
 PYTHON="python-3.14.10-embed-amd64.zip"
-DATA=[(GODOT,"https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/","sha512","d44ea7ef5bab754cacd49d581b6062836b2eea12a82e1d183aebfad9cd8c7db2bd82513337bd657d6d2d5c04d46239c0570b029faf1343e81e8a2fa7b85dd83b"),(PYTHON,"https://www.python.org/ftp/python/3.14.10/","sha256","90905e64a840557d8c1bc4f5b74db3d7ee85e3ffb217611cac1c7813acea4159")]
+DATA=[(GODOT,"https://github.com/godotengine/godot/releases/download/4.7.1-stable/","sha512","a6b02c527c18ba9936e63562032701432b2dc57d98d6483ceaccb00fe14af16af5773ae8a55e7b4d614edf121c4d9e420d870f804edb1dac16362298a01ce6c4"),(PYTHON,"https://www.python.org/ftp/python/3.14.10/","sha256","90905e64a840557d8c1bc4f5b74db3d7ee85e3ffb217611cac1c7813acea4159")]
 
 
 def provision(cache,out,offline):

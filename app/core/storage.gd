@@ -194,7 +194,8 @@ func unpack(src: String) -> String:
 	if not zip_limits(src): return ""
 	var reader=ZIPReader.new()
 	if reader.open(src)!=OK: return ""
-	var members=reader.get_files()
+	# Godot 4.7+ ZIPPacker writes folder entries ("assets/") automatically; they carry no data.
+	var members=Array(reader.get_files()).filter(func(m):return not str(m).ends_with("/"))
 	if not "manifest.json" in members or not "project.oes.json" in members: return ""
 	var manifest=JSON.parse_string(reader.read_file("manifest.json").get_string_from_utf8())
 	if not manifest is Dictionary or manifest.size()!=members.size()-1: return ""

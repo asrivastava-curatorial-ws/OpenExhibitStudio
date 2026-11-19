@@ -223,7 +223,7 @@ func build_shell():
 	status.size_flags_horizontal=SIZE_EXPAND_FILL
 	status.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	foot.add_child(status)
-	foot.add_child(StyleKit.label("OpenExhibit  0.1.0",11,StyleKit.MUTED))
+	foot.add_child(StyleKit.label("OpenExhibit  "+str(ProjectSettings.get_setting("application/config/version","")),11,StyleKit.MUTED))
 
 func menu(parent,name_:String,actions:Dictionary):
 	var m=MenuButton.new()

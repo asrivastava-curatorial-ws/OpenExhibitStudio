@@ -17,7 +17,8 @@ def digest(path):
 
 def verify(path):
     with zipfile.ZipFile(path) as z:
-        names=z.namelist()
+        # Folder entries (written automatically by Godot 4.7+) carry no data.
+        names=[n for n in z.namelist() if not n.endswith("/")]
         if len(names)>2048 or len({n.casefold() for n in names})!=len(names) or set(["project.oes.json","manifest.json"])-set(names):
             raise ValueError("Invalid package members.")
         if sum(i.file_size for i in z.infolist())>512*1024**2 or any(i.file_size>256*1024**2 for i in z.infolist()):

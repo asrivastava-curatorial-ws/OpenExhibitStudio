@@ -37,7 +37,7 @@ done
 cp "$root/app/assets/icon.svg" "$tempdir/usr/share/icons/hicolor/scalable/apps/openexhibit.svg"
 cat > "$tempdir/DEBIAN/control" <<'EOF'
 Package: openexhibit-studio
-Version: 0.2.0
+Version: 0.3.0
 Section: education
 Priority: optional
 Architecture: amd64
@@ -48,4 +48,4 @@ Suggests: python3-opencv, python3-pil, python3-tk, ffmpeg, poppler-utils, mosqui
 Description: Offline exhibit authoring and playback
  Native scene editor, calibrated outputs, hardware gateway live contests and fourteen examples.
 EOF
-dpkg-deb --root-owner-group -Zxz -z4 --build "$tempdir" "$out/OpenExhibit-Studio-0.2.0-linux-amd64.deb"
+dpkg-deb --root-owner-group -Zxz -z4 --build "$tempdir" "$out/OpenExhibit-Studio-0.3.0-linux-amd64.deb"
