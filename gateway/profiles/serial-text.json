@@ -1,0 +1,14 @@
+{
+  "devices": [
+    {
+      "id": "sketch",
+      "transport": "serial",
+      "protocol": "ascii",
+      "port": "/dev/ttyACM0",
+      "baud": 115200,
+      "inputs": ["dial", "button", "page", "motion_x", "motion_y"],
+      "filters": {"dial": {"alpha": 0.4, "epsilon": 0.5}}
+    }
+  ],
+  "lockout": false
+}
