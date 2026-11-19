@@ -1,6 +1,6 @@
 # Electricity across time
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 In the Mapping workspace, select each of the three feeds. Adjacent feeds include a shared strip with complementary linear blend ramps.
 

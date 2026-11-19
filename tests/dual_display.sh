@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2329  # functions run indirectly (through run() or the EXIT trap)
 # Start two X11 test displays in an isolated temporary configuration.
 set -eu
 root=$(cd "$(dirname "$0")" && pwd)

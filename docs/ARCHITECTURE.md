@@ -36,3 +36,31 @@ OpenExhibit Studio stores the exhibition as data. Native Godot controls author t
 The Python quiz service owns the room state and clock. SQLite transactions serialize answers and phase transitions. The private operator listener authenticates management commands. Audience browsers receive public round data from a separate listener. The Godot contest scene component uses the public state shape and feeds its native rendering into the existing mapping shader.
 
 Structured-light acquisition stores raw images. A separate calibration process estimates geometry and measures holdouts. Studio imports a measured solution into one chosen output with normal validation and undo. The same shader produces live output and exported pixels. Numerical projection tests compare rendered output with an independent implementation.
+
+## Code map (0.3)
+
+| Path | Responsibility |
+| --- | --- |
+| `app/core/` | Shared by Studio and Player: `project.gd` (model, validation, migration), `storage.gd` (atomic saves, `.oex` packages), `session.gd` (variables, rules, show clock), `stage.gd` / `graphic.gd` / `feed.gd` (rendering), `mapping.gd` + `feed.gdshader` (warp, blend, curved surfaces), `gateway_client.gd`, `contest_board.gd` (live-audience board), `tools.gd` (finds the release folder and starts the Python services), `operator_lock.gd` (Player operator password). |
+| `app/studio/main.gd` | Studio shell: menus, workspace rail, scenes and layers, inspector, undo, open/save, recovery. |
+| `app/studio/workspaces.gd` | Flipbook, Science, Media, Timeline, Installation, 3D view, Projection and Publish workspaces. |
+| `app/studio/logic_space.gd`, `rule_text.gd` | Interactions: rule cards, the rule editor and the plain-language sentences for rules. |
+| `app/studio/hardware_space.gd`, `pin_planner.gd` | Virtual inputs and lamps, starting and arming the gateway, firmware tools. |
+| `app/studio/audience_space.gd` | Starts `tools/quiz.py` and opens the slide editor, presenter and projector pages. |
+| `app/studio/welcome.gd`, `canvas.gd`, `calibration_tools.gd` | Start screen; canvas editing; calibration wizard and measured-warp import. |
+| `app/player/` | Standalone runtime, output windows and the password-protected operator panel. |
+| `tools/quiz.py`, `tools/contest/` | Live-audience service: `deck.py` (slide types, validation, Aiken import), `room.py` (session state machine in SQLite), `web/` (phone, presenter, projector and editor pages). |
+| `gateway/` | Hardware gateway: transports, protocol adapters, arming and board profiles. |
+
+### Live-audience data flow
+
+Studio starts `tools/quiz.py` with the slide deck, a SQLite file and an info file path. The service
+writes its addresses and a random operator token to the info file (owner-only permissions) and
+listens twice: the audience listener on the chosen LAN address serves the phone page, the
+projector page and public state; the operator listener on 127.0.0.1 additionally serves the
+presenter and editor pages and every `/api/host/*` call, which needs the token as a bearer header.
+Studio opens the presenter page with the token in the URL fragment, which never reaches the
+network. Pages wait for changes with long polls (`/api/state?since=…`) that the room wakes on every
+change, so answers, reactions and phase changes arrive without a refresh loop. The room is the only
+writer: every answer and phase change is one SQLite transaction, and the snapshot it returns is
+filtered by role so phones never see unrevealed answers.

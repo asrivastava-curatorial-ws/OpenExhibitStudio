@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build complete, Windows portable or compact source distributions with SHA-256 inventories."""
+"""Build complete, Windows portable or source distributions with SHA-256 inventories.
+
+The source archive holds no build output: setup.sh / Setup-Windows.cmd download the engine
+and build the packs on the target computer.
+"""
 
 import argparse
 import hashlib
@@ -11,7 +15,8 @@ VERSION = "0.3.0"
 
 
 def files(kind):
-    ignored = {".git", ".godot", "__pycache__", "node_modules", "dist"}
+    # .venv and downloads/ are created by setup; bin/ holds build output and the engine.
+    ignored = {".git", ".godot", "__pycache__", "node_modules", "dist", ".venv", "downloads", ".ruff_cache"}
     for path in sorted(ROOT.rglob("*")):
         rel = path.relative_to(ROOT)
         if (
@@ -19,9 +24,10 @@ def files(kind):
             or ignored.intersection(rel.parts)
             or rel.suffix in {".pyc", ".bak"}
             or ".writing-" in path.name
+            or rel.as_posix() == "SHA256SUMS.txt"  # written fresh into every archive
         ):
             continue
-        if kind == "source" and rel.parts[0] == "bin" and rel.suffix != ".pck":
+        if kind == "source" and rel.parts[0] == "bin":
             continue
         if kind == "windows":
             if rel.parts[0] == "bin":
@@ -42,16 +48,16 @@ def files(kind):
 
 
 def build(path, kind):
-    needed = [
-        "bin/studio.pck",
-        "bin/player.pck",
-        "bin/windows/studio.pck",
-        "bin/windows/player.pck",
-        "tools/contest/museum.quiz.json",
-        "docs/TEST-RESULTS.md",
-    ]
+    needed = ["tools/contest/museum.quiz.json", "docs/TEST-RESULTS.md"]
     if kind != "source":
-        needed += ["bin/windows/godot.exe", "bin/windows/python/python.exe"]
+        needed += [
+            "bin/studio.pck",
+            "bin/player.pck",
+            "bin/windows/studio.pck",
+            "bin/windows/player.pck",
+            "bin/windows/godot.exe",
+            "bin/windows/python/python.exe",
+        ]
     if kind == "complete":
         needed.append("bin/godot")
     for rel in needed:

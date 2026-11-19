@@ -2,7 +2,43 @@ The [0.2 field adapter guide](FIELD-IO.md) supplements the original controller a
 
 # Physical computing
 
-Start with the virtual inputs in Studio. **Hardware → Board pins and component profiles** opens the pin planner. Select a board, click a pin, choose a component, give its channel a name and save the assignment. The planner checks duplicate pins/names and the supported analog or input-only pins. An AVR input plan can export a Firmata gateway configuration. Check the site pinout and edit the serial port before connecting.
+Hardware status for 0.3.0: the gateway, protocol adapters, block editor and firmware were exercised
+with software fixtures, simulated serial devices and compilers. No physical board, sensor or actuator
+was connected during the 0.3.0 tests ([TEST-RESULTS.md](TEST-RESULTS.md)). Commission every
+installation on the bench before opening it to visitors.
+
+## Quick start from Studio
+
+Open **Hardware** in Studio's left rail.
+
+1. **Try it without hardware.** Drag the virtual sliders or press **Pulse** to feed input channels.
+   The lamps show what the exhibit would switch; **Arm virtual outputs** lets them light.
+2. **Connect a board.** Under *Board or protocol* choose what is plugged in:
+   - *Arduino Uno / Nano / Mega — OpenExhibit firmware* for the supplied sketch (firmware/ExhibitUno);
+   - *Any Arduino or ESP32 sketch that prints “name value” lines* for your own sketch or one exported
+     from the block editor;
+   - *Arduino with StandardFirmata / ConfigurableFirmata* for stock Firmata.
+
+   Plug the board in, press **Refresh**, pick its USB serial port and press **Start hardware service**.
+   Studio writes the site configuration to `hardware/site.json` in its data folder
+   (`~/.local/share/OpenExhibitStudio` on Linux, `%APPDATA%\OpenExhibitStudio` on Windows), starts
+   the gateway on 127.0.0.1 with a fresh access token and connects to it. A “name value” sketch may
+   report any input channel the exhibit uses.
+3. **Arm outputs** only after checking the wiring. Outputs disarm after every disconnection, restart
+   or unplug, and must be armed again.
+4. **Firmware and wiring** holds the pin planner (**Board pins and components…**), the offline block
+   editor, the wiring drawings and the raw channel definitions.
+
+Network profiles (ESP32 over MQTT, OSC, Modbus TCP, Art-Net/sACN) start the same way once their
+addresses and topics are filled in under gateway/profiles/. The Player and kiosks start the gateway
+from the command line, as described below.
+
+## Pin planner
+
+**Board pins and components…** opens the pin planner. Select a board, click a pin, choose a
+component, give its channel a name and save the assignment. The planner checks duplicate pins and
+names and the supported analog or input-only pins. An AVR input plan can export a Firmata gateway
+configuration. Check the site pinout and the serial port before connecting.
 
 ## Classic Arduino bench
 
@@ -10,7 +46,7 @@ The supplied sketch supports a classic 5 V Uno, Nano or Mega 2560. Its v1 device
 
 1. Install Arduino CLI, the AVR core and any required USB driver on a setup computer. **python3 tools/firmware.py list** queries actual detected boards. **cores** and **libraries** show the installed toolchains. Use **--fqbn** for alternate Nano bootloaders. [Arduino CLI guide](https://arduino.github.io/arduino-cli/latest/getting-started/)
 2. Compile with **python3 tools/firmware.py compile --board uno**. When you have positively identified the target, upload with **python3 tools/firmware.py upload --board uno --port /dev/ttyACM0**. Windows ports use names such as COM3. Compilation and upload can run offline after installing the board core and required libraries.
-3. Copy **gateway/profiles/uno.json**, set its port and run **python3 gateway/openexhibit_gateway.py --config your-uno.json**. The Linux POSIX serial adapter uses the standard library. Windows uses pyserial. **--list** discovers ports. Stable Linux by-id paths help reconnect the same board.
+3. (Studio's **Start hardware service** does steps 3 and 4 for you.) For the Player or a kiosk, copy **gateway/profiles/uno.json**, set its port and run **python3 gateway/openexhibit_gateway.py --config your-uno.json**. The Linux POSIX serial adapter uses the standard library. Windows uses pyserial. **--list** discovers ports. Stable Linux by-id paths help reconnect the same board.
 4. The gateway prints a local operator token if one was not supplied in OPENEXHIBIT_TOKEN. Enter it in Studio’s Hardware workspace and choose **Connect**. For the standalone player set OPENEXHIBIT_TOKEN and OPENEXHIBIT_OPERATOR_KEY before launch. Use F10 to arm from the operator panel. Project files carry neither credential.
 5. Open **Build a signal**. A real dial should update its gauge and live plot. Press the push button to send the indicator request. The physical LED changes only after the gateway and firmware confirm arming. Disconnect USB and verify the visible device status, safe LED state and requirement to rearm after reconnection.
 
@@ -38,7 +74,7 @@ Create the first account with **mosquitto_passwd -c /etc/mosquitto/exhibit.passw
 
 ## Firmware blocks and other components
 
-The optional **firmware/blockly/index.html** creates an Arduino input sketch using genuine Blockly. Run **npm install --ignore-scripts** inside firmware/blockly once, then retain the directory for offline use. Open the HTML in a desktop browser. Drag analog-input or push-button blocks, set unique channels, and export **ExhibitInputs.ino**. The generated sketch reports ASCII samples at 115200 baud. Use the gateway’s ASCII adapter and register the selected input channel names. The block editor supports classic AVR inputs. The ESP32 actuator example uses the supplied handwritten firmware. The compiler helper accepts **install-core --name** and **install-library --name** for deliberate package installation.
+**Open block editor (Blockly)** in Studio, or firmware/blockly/index.html in any desktop browser, creates an Arduino input sketch with genuine Blockly 12.5.1. Blockly is included in firmware/blockly/vendor, so the editor works offline without npm. Choose Uno, Nano or Mega, drag analog-input, push-button, switch or ultrasonic-distance blocks, give each a unique channel name and press **Export sketch (.ino)**. The sketch prints “name value” lines at 115200 baud; connect it with the *“name value” lines* profile (gateway/profiles/serial-text.json). The block editor covers classic AVR inputs; the ESP32 actuator example uses the supplied handwritten firmware. The compiler helper accepts **install-core --name** and **install-library --name** for deliberate package installation.
 
 The planner’s component taxonomy includes switches, Hall/reed sensors, encoders, RFID/NFC, proximity, load/pressure, environmental sensors, displays, lighting and externally driven actuators. A named component is not a device driver. I²C, SPI, UART peripherals and driver-specific motor control require matching site firmware or another external controller. Use **docs/PLUGINS.md** for the input interface. Optional per-channel **scale**, **offset**, **alpha**, **epsilon**, **interval_ms** and **debounce_ms** implement linear calibration, exponential smoothing, deadband, rate limiting and stable-value filtering. Use debounce on discrete signals. Keep the analog sampling cadence in firmware.
 

@@ -1,6 +1,6 @@
 # Inside a wave
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 Start the Player to open six independent surface feeds. In Mapping choose each output. To use continuous shared artwork, reapply the Immersive room preset and author a 4 × 3 cube-cross atlas.
 

@@ -1,6 +1,6 @@
 # Earth in longitude
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 In Hardware inject encoder = 45. The Mapping preview (Exhibit content) shifts longitude by 45°. Input is an absolute angle in degrees; the supplied encoder sketch reports one degree per accepted tick.
 

@@ -2,7 +2,7 @@
 # Start OpenExhibit Studio.   bash studio.sh [project.oes.json | exhibit.oex]
 # The first start runs setup.sh, which downloads and verifies the Godot engine once.
 set -eu
-base=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+base=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 engine="${OPENEXHIBIT_GODOT:-$base/bin/godot}"
 if [ ! -x "$engine" ] || { [ -f "$base/app/project.godot" ] && [ ! -d "$base/app/.godot/imported" ]; }; then
   echo "First start: preparing OpenExhibit Studio …"

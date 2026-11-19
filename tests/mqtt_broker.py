@@ -43,9 +43,14 @@ def run(broker, passwd):
             free.bind(('127.0.0.1', 0))
             port = free.getsockname()[1]
         conf = folder / 'broker.conf'
-        conf.write_text(
+        settings = (
             f'listener {port} 127.0.0.1\nallow_anonymous false\npassword_file {pwfile}\npersistence false\n'
         )
+        if hasattr(os, 'geteuid') and os.geteuid() == 0:
+            # Started as root, Mosquitto switches to its own account and then cannot read the
+            # password file in this private temporary folder. Keep this loopback-only fixture as is.
+            settings += 'user root\n'
+        conf.write_text(settings)
         program = folder / 'fixture'
         subprocess.run(
             [
@@ -63,10 +68,9 @@ def run(broker, passwd):
         sim = None
         client = None
         hub = None
+        broker_log = (folder / 'broker.log').open('w')
         try:
-            proc = subprocess.Popen(
-                [broker, '-c', str(conf)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-            )
+            proc = subprocess.Popen([broker, '-c', str(conf)], stdout=broker_log, stderr=subprocess.STDOUT)
 
             def listening():
                 try:
@@ -75,7 +79,10 @@ def run(broker, passwd):
                 except OSError:
                     return False
 
-            wait(listening, 'Broker did not open its local authenticated listener.')
+            try:
+                wait(listening, 'Broker did not open its local authenticated listener.')
+            except AssertionError as error:
+                raise AssertionError(f'{error}\n{(folder / "broker.log").read_text()}') from None
             sim = subprocess.Popen(
                 [str(program)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, bufsize=1
             )
@@ -158,6 +165,7 @@ def run(broker, passwd):
             if proc and proc.poll() is None:
                 proc.terminate()
                 proc.wait(timeout=4)
+            broker_log.close()
             os.environ.pop('OES_MQTT_BENCH_PASS', None)
 
 

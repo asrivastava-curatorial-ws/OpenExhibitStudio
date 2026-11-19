@@ -1,6 +1,6 @@
 # Light and motion
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 Use the three angle buttons in Test. In Hardware arm virtual outputs and pulse the button to see both output requests.
 

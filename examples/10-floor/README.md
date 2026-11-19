@@ -1,6 +1,6 @@
 # Wake the floor
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 Move the slider or inject motion_x = 0.2 and motion_y = 0.7 to reposition the origin. An optional overhead webcam sends the centroid of frame differences.
 

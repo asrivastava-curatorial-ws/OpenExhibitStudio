@@ -1,55 +1,97 @@
-# OpenExhibit Studio 0.2.0
+# OpenExhibit Studio 0.3.0
 
-OpenExhibit Studio authors and plays offline museum installations. This release adds a local audience quiz system, camera-assisted projector calibration and more field-device protocols. Fourteen editable exhibits ship with Studio and the standalone Player.
+Free, offline software for building museum and science-centre exhibits: touchscreen kiosks,
+projection-mapped installations, digital and physical flipbooks, Arduino/ESP32 interactives, and
+AhaSlides-style live audience sessions (polls, quizzes, word clouds, Q&A) on visitors' phones.
 
-## Start on your computer
+Everything runs on your own computers. There are no accounts, no cloud services and no
+telemetry. Studio authors exhibits; the standalone Player runs them on exhibit computers.
 
-| Distribution | Authoring and playback |
-| --- | --- |
-| Windows x64 Setup.exe | Run the per-user installer, then choose **OpenExhibit Studio → Studio** in Start. The engine, quiz interpreter, fonts and examples are included. The installer is unsigned. |
-| Windows portable | Extract the complete folder. Open **Studio.cmd** or **Player.cmd**. Drop a packaged exhibit on Player.cmd. |
-| Ubuntu x86-64 .deb | Install with `sudo apt install ./OpenExhibit-Studio-0.2.0-linux-amd64.deb`. Launch `openexhibit-studio` or `openexhibit-player`. A fully offline installation needs the ordinary distribution dependencies already installed or cached. |
-| Complete ZIP on Ubuntu | Extract, enter **OpenExhibitStudio** and run `bash studio.sh`. To run the example scoreboard, use `bash player.sh examples/14-live-quiz/project.oes.json`. |
-| Compact source ZIP | Includes both platform packs, sources, examples and verification material. Install Godot 4.6.3 or set OPENEXHIBIT_GODOT and use the launchers. Run Windows setup with your existing Godot executable. Python 3.10 or newer is needed for the quiz service. |
+## Install and start
 
-**For a contest**, choose **View → Live quiz contest**, select the classroom or venue network interface and press **Start new contest**. Open **Edit contest** before beginning, or run the included ten-round science quiz. Participants scan the local QR. The host controls answers, timing and results. A scoreboard component can appear on any calibrated exhibit surface. [Contest guide](docs/LIVE-QUIZ.md)
+**Ubuntu / Kubuntu / Debian (x86-64; ARM64 is supported by setup but untested)** — from the extracted folder:
 
-**For projection**, open **Mapping**, select the output, and choose **Camera calibration wizard**. The solver checks independent optical landmarks before exporting a measured warp. The real-projector commissioning procedure records error in physical millimetres. [Calibration guide](docs/CALIBRATION.md)
+```sh
+bash setup.sh          # once: downloads Godot 4.7.1 from GitHub, checks its SHA-512, prepares the app
+bash studio.sh         # start Studio (runs setup by itself the first time)
+bash player.sh examples/06-digital-book/project.oes.json
+```
 
-Start with **Orbital atlas**. Press **Test exhibit**, choose **Mars**, and watch the planet name and orbital period change. Press **F5** to return to editing. Choose **File → Save as** and create a project directory before making your own exhibit.
+Optional: `bash setup.sh --hardware` adds pyserial and paho-mqtt for USB and Wi-Fi boards, and
+`bash setup.sh --desktop` adds Studio and Player to the application menu.
 
-## Player-only installation
+**Windows 10/11** — double-click `Setup-Windows.cmd` once, then `Studio.cmd`. Setup downloads the
+engine with the same checksum check and offers to install Python 3.12 with winget if it is missing
+(Python is needed only for live audience sessions and USB hardware). Add `-Shortcuts` for
+Start-menu and desktop shortcuts.
 
-On Linux, copy **player.sh**, **bin/godot**, **bin/player.pck** and **licenses/** into the same relative folder structure. Include **examples/** if the operator needs the sample library. Supply a project path or use the player’s Open exhibit button. On Windows, run `Setup-Windows.cmd -PlayerOnly` from the full ZIP to install the included player and engine. The player pack contains the content renderer, event engine and output manager. It has no Studio scripts.
+**Offline computers** — on a connected machine, fetch the engine into `downloads/`:
 
-The bundled Linux executable is the upstream Godot engine distribution, which also contains Godot’s development tools. The launchers run an independent compiled OpenExhibit pack. The native export command in the build guide produces smaller template-based executables.
+```sh
+mkdir -p downloads && curl -L -o downloads/Godot_v4.7.1-stable_linux.x86_64.zip \
+  https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip
+# Windows: …/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip
+```
 
-## Find your starting point
+Copy the folder to the offline computer and run `bash setup.sh --offline` (or
+`Setup-Windows.cmd -Offline`). Godot 4.6.3 also works: set `OPENEXHIBIT_GODOT_VERSION=4.6.3`.
+
+## A five-minute tour
+
+1. Studio opens with a **start screen**: pick *Touchscreen kiosk* (or any template), or a blank
+   exhibit. Templates open as read-only examples — **File → Save as** into an empty folder to
+   make your own copy.
+2. **Screens**: click any layer and edit it in the Inspector; changes apply as you type. Select a
+   button and choose what happens **When pressed** — go to a scene, set a variable, play a
+   timeline, switch a device output, turn a page.
+3. **Interactions** builds richer rules that read as sentences:
+   *When button “Mars” is pressed → set planet to “Mars”; go to scene “Mars facts”.*
+4. Press **F5 (Try it)** to use the exhibit as a visitor; F5 again returns to editing.
+5. **Publish → Export .oex package**, then on the exhibit computer:
+   `bash player.sh exhibit.oex --kiosk` (Windows: `Player.cmd exhibit.oex --kiosk`).
+
+## Live audience sessions (AhaSlides-style)
+
+Open the *Live audience talk* template, go to **Live audience**, choose your Wi-Fi or LAN under
+**Who can join**, and press **Start session and present**. The presenter console opens in the
+browser; press **F** there for the projector window. Visitors scan the QR code and answer on their
+phones. Slide types: content, pick one / several, type an answer, number, correct order, match,
+categorise, poll, word cloud, rating scale, ranking, open-ended ideas with voting, audience Q&A
+and a spinner wheel — with leaderboards, team play, emoji reactions and CSV exports.
+→ [Live audience guide](docs/LIVE-AUDIENCE.md)
+
+## Hardware
+
+**Hardware → Try it without hardware** gives virtual sliders and lamps for every channel. To use a
+real board, pick a board profile and its USB port and press **Start hardware service**; Studio
+runs the local gateway and connects to it. Outputs never switch on until you **Arm** them.
+The firmware block editor (Blockly, works offline) writes Arduino sketches for you.
+→ [Hardware guide](docs/HARDWARE.md)
+
+## Documentation
 
 | I want to… | Read |
 | --- | --- |
-| Design an exhibit without programming | [User manual](docs/USER-MANUAL.md) |
-| Set up a panorama, sphere, cylinder or book | [Installation and mapping](docs/MAPPING.md) |
-| Connect an Arduino, ESP32, webcam or existing program | [Hardware guide](docs/HARDWARE.md) and [wiring drawings](docs/wiring.svg) |
-| Install updates, start automatically or synchronize players | [Deployment](docs/DEPLOYMENT.md) |
-| Find out exactly what works | [Capability matrix](docs/CAPABILITIES.md) and [actual test results](docs/TEST-RESULTS.md) |
-| Modify or rebuild the programs | [Architecture and plan](docs/ARCHITECTURE.md), [build and reproducibility](docs/BUILD.md) |
-| Extend an exhibit | [Plugin interfaces](docs/PLUGINS.md), [device protocol](docs/PROTOCOL.md), [project format](docs/FORMAT.md), [JSON Schema](docs/project.schema.json) |
-| Redistribute the software or assets | [Dependency and licence inventory](docs/DEPENDENCIES.md) |
+| Learn Studio step by step | [User manual](docs/USER-MANUAL.md) |
+| Run polls, quizzes and Q&A | [Live audience](docs/LIVE-AUDIENCE.md) |
+| Set up projectors, a dome, a sphere or a book | [Installation and mapping](docs/MAPPING.md) · [Calibration](docs/CALIBRATION.md) |
+| Connect Arduino, ESP32, OSC, DMX, Modbus | [Hardware](docs/HARDWARE.md) · [Field devices](docs/FIELD-IO.md) · [Protocol](docs/PROTOCOL.md) |
+| Run exhibits unattended | [Deployment](docs/DEPLOYMENT.md) |
+| Know exactly what works and what does not | [Capabilities and limits](docs/CAPABILITIES.md) · [Test results](docs/TEST-RESULTS.md) |
+| See what changed from 0.2.0 | [Changelog](CHANGELOG.md) |
+| Understand which open-source projects were reused or evaluated | [Reuse](docs/REUSE.md) · [Dependencies and licences](docs/DEPENDENCIES.md) |
+| Build, test or extend it | [Build](docs/BUILD.md) · [Architecture](docs/ARCHITECTURE.md) · [File format](docs/FORMAT.md) · [Plugins](docs/PLUGINS.md) |
 
 ## Repository layout
 
-| Directory | Contents |
+| Folder | Contents |
 | --- | --- |
-| app/core | Version checks, atomic recovery, event engine, component rendering, mappings, authenticated clock and gateway client |
-| app/studio | Authoring shell, editable canvas, inspector, pin planner, calibration pad and workspaces |
-| app/player | Standalone entry point, output windows and operator controls |
-| app/qa, tests | Native integration checks, gateway tests, C++ protocol fixture and measured reports |
-| gateway | Headless hardware service, transport adapters and installation-specific example profiles |
-| firmware | Uno/Nano/Mega sketch, ESP32 sketch, shared watchdog protocol and optional Blockly editor |
-| examples | Fourteen independent project folders, each with its local assets and setup notes |
-| tools | Pack builds, media preparation, PDF book import, camera adapter, show clock, offline updates and soak monitor |
-| packaging, bin | Install scripts, compiled Studio/player packs and the bundled Linux and Windows engines in the complete release |
-| docs, licenses | Operator and developer guides, licences and attribution |
+| `app/` | Godot project. `core/` is shared by Studio and Player (project model, session engine, renderer, mapping); `studio/` is the authoring shell; `player/` the runtime; `qa/` native test suites. |
+| `tools/` | Python services and utilities: `quiz.py` + `contest/` (live audience), calibration, PDF import, packaging, deployment. |
+| `gateway/` | Hardware service: serial, Firmata, MQTT, OSC, Art-Net/sACN, Modbus, MIDI, HID adapters and board profiles. |
+| `firmware/` | Arduino and ESP32 sketches, the shared protocol library and the offline block editor. |
+| `examples/` | Fifteen ready-to-run exhibits with their own assets. |
+| `tests/` | Python, browser and protocol tests; `tests/results/` holds recorded runs. |
 
-Source and original example content carry the MIT licence. Redistributed engines, fonts and geographic data have the terms listed in the dependency inventory.
+Licence: MIT for the project's own code and example content. Bundled third-party components keep
+their licences — see [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) and `licenses/`.

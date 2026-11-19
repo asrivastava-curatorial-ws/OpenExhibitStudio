@@ -1,8 +1,6 @@
-The 0.2 Windows x64 installer includes Studio, Player, the official engine and an application-local Python for quiz hosting. The [contest runbook](LIVE-QUIZ.md) covers LAN ports, room recovery and backup.
-
 # Deployment and operations
 
-Export an exhibit under **Deployment**. Open a single output with **player.sh --project exhibit.oex --output out_2 --fullscreen** on Linux, or pass the same arguments to **Player.cmd** on Windows. Omitting the output ID opens every configured feed on the local computer. Two windows may share a visitor session. Independent computers run separate visitor sessions.
+Export an exhibit under **Publish**. Open a single output with **player.sh --project exhibit.oex --output out_2 --fullscreen** on Linux, or pass the same arguments to **Player.cmd** on Windows. Omitting the output ID opens every configured feed on the local computer. Two windows may share a visitor session. Independent computers run separate visitor sessions.
 
 ## Offline updates and recovery
 
@@ -38,3 +36,19 @@ bash player.sh --project examples/13-shows/project.oes.json --clock-host 192.168
 The console accepts **pause**, **resume** and **restart**. Use the same exhibit on all followers. The default UDP port is 18442. Followers poll four times per second, reject stale replies and stop cue advancement after a 2.5-second loss. The operator panel shows the most recent RTT and estimated playhead error. A correction samples the show’s presentation state and disarms outputs. Remote-clock followers cannot arm physical outputs through the operator panel. Media decoders remain locally timed. Cue synchronization is software-based and does not implement video genlock, frame-lock or sample-accurate multichannel audio.
 
 The gateway binds its TCP control socket to loopback only. Its token is separate from the clock key and the operator password. SQLite recording of sensor samples starts only with **--record**. The default system sends no telemetry and stores no visitor images. The drawing-wall example keeps submissions in memory until reset. Host and site backups must include the authoring project, deployment copies, calibration profile and local gateway configuration.
+
+
+## Operator password
+
+The Player's operator panel (F10) arms hardware outputs, resets the visit and closes the Player.
+The first time it is opened on a computer it asks for a new password (8+ characters), stored as a
+salted, iterated SHA-256 hash in the Player's user-data folder
+(`~/.local/share/OpenExhibitStudio/operator.json` on Linux,
+`%APPDATA%\OpenExhibitStudio\operator.json` on Windows). Delete that file to reset it. A site can
+instead set `OPENEXHIBIT_OPERATOR_KEY` (16+ characters) in the service environment.
+
+## Live audience sessions on a show computer
+
+Sessions need Python 3.10+ (installed by setup on Linux; `Setup-Windows.cmd` offers winget on
+Windows). See [LIVE-AUDIENCE.md](LIVE-AUDIENCE.md) for ports, firewall and resuming after a
+power cut.

@@ -11,7 +11,7 @@
 # Everything is installed inside this folder; nothing is written to system directories.
 set -euo pipefail
 
-ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 cd "$ROOT"
 
 GODOT_VERSION="${OPENEXHIBIT_GODOT_VERSION:-4.7.1}"
@@ -76,9 +76,9 @@ usable_engine() { # path -> 0 when it is Godot 4.6 or newer
 # ---------------------------------------------------------------- report only
 if [ "$CHECK" = 1 ]; then
   if usable_engine "$ROOT/bin/godot"; then ok "Engine: $(engine_version "$ROOT/bin/godot")"; else warn "Engine: not installed (run: bash setup.sh)"; fi
-  [ -d "$ROOT/app/.godot/imported" ] && ok "App: imported" || warn "App: not imported yet"
-  command -v python3 >/dev/null && ok "Python: $(python3 --version)" || warn "Python 3: missing (live audience and hardware need it)"
-  [ -x "$ROOT/.venv/bin/python" ] && ok "Hardware Python environment: .venv" || say "Hardware extras: not installed (optional: bash setup.sh --hardware)"
+  if [ -d "$ROOT/app/.godot/imported" ]; then ok "App: imported"; else warn "App: not imported yet"; fi
+  if command -v python3 >/dev/null; then ok "Python: $(python3 --version)"; else warn "Python 3: missing (live audience and hardware need it)"; fi
+  if [ -x "$ROOT/.venv/bin/python" ]; then ok "Hardware Python environment: .venv"; else say "Hardware extras: not installed (optional: bash setup.sh --hardware)"; fi
   exit 0
 fi
 

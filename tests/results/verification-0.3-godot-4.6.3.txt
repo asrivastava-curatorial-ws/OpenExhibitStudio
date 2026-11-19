@@ -1,0 +1,375 @@
+OpenExhibit Studio checks — 2026-11-19 15:29 UTC
+Godot 4.6.3.stable.official.7d41c59c4 · Python 3.13.18 · Linux 6.18.44-fc-v653 x86_64
+
+===== GDScript parse check
+$ parse_all
+Parsed 37 scripts.
+
+===== Core project and rule suite
+$ /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --headless --path app --script res://qa/check_core.gd
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS schema accepts a fresh exhibit
+PASS save a project
+PASS save and reopen preserve data
+PASS write an exhibit package
+PASS verify and reopen package
+PASS visitor rule updates session state
+PASS event cycles bounded and reported
+PASS independent saves preserve private extensions
+PASS interrupted-save backup restored
+PASS newer file version rejected
+PASS opt-in arithmetic expression
+PASS nested timeline cycle bounded
+12 checks, 0 failures
+
+===== Integration, headless, IPv4/IPv6 sockets denied
+$ python3 tests/offline_run.py /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --headless --path app --script res://qa/check_integration.gd -- --examples /tmp/oes463/examples
+Verified IPv4/IPv6 socket creation disabled for this process tree.
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS checksum and schema · 01-solar
+PASS relocate assets · 01-solar
+PASS portable round trip · 01-solar
+PASS checksum and schema · 02-panorama
+PASS relocate assets · 02-panorama
+PASS portable round trip · 02-panorama
+PASS checksum and schema · 03-earth
+PASS relocate assets · 03-earth
+PASS portable round trip · 03-earth
+PASS checksum and schema · 04-cyclorama
+PASS relocate assets · 04-cyclorama
+PASS portable round trip · 04-cyclorama
+PASS checksum and schema · 05-room
+PASS relocate assets · 05-room
+PASS portable round trip · 05-room
+PASS checksum and schema · 06-digital-book
+PASS relocate assets · 06-digital-book
+PASS portable round trip · 06-digital-book
+PASS checksum and schema · 07-physical-book
+PASS relocate assets · 07-physical-book
+PASS portable round trip · 07-physical-book
+PASS checksum and schema · 08-arduino
+PASS relocate assets · 08-arduino
+PASS portable round trip · 08-arduino
+PASS checksum and schema · 09-esp32
+PASS relocate assets · 09-esp32
+PASS portable round trip · 09-esp32
+PASS checksum and schema · 10-floor
+PASS relocate assets · 10-floor
+PASS portable round trip · 10-floor
+PASS checksum and schema · 11-mixed
+PASS relocate assets · 11-mixed
+PASS portable round trip · 11-mixed
+PASS checksum and schema · 12-postcards
+PASS relocate assets · 12-postcards
+PASS portable round trip · 12-postcards
+PASS checksum and schema · 13-shows
+PASS relocate assets · 13-shows
+PASS portable round trip · 13-shows
+PASS checksum and schema · 14-live-quiz
+PASS relocate assets · 14-live-quiz
+PASS portable round trip · 14-live-quiz
+PASS checksum and schema · 15-live-show
+PASS relocate assets · 15-live-show
+PASS portable round trip · 15-live-show
+PASS all fifteen exhibit examples present
+PASS edited canvas text updates shared renderer
+PASS undo restores the exact previous object
+PASS redo returns the edited object
+PASS visitor button updates another native control
+PASS workspace opens · Canvas
+PASS workspace opens · Flipbook
+PASS workspace opens · Science
+PASS workspace opens · Assets
+PASS workspace opens · Logic
+PASS workspace opens · Timeline
+PASS workspace opens · Hardware
+PASS workspace opens · Installation
+PASS workspace opens · 3D scene
+PASS workspace opens · Mapping
+PASS workspace opens · Test
+PASS workspace opens · Live audience
+PASS workspace opens · Deployment
+PASS canvas transform commits to project
+PASS undo canvas transform
+PASS duplicate obtains independent ID
+PASS authoring save entry point
+PASS concurrent modification detected
+PASS valid preset · Kiosk
+PASS valid preset · Multiple kiosks
+PASS valid preset · Interactive table
+PASS valid preset · Mixed displays
+PASS valid preset · Video wall
+PASS valid preset · Single projector
+PASS valid preset · Linear panorama
+PASS valid preset · Vertical panorama
+PASS valid preset · Cyclorama
+PASS valid preset · 360° ring
+PASS valid preset · Earth sphere
+PASS valid preset · Fulldome
+PASS valid preset · Immersive room
+PASS valid preset · L-shaped room
+PASS valid preset · U-shaped room
+PASS valid preset · CAVE
+PASS valid preset · Custom object
+PASS valid preset · Relief map
+PASS valid preset · Digital book
+PASS valid preset · Projected book
+PASS valid preset · Physical book
+PASS valid preset · Touchscreen + projection
+PASS valid preset · Pepper’s Ghost
+PASS valid preset · Mixed installation
+PASS corner pin is a perspective homography
+PASS mesh warp recovers displaced central control point
+PASS warp, blend and geometry persist
+PASS 360-degree cylinder seam and cardinal sectors
+PASS fixed cylinder height controls vertical mapping
+PASS equatorial projector layout flags uncovered north pole
+PASS equirectangular sphere rotation
+PASS measured camera report applies to actual Studio output
+PASS undo restores prior calibration
+PASS wrong-resolution camera report cannot overwrite the output
+PASS two native windows with independent requested sizes
+PASS fresh runtime starts with outputs disarmed
+PASS one physical-channel event requests two output devices
+PASS one input updates kiosk and projector scene
+PASS visitor reset clears outputs and state
+PASS standalone feed maps pointer input to native scene button
+PASS timeline changes film at six seconds
+PASS seeking restores presentation and disarms outputs
+PASS submitted drawing is a snapshot
+PASS clearing kiosk preserves wall submission
+PASS page sensor selects a physical book spread
+PASS manual fallback turns one book page
+PASS traversal path rejected
+PASS 30,000 sensor events keep bounded traces and samples
+RESULT 116 integration checks, 0 failures.
+
+===== LAN timeline clock (Godot follower + Python publisher)
+$ clock_check
+Clock listening at ('127.0.0.1', 18442)
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS native LAN clock follower + Python publisher, authenticated reply, timeline running; RTT 7 ms
+
+===== Integration on two X11 heads
+$ on_two_heads /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --audio-driver Dummy --path app --script res://qa/check_integration.gd -- --examples /tmp/oes463/examples
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+PASS checksum and schema · 01-solar
+PASS relocate assets · 01-solar
+PASS portable round trip · 01-solar
+PASS checksum and schema · 02-panorama
+PASS relocate assets · 02-panorama
+PASS portable round trip · 02-panorama
+PASS checksum and schema · 03-earth
+PASS relocate assets · 03-earth
+PASS portable round trip · 03-earth
+PASS checksum and schema · 04-cyclorama
+PASS relocate assets · 04-cyclorama
+PASS portable round trip · 04-cyclorama
+PASS checksum and schema · 05-room
+PASS relocate assets · 05-room
+PASS portable round trip · 05-room
+PASS checksum and schema · 06-digital-book
+PASS relocate assets · 06-digital-book
+PASS portable round trip · 06-digital-book
+PASS checksum and schema · 07-physical-book
+PASS relocate assets · 07-physical-book
+PASS portable round trip · 07-physical-book
+PASS checksum and schema · 08-arduino
+PASS relocate assets · 08-arduino
+PASS portable round trip · 08-arduino
+PASS checksum and schema · 09-esp32
+PASS relocate assets · 09-esp32
+PASS portable round trip · 09-esp32
+PASS checksum and schema · 10-floor
+PASS relocate assets · 10-floor
+PASS portable round trip · 10-floor
+PASS checksum and schema · 11-mixed
+PASS relocate assets · 11-mixed
+PASS portable round trip · 11-mixed
+PASS checksum and schema · 12-postcards
+PASS relocate assets · 12-postcards
+PASS portable round trip · 12-postcards
+PASS checksum and schema · 13-shows
+PASS relocate assets · 13-shows
+PASS portable round trip · 13-shows
+PASS checksum and schema · 14-live-quiz
+PASS relocate assets · 14-live-quiz
+PASS portable round trip · 14-live-quiz
+PASS checksum and schema · 15-live-show
+PASS relocate assets · 15-live-show
+PASS portable round trip · 15-live-show
+PASS all fifteen exhibit examples present
+PASS edited canvas text updates shared renderer
+PASS undo restores the exact previous object
+PASS redo returns the edited object
+PASS visitor button updates another native control
+PASS workspace opens · Canvas
+PASS workspace opens · Flipbook
+PASS workspace opens · Science
+PASS workspace opens · Assets
+PASS workspace opens · Logic
+PASS workspace opens · Timeline
+PASS workspace opens · Hardware
+PASS workspace opens · Installation
+PASS workspace opens · 3D scene
+PASS workspace opens · Mapping
+PASS workspace opens · Test
+PASS workspace opens · Live audience
+PASS workspace opens · Deployment
+PASS canvas transform commits to project
+PASS undo canvas transform
+PASS duplicate obtains independent ID
+PASS authoring save entry point
+PASS concurrent modification detected
+PASS valid preset · Kiosk
+PASS valid preset · Multiple kiosks
+PASS valid preset · Interactive table
+PASS valid preset · Mixed displays
+PASS valid preset · Video wall
+PASS valid preset · Single projector
+PASS valid preset · Linear panorama
+PASS valid preset · Vertical panorama
+PASS valid preset · Cyclorama
+PASS valid preset · 360° ring
+PASS valid preset · Earth sphere
+PASS valid preset · Fulldome
+PASS valid preset · Immersive room
+PASS valid preset · L-shaped room
+PASS valid preset · U-shaped room
+PASS valid preset · CAVE
+PASS valid preset · Custom object
+PASS valid preset · Relief map
+PASS valid preset · Digital book
+PASS valid preset · Projected book
+PASS valid preset · Physical book
+PASS valid preset · Touchscreen + projection
+PASS valid preset · Pepper’s Ghost
+PASS valid preset · Mixed installation
+PASS corner pin is a perspective homography
+PASS mesh warp recovers displaced central control point
+PASS warp, blend and geometry persist
+PASS 360-degree cylinder seam and cardinal sectors
+PASS fixed cylinder height controls vertical mapping
+PASS equatorial projector layout flags uncovered north pole
+PASS equirectangular sphere rotation
+PASS measured camera report applies to actual Studio output
+PASS undo restores prior calibration
+PASS wrong-resolution camera report cannot overwrite the output
+PASS two native windows with independent requested sizes
+PASS fresh runtime starts with outputs disarmed
+PASS one physical-channel event requests two output devices
+PASS one input updates kiosk and projector scene
+PASS OpenGL renders distinct exhibit colours in the scene texture
+PASS calibrated second window renders live projector feed
+PASS visitor reset clears outputs and state
+PASS standalone feed maps pointer input to native scene button
+PASS timeline changes film at six seconds
+PASS seeking restores presentation and disarms outputs
+PASS submitted drawing is a snapshot
+PASS clearing kiosk preserves wall submission
+PASS page sensor selects a physical book spread
+PASS manual fallback turns one book page
+PASS traversal path rejected
+PASS 30,000 sensor events keep bounded traces and samples
+RESULT 118 integration checks, 0 failures.
+
+===== Every example launches in the Player
+$ on_two_heads /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --audio-driver Dummy --path app --script res://qa/check_examples.gd -- --examples /tmp/oes463/examples
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+PASS native example playback · 01-solar · 1 feed(s)
+PASS native example playback · 02-panorama · 3 feed(s)
+PASS native example playback · 03-earth · 4 feed(s)
+PASS native example playback · 04-cyclorama · 3 feed(s)
+PASS native example playback · 05-room · 6 feed(s)
+PASS native example playback · 06-digital-book · 1 feed(s)
+PASS native example playback · 07-physical-book · 2 feed(s)
+PASS native example playback · 08-arduino · 1 feed(s)
+PASS native example playback · 09-esp32 · 1 feed(s)
+PASS native example playback · 10-floor · 1 feed(s)
+PASS native example playback · 11-mixed · 2 feed(s)
+PASS native example playback · 12-postcards · 2 feed(s)
+PASS native example playback · 13-shows · 1 feed(s)
+PASS native example playback · 14-live-quiz · 1 feed(s)
+PASS native example playback · 15-live-show · 1 feed(s)
+RESULT 15 example launches, 0 failures.
+
+===== UV-mapped mesh rendering
+$ on_two_heads /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --audio-driver Dummy --path app --script res://qa/check_mesh.gd -- --examples /tmp/oes463/examples
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+PASS UV-mapped OBJ with perspective projector, dark background and sampled content; colours (1.0, 0.1255, 0.1961, 1.0) (0.0, 0.0, 0.0, 1.0)
+
+===== Rendered mapping pixels vs independent model
+$ on_two_heads python3 tests/projector_pixels.py --godot /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+plain              samples= 504 p99=0.84 max=0.84
+corner             samples= 483 p99=0.90 max=0.97
+maskgain           samples= 504 p99=0.76 max=0.76
+left               samples= 504 p99=0.65 max=0.65
+right              samples= 504 p99=0.65 max=0.65
+mesh               samples= 504 p99=0.84 max=0.99
+sphere             samples= 504 p99=0.76 max=0.82
+rotated_sphere     samples= 504 p99=0.81 max=0.97
+cylinder           samples= 504 p99=0.93 max=1.01
+seam               samples= 504 p99=0.86 max=0.95
+fulldome           samples= 480 p99=0.94 max=1.02
+cube0              samples= 504 p99=0.00 max=0.00
+cube1              samples= 504 p99=0.00 max=0.00
+cube2              samples= 504 p99=0.00 max=0.00
+cube3              samples= 504 p99=0.00 max=0.00
+cube4              samples= 504 p99=0.00 max=0.00
+cube5              samples= 504 p99=0.00 max=0.00
+PASS 17 real rendered rasters, 8523 RGB probes, largest deviation 1.02/255; overlap sum max error 0.60/255.
+
+===== Player live-audience board against a real service
+$ on_two_heads python3 tests/contest_native.py
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+BOARD lobby
+BOARD open
+BOARD reveal
+BOARD standings
+PASS native contest layer and rendered scoreboard
+
+Summary
+  PASS  GDScript parse check (10 s)
+  PASS  Core project and rule suite (0 s)
+  PASS  Integration, headless, IPv4/IPv6 sockets denied (2 s)
+  PASS  LAN timeline clock (Godot follower + Python publisher) (1 s)
+  PASS  Integration on two X11 heads (5 s)
+  PASS  Every example launches in the Player (6 s)
+  PASS  UV-mapped mesh rendering (1 s)
+  PASS  Rendered mapping pixels vs independent model (3 s)
+  PASS  Player live-audience board against a real service (4 s)
+Full log: /home/claude/work/OpenExhibitStudio/tests/results/verification-0.3-godot-4.6.3.txt

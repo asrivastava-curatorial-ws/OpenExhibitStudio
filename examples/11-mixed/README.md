@@ -1,6 +1,6 @@
 # Reef finder
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 In Hardware arm virtual outputs and inject dial = 70. Both output scenes show Sandstone and both indicator requests become 1. The standalone player opens the kiosk at 1280 × 720 and projector at 1024 × 768.
 

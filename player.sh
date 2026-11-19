@@ -2,7 +2,7 @@
 # Play an exhibit.   bash player.sh [project.oes.json | exhibit.oex] [--fullscreen] [--kiosk]
 # Works from the full folder (runs setup on first start) or a player-only copy with bin/player.pck.
 set -eu
-base=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+base=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 engine="${OPENEXHIBIT_GODOT:-$base/bin/godot}"
 if [ ! -x "$engine" ] || { [ -f "$base/app/project.godot" ] && [ ! -d "$base/app/.godot/imported" ]; }; then
   if [ -f "$base/setup.sh" ]; then

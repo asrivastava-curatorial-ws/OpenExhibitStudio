@@ -1,6 +1,6 @@
 # Build a signal
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 Move the on-screen slider or inject dial = 75. Press Toggle indicator. In Hardware arm virtual outputs, then inject button = 1 to inspect the lamp request.
 

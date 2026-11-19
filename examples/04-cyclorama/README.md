@@ -1,6 +1,6 @@
 # Waves in three languages
 
-Open project.oes.json in Studio and choose **Test exhibit**, or open it in the standalone Player.
+Open project.oes.json in Studio and press **▶ Try it** (F5), or open it in the standalone Player.
 
 Compare the three scripts across a 180° cylinder. Open Installation to change radius or height and rebuild a layout. Try the 360° ring preset with the same wave texture.
 

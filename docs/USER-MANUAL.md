@@ -1,71 +1,173 @@
-# Create your first exhibit
+# OpenExhibit Studio — user manual
 
-For phone-based museum competitions, start with **View → Live quiz contest** and the [contest operator guide](LIVE-QUIZ.md). For structured-light capture, choose **Mapping → Camera calibration wizard** and use the [projection commissioning guide](CALIBRATION.md). The [field adapter guide](FIELD-IO.md) covers external meters, indicators and input devices.
+This guide assumes no programming. Keys in **bold**; menus as *File → Save as*.
 
+## 1. Start
 
-## Make a working copy
+Run `bash studio.sh` (Linux) or `Studio.cmd` (Windows). The first start downloads the Godot engine
+once and prepares the app (about half a minute).
 
-1. Start Studio and open **File → Examples → Orbital atlas**.
-2. Choose **File → Save as**. Create a new folder, open it and save **project.oes.json**. Studio copies the artwork with the project.
-3. Click **Test exhibit** and press **Mars** on the exhibit. The card should show **686.98 Earth days**. Click **Test exhibit** again to return to the canvas.
+The **start screen** offers:
 
-## Edit the visitor screen
+- **Blank exhibit** — one empty scene at 1280 × 720.
+- **Templates** — the fifteen bundled examples (kiosk, flipbook, live talk, video show, Arduino,
+  projection panorama, sphere, cyclorama, immersive room, physical book, and more).
+- **Recent** exhibits and **Open** for a project (`project.oes.json`) or package (`.oex`).
 
-Choose an object in **Layers**, or click it directly on the canvas. The Inspector shows its name, content, colour and rectangle. Change a value and choose **Apply changes**. Drag the selected object to move it. Drag its bottom-right handle to resize it. Snap uses eight logical pixels. Hold Alt during a drag for single-pixel positioning.
+Templates open read-only. Use *File → Save as* and choose an **empty folder**: Studio writes
+`project.oes.json` there and copies every image, sound and video into `assets/`.
 
-Use **+ Object** for buttons, text, panels, images, video, audio, sliders, charts, drawing pads, text entry or scientific objects. Files dropped on the Studio window import as new components. Use the layer arrows to move an object in front of or behind another object. **Copy** creates a new object ID. A duplicate button retains its original event binding, so either button can operate the same action.
+## 2. The window
 
-Layers are local to their scene. Use **New scene** for a new visitor page. With no layer selected, edit the scene name, background and transition in the Inspector. Select **View → Global settings** for the exhibit title, first scene, logical dimensions, idle reset or startup timeline.
-
-## Connect a button without writing code
-
-1. Add a **Button** and change its text to **Add one**. In its **On press** field enter **tap.count** and apply the change.
-2. Add **Text**, set its text to **Visitors pressed {score} times**, and apply.
-3. Open **Logic** from the left rail or command palette. Choose **Variables** and enter `{"score":0}`.
-4. Choose **When–If–Do rule**. Enter **tap.count** for When and choose **always**. For Do choose **add**, set the target to **score** and the value to **1**. Save the rule.
-5. Test the exhibit. Every press increments the number. Reset visit restores the starting value.
-
-A rule can have several actions. Open an existing rule and choose **Edit all actions**. Choose **Node graph** to view event-to-action connections. Drag an event output onto another action to add a copy to that event’s sequence. The trace lists executed events and the variable watch shows their resulting values. A breakpoint holds actions until **Resume breakpoint**.
-
-## Choose an installation
-
-Open **Installation**, select a preset and choose **Apply installation layout**. The physical layout can change while you keep the visitor scenes. Set each output’s display index and resolution in **Mapping → Output settings**. Choose **@live** to follow the visitor’s current page or select a fixed scene for a dedicated projection. A surface can therefore show the same variable as the touchscreen with a different design.
-
-For a first optical check, project the alignment grid and adjust corner or mesh handles. Use the Mapping guide for sphere, room and cylinder conventions. Save a calibration profile to reuse an installation with another exhibit.
-
-## Multimedia and books
-
-Import PNG, JPEG, WebP or SVG artwork. Use embedded GLB/glTF or triangulatable OBJ files for 3D objects. Use WAV, MP3 or Ogg Vorbis audio and Ogg Theora (.ogv) video. A movie can be converted before import with the command in the build guide. A scene starts its media on entry. The first scene stream owns audio in a multi-output player to avoid duplicate playback.
-
-The **Flipbook** workspace treats scenes as pages. Import page images, arrange the scenes in the desired project order, then choose **Build page navigation**. This creates on-screen navigation, arrow-key actions and numbered page-input rules. The supplied book has three illustrated geology pages. Horizontal touch swipes turn linked pages. **tools/import_pdf.py** rasterizes a PDF into a standalone book project using Poppler. Complex original PDF interactions do not survive rasterization.
-
-## Play a timed show
-
-Open **Timeline** and create a timeline. **Add cue** places a scene change, state update or output request at a time in seconds. **Add animation key** sets an object’s x, y, rotation or opacity at that time. Add a second key to interpolate between the two. Choose linear, smooth or step interpolation. **Edit tracks** exposes duration, looping and the complete cue and key lists.
-
-Scrubbing moves the visual playhead and samples scene navigation and animation. It disarms outputs. General rules, old actuator pulses and visitor submissions are never replayed during a seek. Independent audio/video decoder positions are not chase-locked to the show clock. Try **Travelling waves** for a two-film sequence with slide and fade transitions.
-
-## Test a physical interaction on a desk
-
-Open **Reef finder → Hardware**. Choose **dial**, enter **70**, arm virtual outputs and inject the sample. The watched rock becomes **Sandstone**. Virtual **lamp** and **light** become 1. In Deployment choose **Launch standalone preview** to open both display windows. Drag the kiosk slider to change the projection. Each Studio workspace edit rebuilds the preview session, so arm only after editing.
-
-Hardware includes a board/pin planner and an authenticated gateway connection. A planned channel is a description. The site gateway profile and matching firmware determine what a physical pin actually does. The hardware guide walks through a complete Arduino bench setup.
-
-## Save, recover and hand over
-
-**Save** writes the project and maintains a .bak copy of the previous file. A short delay after an edit creates a separate recovery journal. Reopen Studio after an interruption and choose **Restore**, inspect the changes and save. A changed-on-disk manifest triggers a Save As request. Use one Studio editing session per workstation for recovery journal isolation.
-
-**File → Export package** creates a .oex containing the project and all referenced assets. The player verifies its checksums before playback. To edit a package, open it and use Save As. A package carries the logical hardware channels. Site secrets and local serial-device paths are configured on the playback computer.
-
-| Shortcut | Action |
+| Area | Purpose |
 | --- | --- |
-| Ctrl+S / Ctrl+Shift+S | Save / Save As |
-| Ctrl+O / Ctrl+P | Open project / search commands |
-| Ctrl+Z / Ctrl+Shift+Z or Ctrl+Y | Undo / redo |
-| Ctrl+D / Delete | Duplicate / remove selected layer |
-| F5 in Studio | Enter or leave visitor test |
-| F2 / F5 / F11 in normal Player | Calibration patterns / reset visit / full screen |
-| F10 / F12 in Player | Password-protected operator controls / immediate software disarm |
-| Left / right arrow in a linked book | Previous / next page |
+| Left rail | Workspaces, grouped as Design (Screens, Flipbook, Science, Media), Behaviour (Interactions, Timeline, Hardware), Install (Installation, 3D view, Projection) and Run (Try it, Live audience, Publish). Hover for a description. |
+| Scenes | Pages of the exhibit. ★ marks the first scene. Buttons below reorder, duplicate and delete. |
+| Layers | Objects on the current scene, front-most at the top. Buttons below change stacking, duplicate and delete. |
+| Centre | The selected workspace — on Screens, the canvas. |
+| Inspector | Properties of the selected layer, or of the scene when nothing is selected. |
 
-Use the splitter handles to resize panels. The Inspector can detach into a separate native window and dock again. Standard buttons and inputs participate in keyboard focus navigation. Test the actual visitor touch controller, keyboard, contrast, font size and reach at the installation.
+## 3. Design a screen
+
+- **Add component** opens a menu: text, button, panel, image, video, sound, 3D model, slider,
+  text box, drawing pad, gauge, live chart, solar system, particles, fractal, live audience board.
+  You can also drag image, sound, video and 3D files onto the window.
+- Click an object to select it. **Drag** to move; drag the bottom-right handle to resize. Moves snap
+  to 8 px; hold **Alt** for single pixels.
+- The **Inspector** applies changes as you type (press **Enter** or click elsewhere). Colours
+  open a colour picker. Several quick edits to the same field count as one undo step.
+- Text can show live values: `Visitors pressed {score} times` displays the variable `score`.
+- **Hidden** layers are not drawn; **Locked** layers cannot be clicked on the canvas.
+- Video must be Ogg Theora. Convert with
+  `ffmpeg -i input.mp4 -c:v libtheora -q:v 7 -c:a libvorbis output.ogv`.
+
+## 4. Make it interactive
+
+### Buttons — When pressed
+
+Select a button and choose an action under **When pressed**: go to a scene, set or add to a
+variable, play a timeline, send a value to a device output, next/previous page, or reset the visit.
+That is all a simple navigation kiosk needs.
+
+### Interactions
+
+For anything richer, open **Interactions**. Every rule reads as a sentence:
+
+> When button “Mars” is pressed → set planet to “Mars”; set days to 686.98; go to scene “Mars facts”.
+
+**+ New interaction** opens three steps:
+
+1. **When** — pick from everything that can happen: each button, slider and text box (by name),
+   each sensor channel, each scene opening, a new visit starting, next/previous page — or type a
+   custom event name.
+2. **If** (optional) — compare the incoming value or a variable with a value.
+3. **Do** — one or more actions, in order. The target adapts to the action: a scene list, a
+   timeline list, a variable name (with suggestions under **…**), an output channel.
+
+The sentence at the bottom updates as you edit. **Variables…** sets starting values for each visit.
+**Try an event** sends any event by hand; the *Variables now* and *Event trace* panels show what
+happened. **● Break** pauses the visitor session when a rule fires, so you can inspect it;
+**Resume after breakpoint** continues. **Graph view** shows rules as connected nodes.
+
+### Try it
+
+Press **F5** or **▶ Try it** to use the exhibit as a visitor — buttons work, timelines play and the
+idle reset runs. **F5** returns to editing. **Reset visit** starts over.
+
+## 5. Timelines
+
+A timeline runs actions at set times (cues) and animates layers (keys) — for attract loops,
+narrated shows or synchronised effects. In **Timeline**: **+ New timeline**, drag the scrubber,
+then **+ Cue at playhead** or **+ Animation key at playhead**. Two keys on the same property animate
+between them (linear, smooth or step). Scrubbing never replays device outputs: it switches them
+off. *View → Exhibit settings* can start a timeline automatically and reset idle visitors.
+
+## 6. Flipbooks
+
+Each scene is a page. In **Flipbook**, add blank pages or pages from images, arrange the scenes,
+and press **Build page navigation**: it adds ‹ › buttons, arrow-key and swipe turning, and rules
+for a page sensor (RFID, markers) that sends a page number. Run it again after adding pages.
+Whole PDFs: `python3 tools/import_pdf.py book.pdf my-book` (needs Poppler).
+
+## 7. Hardware
+
+Open **Hardware**.
+
+- **Try it without hardware** — a slider and a *Pulse* button for every input channel, and lamps
+  for every output. Tick **Arm virtual outputs** to see outputs switch.
+- **Connect a board** — pick the board or protocol, plug the board in, press **Refresh**, choose
+  its port and press **Start hardware service**. The status line shows the connection. Press
+  **Arm outputs** before anything can switch on; unplugging, restarting or reconnecting always
+  switches outputs off again.
+- **Firmware and wiring** — the board pin planner, the offline **block editor** (drag sensor
+  blocks, export an Arduino sketch), wiring drawings, and the exact Arduino CLI commands.
+
+On Linux, allow your user to open USB serial devices once:
+`sudo usermod -aG dialout $USER` (then log out and in). Install the USB extras with
+`bash setup.sh --hardware`.
+
+A software stop is not an emergency stop. Anything that moves, heats or uses mains power needs a
+hard-wired emergency stop and suitable drivers — see [HARDWARE.md](HARDWARE.md).
+
+## 8. Live audience
+
+Polls, quizzes, word clouds, idea boards, Q&A and a spinner wheel on visitors' phones. See
+[LIVE-AUDIENCE.md](LIVE-AUDIENCE.md).
+
+## 9. Screens and projectors
+
+**Installation** chooses a layout preset (kiosk, video wall, panorama, cyclorama, 360° ring,
+sphere, dome, immersive room, CAVE, physical book, Pepper's ghost …) with real dimensions in
+metres. Content scenes are kept, so the same exhibit can move to a different room.
+
+**Projection** previews each output with exhibit content, an alignment grid or colour bars. Drag
+the four corners (or a 3 × 3 mesh) until the grid lines up with the surface. **Output settings**
+sets the screen number, resolution, which scene it shows, gamma, black lift and edge-blend widths.
+Calibration profiles can be saved and reused. The camera wizard and measured reports are described
+in [CALIBRATION.md](CALIBRATION.md).
+
+## 10. Publish and run
+
+**Publish → Export .oex package** writes one file containing the project and all media, with
+checksums. On the exhibit computer:
+
+```sh
+bash player.sh exhibit.oex --kiosk      # Linux
+Player.cmd exhibit.oex --kiosk          # Windows
+```
+
+| Player key | Action |
+| --- | --- |
+| F11 | Full screen on/off |
+| F2 | Cycle test patterns |
+| F5 | Reset the visitor session |
+| F10 | Operator panel (password) |
+| F12 | Switch all device outputs off immediately |
+| ← → | Previous / next page |
+
+In kiosk mode Escape, F11, F2 and F5 do nothing, so visitors cannot leave or reset the exhibit;
+use the operator panel.
+
+The first time someone opens the **operator panel (F10)** on a computer, they choose its password
+(stored only as a salted hash on that computer). A site can instead provide
+`OPENEXHIBIT_OPERATOR_KEY` through its service manager. Start-at-login, offline updates and
+rollback are in [DEPLOYMENT.md](DEPLOYMENT.md).
+
+## 11. Saving and recovery
+
+**Ctrl+S** saves; the previous version is kept as `project.oes.json.bak`. Unsaved edits are
+copied to a recovery file within a second; after a crash, Studio offers to restore them. Closing
+with unsaved changes asks whether to save. Media files are checked by SHA-256 when an exhibit
+opens or is exported.
+
+## Keyboard shortcuts
+
+| Keys | Action |
+| --- | --- |
+| Ctrl+N / Ctrl+O / Ctrl+S / Ctrl+Shift+S | New / open / save / save as |
+| Ctrl+E | Export .oex package |
+| Ctrl+Z / Ctrl+Shift+Z (or Ctrl+Y) | Undo / redo |
+| Ctrl+D / Delete | Duplicate / delete the selected layer |
+| Ctrl+P | Command palette (type to search, Enter runs the first match) |
+| F5 | Try it / back to editing |
+| Ctrl+Q | Quit |

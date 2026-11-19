@@ -6,3 +6,6 @@ dist/
 *.bak
 *.writing-*
 firmware/blockly/node_modules/
+.venv/
+downloads/
+.ruff_cache/
