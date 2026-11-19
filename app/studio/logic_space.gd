@@ -399,7 +399,7 @@ func _picker(options: Array, current: String, on_change: Callable) -> OptionButt
 	return menu
 
 
-## A text field with a ▾ menu of suggestions (variables, channels, events).
+## A text field with a “…” menu of suggestions (variables, channels, events).
 func _combo(current: String, suggestions: Array, kind: String, on_change: Callable) -> Control:
 	var row := HBoxContainer.new()
 	var line := LineEdit.new()
@@ -415,7 +415,7 @@ func _combo(current: String, suggestions: Array, kind: String, on_change: Callab
 	row.add_child(line)
 	if suggestions.size():
 		var menu := MenuButton.new()
-		menu.text = "▾"
+		menu.text = "…"
 		menu.tooltip_text = "Choose a known " + kind
 		for item in suggestions:
 			menu.get_popup().add_item(str(item) if str(item) != "$value" else "$value (the incoming value)")

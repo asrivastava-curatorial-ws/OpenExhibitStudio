@@ -409,7 +409,7 @@ func _build_explorer() -> Control:
 	scene_tools.add_child(_tool_button("↑", move_scene.bind(-1), "Move scene earlier"))
 	scene_tools.add_child(_tool_button("↓", move_scene.bind(1), "Move scene later"))
 	scene_tools.add_child(_tool_button("⧉", duplicate_scene, "Duplicate scene"))
-	scene_tools.add_child(_tool_button("🗑", delete_scene, "Delete scene"))
+	scene_tools.add_child(_tool_button("✕", delete_scene, "Delete scene"))
 
 	column.add_child(HSeparator.new())
 	column.add_child(_section_header("LAYERS", "+", add_menu, "Add a component"))
@@ -423,7 +423,7 @@ func _build_explorer() -> Control:
 	layer_tools.add_child(_tool_button("↑", move_layer.bind(1), "Bring forward"))
 	layer_tools.add_child(_tool_button("↓", move_layer.bind(-1), "Send backward"))
 	layer_tools.add_child(_tool_button("⧉", duplicate_object, "Duplicate (Ctrl+D)"))
-	layer_tools.add_child(_tool_button("🗑", delete_object, "Delete (Del)"))
+	layer_tools.add_child(_tool_button("✕", delete_object, "Delete layer (Del)"))
 	return panel
 
 
@@ -489,7 +489,7 @@ func refresh(keep_inspector := false) -> void:
 	var objects: Array = scene_data().get("objects", [])
 	for i in range(objects.size() - 1, -1, -1):
 		var o: Dictionary = objects[i]
-		var flags := ("  ◌" if o.get("hidden", false) else "") + ("  🔒" if o.get("locked", false) else "")
+		var flags := ("  [hidden]" if o.get("hidden", false) else "") + ("  [locked]" if o.get("locked", false) else "")
 		_layers.add_item(str(o.get("name", o.id)) + flags)
 		var index := _layers.item_count - 1
 		_layers.set_item_metadata(index, o.id)

@@ -162,7 +162,7 @@ func received(result: int, code: int, _headers: PackedStringArray, body: PackedB
 			for item in s.get("distribution", []).slice(0, 4):
 				box.add_child(line("%s    %d" % [item[0], item[1]], 20, StyleKit.BLUE))
 			if s.get("spinner") is Dictionary and s.spinner.get("winner"):
-				box.add_child(line("🎯  " + str(s.spinner.winner), 44, StyleKit.BLUE))
+				box.add_child(line("Winner:  " + str(s.spinner.winner), 44, StyleKit.BLUE))
 			for idea in s.get("ideas", []).slice(0, 4):
 				box.add_child(line("▲ %d   %s" % [int(idea.votes), idea.body], 22, StyleKit.TEXT))
 		clock_text = line("", 21, StyleKit.MUTED)

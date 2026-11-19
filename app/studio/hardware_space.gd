@@ -128,7 +128,7 @@ func _virtual_section(box: VBoxContainer) -> void:
 func _draw_lamps(lamps: HFlowContainer, outputs: Array) -> void:
 	StyleKit.clear(lamps)
 	if outputs.is_empty():
-		lamps.add_child(host.logic._muted("No outputs are used by this exhibit."))
+		lamps.add_child(StyleKit.label("No outputs are used by this exhibit.", 12, StyleKit.MUTED))
 		return
 	for channel in outputs:
 		var value = host.session.virtual_outputs.get(channel)
