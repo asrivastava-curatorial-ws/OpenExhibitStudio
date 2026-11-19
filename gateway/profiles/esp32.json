@@ -1,0 +1,1 @@
+{"devices":[{"id":"esp32","transport":"mqtt","host":"127.0.0.1","port":1883,"topic":"oes/esp32","username":"exhibit-gateway","password_env":"OES_MQTT_PASSWORD","protocol":"oes1","inputs":["button"],"outputs":{"light":[0,1],"servo":[30,150]}}],"lockout":false}

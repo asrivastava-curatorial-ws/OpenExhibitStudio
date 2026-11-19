@@ -1,0 +1,347 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Waves in three languages",
+  "canvas": [
+    2160,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "waves": {
+      "path": "assets/waves.svg",
+      "sha256": "7feb6096f79e4649ecb9643da9d28b19a1065670524ce6bbdfac94380b84cec4"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Wave field",
+      "background": "#101e2e",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "name0",
+          "name": "Name0",
+          "kind": "text",
+          "rect": [
+            42,
+            94,
+            635,
+            110
+          ],
+          "text": "Waves",
+          "font": 67,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "sub0",
+          "name": "Sub0",
+          "kind": "text",
+          "rect": [
+            45,
+            233,
+            636,
+            112
+          ],
+          "text": "A wave transfers energy.",
+          "font": 36,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "name1",
+          "name": "Name1",
+          "kind": "text",
+          "rect": [
+            762,
+            94,
+            635,
+            110
+          ],
+          "text": "তরঙ্গ",
+          "font": 67,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "sub1",
+          "name": "Sub1",
+          "kind": "text",
+          "rect": [
+            765,
+            233,
+            636,
+            112
+          ],
+          "text": "তরঙ্গ শক্তি সঞ্চালন করে।",
+          "font": 36,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "name2",
+          "name": "Name2",
+          "kind": "text",
+          "rect": [
+            1482,
+            94,
+            635,
+            110
+          ],
+          "text": "तरंगें",
+          "font": 67,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "sub2",
+          "name": "Sub2",
+          "kind": "text",
+          "rect": [
+            1485,
+            233,
+            636,
+            112
+          ],
+          "text": "तरंग ऊर्जा का संचार करती है।",
+          "font": 36,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "wave",
+          "name": "Wave",
+          "kind": "image",
+          "rect": [
+            0,
+            388,
+            2160,
+            220
+          ],
+          "asset": "waves",
+          "stretch": true
+        }
+      ]
+    }
+  ],
+  "variables": {},
+  "rules": [],
+  "timelines": [],
+  "devices": [],
+  "installation": {
+    "preset": "Cyclorama",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "cylinder",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "aim": [
+          -1.73205080756888,
+          0,
+          1.0
+        ],
+        "throw": 0.46875,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_2",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 1,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "aim": [
+          0.0,
+          0,
+          2.0
+        ],
+        "throw": 0.46875,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_3",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 2,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "aim": [
+          1.73205080756888,
+          0,
+          1.0
+        ],
+        "throw": 0.46875,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": ""
+  },
+  "extensions": {}
+}

@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>OpenExhibit · Live quiz</title><link rel="stylesheet" href="/style.css"></head>
+<body><header><span class="mark" aria-hidden="true">◈</span><strong>OpenExhibit</strong><span class="head-rule"></span><span id="role"></span><span id="connection" role="status">Connecting…</span></header>
+<main><div class="titleRow"><div><div class="eyebrow" id="phase"></div><h1 id="title">Live quiz</h1></div><div id="code" class="roomCode"></div></div>
+<div id="error" role="alert" hidden></div><section id="join" hidden></section><div class="layout"><section id="stage" class="card"></section><aside id="side"></aside></div>
+<section id="discussion" class="card" hidden><h2>Audience questions</h2><div id="ask"></div><div id="messages"></div></section>
+</main><dialog id="editor"><form id="editForm"><div class="titleRow"><h2>Contest editor</h2><button type="button" id="dismiss">Close</button></div><div id="editBody"></div><p id="editError" role="alert"></p><div class="toolbar"><button class="primary" type="submit">Save deck to room</button><button id="exportDeck" type="button">Download deck</button><label class="fileButton">Import JSON, PPTX or PDF<input type="file" id="importDeck" accept=".json,.pptx,.pdf"></label></div></form></dialog>
+<script defer src="/app.js"></script></body></html>

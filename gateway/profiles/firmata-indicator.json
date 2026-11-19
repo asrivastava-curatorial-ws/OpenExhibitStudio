@@ -1,0 +1,1 @@
+{"devices":[{"id":"uno","transport":"serial","protocol":"firmata","port":"/dev/ttyACM0","baud":57600,"purpose":"indicator_lighting","inputs":["dial"],"outputs":{"lamp":[0,1]},"pins":[{"mode":"analog","pin":0,"channel":"dial"},{"mode":"led","pin":13,"channel":"lamp"}]}],"lockout":false}

@@ -1,0 +1,20 @@
+Verified Ubuntu 24.04 amd64 base sha256:77eb101c607d6e3d4f5ad0c8a02c2136c689b98aba1f359e6502ba517e5c57ec
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+Selecting previously unselected package openexhibit-studio.
+(Reading database ... 6394 files and directories currently installed.)
+Preparing to unpack /tmp/oes-current.deb ...
+Unpacking openexhibit-studio (0.2.0) ...
+Setting up openexhibit-studio (0.2.0) ...
+openexhibit-studio	0.2.0
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+PASS all 14 installed example entry points completed headless
+PASS installed Ubuntu launcher created native window: OpenExhibit Studio
+PASS installed Ubuntu launcher created native window: A field guide to rocks
+PASS clean Ubuntu 24.04 amd64 userspace: dpkg completed, package DB audited, native Studio and Player windows observed.
+
+Windows setup is cross-built and unsigned. Native Windows acceptance remains pending.
+
+PASS Windows installer archive test plus 183 individual extracted files verified byte-for-byte including both packs, engine and Python.

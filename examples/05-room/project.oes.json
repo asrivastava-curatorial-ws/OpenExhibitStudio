@@ -1,0 +1,970 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Inside a wave",
+  "canvas": [
+    1280,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "direction": {
+      "path": "assets/direction.svg",
+      "sha256": "dda515c36aed4557e16d40fdbdd804f50481594f643e458ce63a61396025e561"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Source",
+      "background": "#132b3b",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "WAVE ROOM   /   FRONT",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Source",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "A disturbance starts here.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "field",
+          "name": "Field",
+          "kind": "particles",
+          "rect": [
+            80,
+            236,
+            1120,
+            415
+          ],
+          "color": "#8ddadc"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    },
+    {
+      "id": "right",
+      "name": "Propagation",
+      "background": "#163447",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "WAVE ROOM   /   RIGHT",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Propagation",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "Follow the disturbance across the room.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "field",
+          "name": "Field",
+          "kind": "particles",
+          "rect": [
+            80,
+            236,
+            1120,
+            415
+          ],
+          "color": "#a2c3eb"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    },
+    {
+      "id": "back",
+      "name": "Reflection",
+      "background": "#203144",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "WAVE ROOM   /   BACK",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Reflection",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "A boundary returns part of the wave.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "field",
+          "name": "Field",
+          "kind": "particles",
+          "rect": [
+            80,
+            236,
+            1120,
+            415
+          ],
+          "color": "#e1b597"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    },
+    {
+      "id": "left",
+      "name": "Interference",
+      "background": "#203445",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "WAVE ROOM   /   LEFT",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Interference",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "Overlapping waves add together.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "field",
+          "name": "Field",
+          "kind": "particles",
+          "rect": [
+            80,
+            236,
+            1120,
+            415
+          ],
+          "color": "#d6b0dc"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    },
+    {
+      "id": "floor",
+      "name": "Particle motion",
+      "background": "#102e32",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "WAVE ROOM   /   FLOOR",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Particle motion",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "Touch the surface to change the field.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "field",
+          "name": "Field",
+          "kind": "particles",
+          "rect": [
+            80,
+            236,
+            1120,
+            415
+          ],
+          "color": "#88e4b1"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    },
+    {
+      "id": "ceiling",
+      "name": "Wavefront",
+      "background": "#232639",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "WAVE ROOM   /   CEILING",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Wavefront",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "A wavefront joins points at the same phase.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "field",
+          "name": "Field",
+          "kind": "particles",
+          "rect": [
+            80,
+            236,
+            1120,
+            415
+          ],
+          "color": "#c1b1f1"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    }
+  ],
+  "variables": {},
+  "rules": [],
+  "timelines": [],
+  "devices": [],
+  "installation": {
+    "preset": "Immersive room",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Front",
+        "kind": "plane",
+        "width": 4.0,
+        "height": 4.0,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          -2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "s2",
+        "name": "Right",
+        "kind": "plane",
+        "width": 4.0,
+        "height": 4.0,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          2,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          90,
+          0
+        ]
+      },
+      {
+        "id": "s3",
+        "name": "Back",
+        "kind": "plane",
+        "width": 4.0,
+        "height": 4.0,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          2
+        ],
+        "rotation": [
+          0,
+          180,
+          0
+        ]
+      },
+      {
+        "id": "s4",
+        "name": "Left",
+        "kind": "plane",
+        "width": 4.0,
+        "height": 4.0,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          -2,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      {
+        "id": "s5",
+        "name": "Floor",
+        "kind": "plane",
+        "width": 4.0,
+        "height": 4.0,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          -2,
+          0
+        ],
+        "rotation": [
+          90,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "s6",
+        "name": "Ceiling",
+        "kind": "plane",
+        "width": 4.0,
+        "height": 4.0,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          2,
+          0
+        ],
+        "rotation": [
+          -90,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "main",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -7.0,
+          0,
+          4
+        ],
+        "aim": [
+          -7.0,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_2",
+        "surface": "s2",
+        "scene": "right",
+        "screen": 1,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -4.2,
+          0,
+          4
+        ],
+        "aim": [
+          -4.2,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_3",
+        "surface": "s3",
+        "scene": "back",
+        "screen": 2,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -1.4,
+          0,
+          4
+        ],
+        "aim": [
+          -1.4,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_4",
+        "surface": "s4",
+        "scene": "left",
+        "screen": 3,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          1.4,
+          0,
+          4
+        ],
+        "aim": [
+          1.4,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_5",
+        "surface": "s5",
+        "scene": "floor",
+        "screen": 4,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          4.2,
+          0,
+          4
+        ],
+        "aim": [
+          4.2,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_6",
+        "surface": "s6",
+        "scene": "ceiling",
+        "screen": 5,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          7.0,
+          0,
+          4
+        ],
+        "aim": [
+          7.0,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": ""
+  },
+  "extensions": {}
+}

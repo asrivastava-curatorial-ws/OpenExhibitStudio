@@ -1,0 +1,801 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Rock pages under projection",
+  "canvas": [
+    1280,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "igneous": {
+      "path": "assets/igneous.svg",
+      "sha256": "73e2f327d951fbf5c87f581ae37466513682ad38a6dcb34833e15b50dd9080c6"
+    },
+    "sedimentary": {
+      "path": "assets/sedimentary.svg",
+      "sha256": "063b953d10485e560c4f418208bd1195c61629f9d1dd9c4c4b99e05b4180e7f5"
+    },
+    "metamorphic": {
+      "path": "assets/metamorphic.svg",
+      "sha256": "b1ac8d14af495a5a4d1540fa77f50feb287cafe52434b19c1c64f7de369d0b62"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Igneous",
+      "background": "#162631",
+      "transition": "slide",
+      "objects": [
+        {
+          "id": "series",
+          "name": "Series",
+          "kind": "text",
+          "rect": [
+            50,
+            34,
+            850,
+            46
+          ],
+          "text": "FIELD NOTES   /   GEOLOGY",
+          "font": 20,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "heading",
+          "name": "Heading",
+          "kind": "text",
+          "rect": [
+            48,
+            107,
+            620,
+            82
+          ],
+          "text": "Igneous",
+          "font": 53,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "sub",
+          "name": "Sub",
+          "kind": "text",
+          "rect": [
+            50,
+            214,
+            572,
+            93
+          ],
+          "text": "Cooling creates crystals.",
+          "font": 30,
+          "color": "#f0cb9c"
+        },
+        {
+          "id": "detail",
+          "name": "Detail",
+          "kind": "text",
+          "rect": [
+            50,
+            325,
+            550,
+            167
+          ],
+          "text": "Magma or lava solidifies. Slow cooling can give crystals more time to grow.",
+          "font": 27,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "specimen",
+          "name": "Specimen",
+          "kind": "image",
+          "rect": [
+            655,
+            150,
+            570,
+            390
+          ],
+          "asset": "igneous"
+        },
+        {
+          "id": "caption",
+          "name": "Caption",
+          "kind": "text",
+          "rect": [
+            665,
+            550,
+            550,
+            42
+          ],
+          "text": "Schematic rock texture",
+          "font": 20,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "previous",
+          "name": "Previous",
+          "kind": "button",
+          "rect": [
+            52,
+            625,
+            220,
+            62
+          ],
+          "text": "‹  Previous",
+          "font": 23,
+          "event": "book.prev",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "next",
+          "name": "Next",
+          "kind": "button",
+          "rect": [
+            1000,
+            625,
+            222,
+            62
+          ],
+          "text": "Next  ›",
+          "font": 23,
+          "event": "book.next",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "page",
+          "name": "Page",
+          "kind": "text",
+          "rect": [
+            552,
+            622,
+            190,
+            65
+          ],
+          "text": "01 / 03",
+          "font": 23,
+          "color": "#75e2cb",
+          "align": 1
+        }
+      ]
+    },
+    {
+      "id": "layers",
+      "name": "Sedimentary",
+      "background": "#162631",
+      "transition": "slide",
+      "objects": [
+        {
+          "id": "series",
+          "name": "Series",
+          "kind": "text",
+          "rect": [
+            50,
+            34,
+            850,
+            46
+          ],
+          "text": "FIELD NOTES   /   GEOLOGY",
+          "font": 20,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "heading",
+          "name": "Heading",
+          "kind": "text",
+          "rect": [
+            48,
+            107,
+            620,
+            82
+          ],
+          "text": "Sedimentary",
+          "font": 53,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "sub",
+          "name": "Sub",
+          "kind": "text",
+          "rect": [
+            50,
+            214,
+            572,
+            93
+          ],
+          "text": "Sediments become rock.",
+          "font": 30,
+          "color": "#f0cb9c"
+        },
+        {
+          "id": "detail",
+          "name": "Detail",
+          "kind": "text",
+          "rect": [
+            50,
+            325,
+            550,
+            167
+          ],
+          "text": "Layers of sediment can be compacted and cemented together.",
+          "font": 27,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "specimen",
+          "name": "Specimen",
+          "kind": "image",
+          "rect": [
+            655,
+            150,
+            570,
+            390
+          ],
+          "asset": "sedimentary"
+        },
+        {
+          "id": "caption",
+          "name": "Caption",
+          "kind": "text",
+          "rect": [
+            665,
+            550,
+            550,
+            42
+          ],
+          "text": "Schematic rock texture",
+          "font": 20,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "previous",
+          "name": "Previous",
+          "kind": "button",
+          "rect": [
+            52,
+            625,
+            220,
+            62
+          ],
+          "text": "‹  Previous",
+          "font": 23,
+          "event": "book.prev",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "next",
+          "name": "Next",
+          "kind": "button",
+          "rect": [
+            1000,
+            625,
+            222,
+            62
+          ],
+          "text": "Next  ›",
+          "font": 23,
+          "event": "book.next",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "page",
+          "name": "Page",
+          "kind": "text",
+          "rect": [
+            552,
+            622,
+            190,
+            65
+          ],
+          "text": "02 / 03",
+          "font": 23,
+          "color": "#75e2cb",
+          "align": 1
+        }
+      ]
+    },
+    {
+      "id": "pressure",
+      "name": "Metamorphic",
+      "background": "#162631",
+      "transition": "slide",
+      "objects": [
+        {
+          "id": "series",
+          "name": "Series",
+          "kind": "text",
+          "rect": [
+            50,
+            34,
+            850,
+            46
+          ],
+          "text": "FIELD NOTES   /   GEOLOGY",
+          "font": 20,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "heading",
+          "name": "Heading",
+          "kind": "text",
+          "rect": [
+            48,
+            107,
+            620,
+            82
+          ],
+          "text": "Metamorphic",
+          "font": 53,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "sub",
+          "name": "Sub",
+          "kind": "text",
+          "rect": [
+            50,
+            214,
+            572,
+            93
+          ],
+          "text": "Heat and pressure transform.",
+          "font": 30,
+          "color": "#f0cb9c"
+        },
+        {
+          "id": "detail",
+          "name": "Detail",
+          "kind": "text",
+          "rect": [
+            50,
+            325,
+            550,
+            167
+          ],
+          "text": "Minerals and rock textures change while the rock remains predominantly solid.",
+          "font": 27,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "specimen",
+          "name": "Specimen",
+          "kind": "image",
+          "rect": [
+            655,
+            150,
+            570,
+            390
+          ],
+          "asset": "metamorphic"
+        },
+        {
+          "id": "caption",
+          "name": "Caption",
+          "kind": "text",
+          "rect": [
+            665,
+            550,
+            550,
+            42
+          ],
+          "text": "Schematic rock texture",
+          "font": 20,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "previous",
+          "name": "Previous",
+          "kind": "button",
+          "rect": [
+            52,
+            625,
+            220,
+            62
+          ],
+          "text": "‹  Previous",
+          "font": 23,
+          "event": "book.prev",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "next",
+          "name": "Next",
+          "kind": "button",
+          "rect": [
+            1000,
+            625,
+            222,
+            62
+          ],
+          "text": "Next  ›",
+          "font": 23,
+          "event": "book.next",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "page",
+          "name": "Page",
+          "kind": "text",
+          "rect": [
+            552,
+            622,
+            190,
+            65
+          ],
+          "text": "03 / 03",
+          "font": 23,
+          "color": "#75e2cb",
+          "align": 1
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "page": 1
+  },
+  "rules": [
+    {
+      "id": "rule_1",
+      "event": "enter.main",
+      "actions": [
+        {
+          "op": "set",
+          "target": "page",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "rule_2",
+      "event": "book.prev",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "main",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$page",
+        "right": 1
+      }
+    },
+    {
+      "id": "rule_3",
+      "event": "book.next",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "layers",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$page",
+        "right": 1
+      }
+    },
+    {
+      "id": "rule_4",
+      "event": "input.page",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "main",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$value",
+        "right": 1
+      }
+    },
+    {
+      "id": "rule_5",
+      "event": "enter.layers",
+      "actions": [
+        {
+          "op": "set",
+          "target": "page",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "rule_6",
+      "event": "book.prev",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "main",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$page",
+        "right": 2
+      }
+    },
+    {
+      "id": "rule_7",
+      "event": "book.next",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "pressure",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$page",
+        "right": 2
+      }
+    },
+    {
+      "id": "rule_8",
+      "event": "input.page",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "layers",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$value",
+        "right": 2
+      }
+    },
+    {
+      "id": "rule_9",
+      "event": "enter.pressure",
+      "actions": [
+        {
+          "op": "set",
+          "target": "page",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "rule_10",
+      "event": "book.prev",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "layers",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$page",
+        "right": 3
+      }
+    },
+    {
+      "id": "rule_11",
+      "event": "book.next",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "pressure",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$page",
+        "right": 3
+      }
+    },
+    {
+      "id": "rule_12",
+      "event": "input.page",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "pressure",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$value",
+        "right": 3
+      }
+    }
+  ],
+  "timelines": [],
+  "devices": [
+    {
+      "id": "book",
+      "channels": [
+        {
+          "id": "page",
+          "direction": "input"
+        }
+      ]
+    }
+  ],
+  "installation": {
+    "preset": "Physical book",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "plane",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "s2",
+        "name": "Surface 2",
+        "kind": "plane",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0,
+          0.5,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -1.4,
+          0,
+          4
+        ],
+        "aim": [
+          -1.4,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_2",
+        "surface": "s2",
+        "scene": "@live",
+        "screen": 1,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.5,
+          0,
+          0.5,
+          1
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          1.4,
+          0,
+          4
+        ],
+        "aim": [
+          1.4,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": ""
+  },
+  "extensions": {}
+}

@@ -1,0 +1,429 @@
+CORE
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS schema accepts a fresh exhibit
+PASS save a project
+PASS save and reopen preserve data
+PASS write an exhibit package
+PASS verify and reopen package
+PASS visitor rule updates session state
+PASS event cycles bounded and reported
+PASS independent saves preserve private extensions
+PASS interrupted-save backup restored
+PASS newer file version rejected
+PASS opt-in arithmetic expression
+PASS nested timeline cycle bounded
+12 checks, 0 failures
+
+OFFLINE
+Verified IPv4/IPv6 socket creation disabled for this process tree.
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS checksum and schema · 01-solar
+PASS relocate assets · 01-solar
+PASS portable round trip · 01-solar
+PASS checksum and schema · 02-panorama
+PASS relocate assets · 02-panorama
+PASS portable round trip · 02-panorama
+PASS checksum and schema · 03-earth
+PASS relocate assets · 03-earth
+PASS portable round trip · 03-earth
+PASS checksum and schema · 04-cyclorama
+PASS relocate assets · 04-cyclorama
+PASS portable round trip · 04-cyclorama
+PASS checksum and schema · 05-room
+PASS relocate assets · 05-room
+PASS portable round trip · 05-room
+PASS checksum and schema · 06-digital-book
+PASS relocate assets · 06-digital-book
+PASS portable round trip · 06-digital-book
+PASS checksum and schema · 07-physical-book
+PASS relocate assets · 07-physical-book
+PASS portable round trip · 07-physical-book
+PASS checksum and schema · 08-arduino
+PASS relocate assets · 08-arduino
+PASS portable round trip · 08-arduino
+PASS checksum and schema · 09-esp32
+PASS relocate assets · 09-esp32
+PASS portable round trip · 09-esp32
+PASS checksum and schema · 10-floor
+PASS relocate assets · 10-floor
+PASS portable round trip · 10-floor
+PASS checksum and schema · 11-mixed
+PASS relocate assets · 11-mixed
+PASS portable round trip · 11-mixed
+PASS checksum and schema · 12-postcards
+PASS relocate assets · 12-postcards
+PASS portable round trip · 12-postcards
+PASS checksum and schema · 13-shows
+PASS relocate assets · 13-shows
+PASS portable round trip · 13-shows
+PASS checksum and schema · 14-live-quiz
+PASS relocate assets · 14-live-quiz
+PASS portable round trip · 14-live-quiz
+PASS all fourteen exhibit examples present
+PASS edited canvas text updates shared renderer
+PASS undo restores the exact previous object
+PASS redo returns the edited object
+PASS visitor button updates another native control
+PASS workspace opens · Canvas
+PASS workspace opens · Installation
+PASS workspace opens · 3D scene
+PASS workspace opens · Mapping
+PASS workspace opens · Timeline
+PASS workspace opens · Logic
+PASS workspace opens · Hardware
+PASS workspace opens · Flipbook
+PASS workspace opens · Science
+PASS workspace opens · Assets
+PASS workspace opens · Test
+PASS workspace opens · Deployment
+PASS workspace opens · Live quiz
+PASS canvas transform commits to project
+PASS undo canvas transform
+PASS duplicate obtains independent ID
+PASS authoring save entry point
+PASS concurrent modification detected
+PASS valid preset · Kiosk
+PASS valid preset · Multiple kiosks
+PASS valid preset · Interactive table
+PASS valid preset · Mixed displays
+PASS valid preset · Video wall
+PASS valid preset · Single projector
+PASS valid preset · Linear panorama
+PASS valid preset · Vertical panorama
+PASS valid preset · Cyclorama
+PASS valid preset · 360° ring
+PASS valid preset · Earth sphere
+PASS valid preset · Fulldome
+PASS valid preset · Immersive room
+PASS valid preset · L-shaped room
+PASS valid preset · U-shaped room
+PASS valid preset · CAVE
+PASS valid preset · Custom object
+PASS valid preset · Relief map
+PASS valid preset · Digital book
+PASS valid preset · Projected book
+PASS valid preset · Physical book
+PASS valid preset · Touchscreen + projection
+PASS valid preset · Pepper’s Ghost
+PASS valid preset · Mixed installation
+PASS corner pin is a perspective homography
+PASS mesh warp recovers displaced central control point
+PASS warp, blend and geometry persist
+PASS 360-degree cylinder seam and cardinal sectors
+PASS fixed cylinder height controls vertical mapping
+PASS equatorial projector layout flags uncovered north pole
+PASS equirectangular sphere rotation
+PASS measured camera report applies to actual Studio output
+PASS undo restores prior calibration
+PASS wrong-resolution camera report cannot overwrite the output
+PASS two native windows with independent requested sizes
+PASS fresh runtime starts with outputs disarmed
+PASS one physical-channel event requests two output devices
+PASS one input updates kiosk and projector scene
+PASS visitor reset clears outputs and state
+PASS standalone feed maps pointer input to native scene button
+PASS timeline changes film at six seconds
+PASS seeking restores presentation and disarms outputs
+PASS submitted drawing is a snapshot
+PASS clearing kiosk preserves wall submission
+PASS page sensor selects a physical book spread
+PASS manual fallback turns one book page
+PASS traversal path rejected
+PASS 30,000 sensor events keep bounded traces and samples
+RESULT 113 integration checks, 0 failures.
+
+SCREENS
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+
+GRAPHICS
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS checksum and schema · 01-solar
+PASS relocate assets · 01-solar
+PASS portable round trip · 01-solar
+PASS checksum and schema · 02-panorama
+PASS relocate assets · 02-panorama
+PASS portable round trip · 02-panorama
+PASS checksum and schema · 03-earth
+PASS relocate assets · 03-earth
+PASS portable round trip · 03-earth
+PASS checksum and schema · 04-cyclorama
+PASS relocate assets · 04-cyclorama
+PASS portable round trip · 04-cyclorama
+PASS checksum and schema · 05-room
+PASS relocate assets · 05-room
+PASS portable round trip · 05-room
+PASS checksum and schema · 06-digital-book
+PASS relocate assets · 06-digital-book
+PASS portable round trip · 06-digital-book
+PASS checksum and schema · 07-physical-book
+PASS relocate assets · 07-physical-book
+PASS portable round trip · 07-physical-book
+PASS checksum and schema · 08-arduino
+PASS relocate assets · 08-arduino
+PASS portable round trip · 08-arduino
+PASS checksum and schema · 09-esp32
+PASS relocate assets · 09-esp32
+PASS portable round trip · 09-esp32
+PASS checksum and schema · 10-floor
+PASS relocate assets · 10-floor
+PASS portable round trip · 10-floor
+PASS checksum and schema · 11-mixed
+PASS relocate assets · 11-mixed
+PASS portable round trip · 11-mixed
+PASS checksum and schema · 12-postcards
+PASS relocate assets · 12-postcards
+PASS portable round trip · 12-postcards
+PASS checksum and schema · 13-shows
+PASS relocate assets · 13-shows
+PASS portable round trip · 13-shows
+PASS checksum and schema · 14-live-quiz
+PASS relocate assets · 14-live-quiz
+PASS portable round trip · 14-live-quiz
+PASS all fourteen exhibit examples present
+PASS edited canvas text updates shared renderer
+PASS undo restores the exact previous object
+PASS redo returns the edited object
+PASS visitor button updates another native control
+PASS workspace opens · Canvas
+PASS workspace opens · Installation
+PASS workspace opens · 3D scene
+PASS workspace opens · Mapping
+PASS workspace opens · Timeline
+PASS workspace opens · Logic
+PASS workspace opens · Hardware
+PASS workspace opens · Flipbook
+PASS workspace opens · Science
+PASS workspace opens · Assets
+PASS workspace opens · Test
+PASS workspace opens · Deployment
+PASS workspace opens · Live quiz
+PASS canvas transform commits to project
+PASS undo canvas transform
+PASS duplicate obtains independent ID
+PASS authoring save entry point
+PASS concurrent modification detected
+PASS valid preset · Kiosk
+PASS valid preset · Multiple kiosks
+PASS valid preset · Interactive table
+PASS valid preset · Mixed displays
+PASS valid preset · Video wall
+PASS valid preset · Single projector
+PASS valid preset · Linear panorama
+PASS valid preset · Vertical panorama
+PASS valid preset · Cyclorama
+PASS valid preset · 360° ring
+PASS valid preset · Earth sphere
+PASS valid preset · Fulldome
+PASS valid preset · Immersive room
+PASS valid preset · L-shaped room
+PASS valid preset · U-shaped room
+PASS valid preset · CAVE
+PASS valid preset · Custom object
+PASS valid preset · Relief map
+PASS valid preset · Digital book
+PASS valid preset · Projected book
+PASS valid preset · Physical book
+PASS valid preset · Touchscreen + projection
+PASS valid preset · Pepper’s Ghost
+PASS valid preset · Mixed installation
+PASS corner pin is a perspective homography
+PASS mesh warp recovers displaced central control point
+PASS warp, blend and geometry persist
+PASS 360-degree cylinder seam and cardinal sectors
+PASS fixed cylinder height controls vertical mapping
+PASS equatorial projector layout flags uncovered north pole
+PASS equirectangular sphere rotation
+PASS measured camera report applies to actual Studio output
+PASS undo restores prior calibration
+PASS wrong-resolution camera report cannot overwrite the output
+PASS two native windows with independent requested sizes
+PASS fresh runtime starts with outputs disarmed
+PASS one physical-channel event requests two output devices
+PASS one input updates kiosk and projector scene
+PASS OpenGL renders distinct exhibit colours in the scene texture
+PASS calibrated second window renders live projector feed
+PASS visitor reset clears outputs and state
+PASS standalone feed maps pointer input to native scene button
+PASS timeline changes film at six seconds
+PASS seeking restores presentation and disarms outputs
+PASS submitted drawing is a snapshot
+PASS clearing kiosk preserves wall submission
+PASS page sensor selects a physical book spread
+PASS manual fallback turns one book page
+PASS traversal path rejected
+PASS 30,000 sensor events keep bounded traces and samples
+RESULT 115 integration checks, 0 failures.
+
+EXAMPLES
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS native example playback · 01-solar · 1 feed(s)
+PASS native example playback · 02-panorama · 3 feed(s)
+PASS native example playback · 03-earth · 4 feed(s)
+PASS native example playback · 04-cyclorama · 3 feed(s)
+PASS native example playback · 05-room · 6 feed(s)
+PASS native example playback · 06-digital-book · 1 feed(s)
+PASS native example playback · 07-physical-book · 2 feed(s)
+PASS native example playback · 08-arduino · 1 feed(s)
+PASS native example playback · 09-esp32 · 1 feed(s)
+PASS native example playback · 10-floor · 1 feed(s)
+PASS native example playback · 11-mixed · 2 feed(s)
+PASS native example playback · 12-postcards · 2 feed(s)
+PASS native example playback · 13-shows · 1 feed(s)
+PASS native example playback · 14-live-quiz · 1 feed(s)
+RESULT 14 example launches, 0 failures.
+
+MESH
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS UV-mapped OBJ with perspective projector, dark background and sampled content; colours (1.0, 0.1255, 0.1961, 1.0) (0.0, 0.0, 0.0, 1.0)
+
+QUIZ-NATIVE
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+BOARD lobby
+BOARD open
+BOARD reveal
+BOARD standings
+PASS native contest layer and rendered scoreboard
+
+QUIZ-BROWSER
+PASS actual Chromium: edited deck, QR join link, host/projector plus two mobile viewports, Unicode, responses, reconnection, moderation, upvote, pause/resume, reveal, rankings, multiple answers and CSV; zero JS exceptions.
+
+PYTHON-ALL
+test_corner_order_and_low_baseline_fail (test_calibration.CalibrationTests.test_corner_order_and_low_baseline_fail) ... ok
+test_integer_gray_decodes_every_native_pixel_without_powers_of_two (test_calibration.CalibrationTests.test_integer_gray_decodes_every_native_pixel_without_powers_of_two) ... ok
+test_known_optics_holdout_independent_frames_and_uv_centres (test_calibration.CalibrationTests.test_known_optics_holdout_independent_frames_and_uv_centres) ... OPTICS 193x127 corner_max=0.0900 spatial_p95=0.4737 optical_p95=0.2942 marks=20
+OPTICS 257x149 corner_max=0.0184 spatial_p95=0.4752 optical_p95=0.2489 marks=20
+OPTICS 109x163 corner_max=0.0078 spatial_p95=0.4742 optical_p95=0.1720 marks=20
+ok
+test_metric_pose_independent_survey (test_calibration.CalibrationTests.test_metric_pose_independent_survey) ... POSE holdout_p95=0.0920 camera_position_error_m=0.001140
+ok
+test_missing_references_or_resolution_change_fail (test_calibration.CalibrationTests.test_missing_references_or_resolution_change_fail) ... ok
+test_moved_camera_at_independent_check_is_rejected (test_calibration.CalibrationTests.test_moved_camera_at_independent_check_is_rejected) ... ok
+test_photometric_curve_and_maximum_white (test_calibration.CalibrationTests.test_photometric_curve_and_maximum_white) ... ok
+test_shadow_and_missing_quadrants_are_rejected (test_calibration.CalibrationTests.test_shadow_and_missing_quadrants_are_rejected) ... ok
+test_swapped_inverse_frames_and_bad_manifest_fail (test_calibration.CalibrationTests.test_swapped_inverse_frames_and_bad_manifest_fail) ... ok
+test_independent_site_target_and_deliberate_misalignment (test_calibration.SiteTests.test_independent_site_target_and_deliberate_misalignment) ... ok
+test_concurrent_duplicate_posts_score_once (test_contest.ContestTests.test_concurrent_duplicate_posts_score_once) ... ok
+test_deadline_stale_action_and_cross_round_submission (test_contest.ContestTests.test_deadline_stale_action_and_cross_round_submission) ... ok
+test_deck_marking_all_quiz_and_audience_types (test_contest.ContestTests.test_deck_marking_all_quiz_and_audience_types) ... ok
+test_lobby_lock_and_team_changes (test_contest.ContestTests.test_lobby_lock_and_team_changes) ... ok
+test_local_listeners_concurrent_audience (test_contest.ContestTests.test_local_listeners_concurrent_audience) ... ok
+test_no_early_results_and_pause_with_authoritative_elapsed (test_contest.ContestTests.test_no_early_results_and_pause_with_authoritative_elapsed) ... ok
+test_qa_moderation_and_single_vote (test_contest.ContestTests.test_qa_moderation_and_single_vote) ... ok
+test_restart_restores_roster_answers_and_pauses_clock (test_contest.ContestTests.test_restart_restores_roster_answers_and_pauses_clock) ... ok
+test_ties_have_shared_rank_and_csv_accounts_for_absences (test_contest.ContestTests.test_ties_have_shared_rank_and_csv_accounts_for_absences) ... ok
+test_poll_stream_updates_and_graded_keys_remain_private (test_contest.PollTests.test_poll_stream_updates_and_graded_keys_remain_private) ... ok
+test_independent_progress_timeout_and_shared_final (test_contest.PracticeTests.test_independent_progress_timeout_and_shared_final) ... ok
+test_corrupt_update_leaves_active_release (test_deploy.DeploymentTests.test_corrupt_update_leaves_active_release) ... ok
+test_reference_schema (test_deploy.DeploymentTests.test_reference_schema) ... ok
+test_traversal_rejected (test_deploy.DeploymentTests.test_traversal_rejected) ... ok
+test_update_rollback_and_idempotency (test_deploy.DeploymentTests.test_update_rollback_and_idempotency) ... ok
+test_artnet_input_filters_universe_and_sequence (test_field_io.FieldTests.test_artnet_input_filters_universe_and_sequence) ... ok
+test_binary_frames_through_public_gateway_path (test_field_io.FieldTests.test_binary_frames_through_public_gateway_path) ... ok
+test_input_only_protocol_rejects_armed_configuration (test_field_io.FieldTests.test_input_only_protocol_rejects_armed_configuration) ... ok
+test_lighting_output_lease_disarm_and_limits_on_real_udp (test_field_io.FieldTests.test_lighting_output_lease_disarm_and_limits_on_real_udp) ... ok
+test_lighting_wire_headers_counts_and_rejection (test_field_io.FieldTests.test_lighting_wire_headers_counts_and_rejection) ... ok
+test_real_modbus_tcp_reads_register (test_field_io.FieldTests.test_real_modbus_tcp_reads_register) ... ok
+test_version_arm_command_disconnect_sequence (test_field_io.IndicatorTests.test_version_arm_command_disconnect_sequence) ... ok
+test_firmata_fragmentation (test_gateway.ProtocolTests.test_firmata_fragmentation) ... ok
+test_input_filter (test_gateway.ProtocolTests.test_input_filter) ... ok
+test_legacy_csv_json_ascii (test_gateway.ProtocolTests.test_legacy_csv_json_ascii) ... ok
+test_osc_scalar (test_gateway.ProtocolTests.test_osc_scalar) ... ok
+test_profile_conflict (test_gateway.ProtocolTests.test_profile_conflict) ... ok
+test_stale_lease (test_gateway.ProtocolTests.test_stale_lease) ... ok
+test_unknown_channel_and_lockout (test_gateway.ProtocolTests.test_unknown_channel_and_lockout) ... ok
+test_bidirectional_real_tty_and_controller_disconnect (test_gateway.SerialEndToEnd.test_bidirectional_real_tty_and_controller_disconnect) ... ok
+test_pdf_decodes_two_real_local_pages (test_quiz_import.SlideTests.test_pdf_decodes_two_real_local_pages) ... ok
+test_pptx_presentation_order_survives_import (test_quiz_import.SlideTests.test_pptx_presentation_order_survives_import) ... ok
+test_block_generator (test_tools.ToolTests.test_block_generator) ... ok
+test_clock_auth_and_nonce (test_tools.ToolTests.test_clock_auth_and_nonce) ... ok
+test_page_codes_and_rotations (test_tools.ToolTests.test_page_codes_and_rotations) ... ok
+test_pdf_book_import (test_tools.ToolTests.test_pdf_book_import) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 15.572s
+
+OK
+HTTP contest: 64 distinct clients joined and submitted; 64 counted; 64000 team points.
+
+PIXELS
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+plain              samples= 504 p99=0.84 max=0.84
+corner             samples= 483 p99=0.90 max=0.97
+maskgain           samples= 504 p99=0.76 max=0.76
+left               samples= 504 p99=0.65 max=0.65
+right              samples= 504 p99=0.65 max=0.65
+mesh               samples= 504 p99=0.84 max=0.99
+sphere             samples= 504 p99=0.76 max=0.82
+rotated_sphere     samples= 504 p99=0.81 max=0.97
+cylinder           samples= 504 p99=0.93 max=1.01
+seam               samples= 504 p99=0.86 max=0.95
+fulldome           samples= 480 p99=0.94 max=1.02
+cube0              samples= 504 p99=0.00 max=0.00
+cube1              samples= 504 p99=0.00 max=0.00
+cube2              samples= 504 p99=0.00 max=0.00
+cube3              samples= 504 p99=0.00 max=0.00
+cube4              samples= 504 p99=0.00 max=0.00
+cube5              samples= 504 p99=0.00 max=0.00
+PASS 17 real rendered rasters, 8523 RGB probes, largest deviation 1.02/255; overlap sum max error 0.60/255.
+
+MQTT
+PASS authenticated Mosquitto + Paho: firmware handshake, input 72, armed indicator, feedback 1 and broker-loss disarm. Board endpoint is a compiled fixture.
+
+BUILD-LINUX
+Built player.pck 436004
+Built studio.pck 513124
+Bundled Godot 4.6.3.stable.official.7d41c59c4
+
+BUILD-WINDOWS
+Built player.pck 436004
+Built studio.pck 513124
+
+
+ISOLATED IP CONTEST
+Isolated namespace with two private IPv4 aliases on loopback and no default route.
+PASS two non-loopback addresses on one host with separate processes: joined, scored, read ranking, operator paths inaccessible.
+
+TARGET TOOLCHAINS, ARDUINO CLI 1.3.1
+Sketch uses 7402 bytes (22%) of program storage space. Maximum is 32256 bytes.
+Global variables use 532 bytes (25%) of dynamic memory, leaving 1516 bytes for local variables. Maximum is 2048 bytes.
+TARGET uno PASS
+Sketch uses 7402 bytes (24%) of program storage space. Maximum is 30720 bytes.
+Global variables use 532 bytes (25%) of dynamic memory, leaving 1516 bytes for local variables. Maximum is 2048 bytes.
+TARGET nano PASS
+Sketch uses 8798 bytes (3%) of program storage space. Maximum is 253952 bytes.
+Global variables use 544 bytes (6%) of dynamic memory, leaving 7648 bytes for local variables. Maximum is 8192 bytes.
+TARGET mega PASS
+esp32:esp32@3.1.3, PubSubClient@2.8, ESP32Servo@3.0.6
+Sketch uses 902528 bytes (68%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 46228 bytes (14%) of dynamic memory, leaving 281452 bytes for local variables. Maximum is 327680 bytes.
+TARGET esp32 PASS (compile command exit 0)
+No upload, GPIO or optical measurement was performed.
+
+INDEPENDENT NATIVE-SIZE OPTICAL FIXTURES
+PASS synthetic 1920x1080 projector, 1920x1200 camera, corner_max=0.0769px spatial_p95=0.4816px independent_p95=0.1865px twenty independent marks
+PASS synthetic 3840x2160 projector, 1920x1080 camera, corner_max=0.0149px spatial_p95=0.4784px independent_p95=0.4751px twenty independent marks

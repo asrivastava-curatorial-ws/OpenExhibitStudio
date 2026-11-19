@@ -1,0 +1,7 @@
+user exhibit-gateway
+topic read oes/esp32/up
+topic write oes/esp32/down
+
+user exhibit-board
+topic read oes/esp32/down
+topic write oes/esp32/up

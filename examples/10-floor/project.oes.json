@@ -1,0 +1,246 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Wake the floor",
+  "canvas": [
+    1280,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "direction": {
+      "path": "assets/direction.svg",
+      "sha256": "dda515c36aed4557e16d40fdbdd804f50481594f643e458ce63a61396025e561"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Ripple field",
+      "background": "#101e2e",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "INTERACTIVE FLOOR   /   MOTION",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Wake the floor",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "Move through the field or use the horizontal control.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "particles",
+          "name": "Particles",
+          "kind": "particles",
+          "rect": [
+            45,
+            211,
+            1190,
+            360
+          ],
+          "color": "#72e0c5"
+        },
+        {
+          "id": "horizontal",
+          "name": "Horizontal",
+          "kind": "slider",
+          "rect": [
+            70,
+            603,
+            1130,
+            70
+          ],
+          "min": 0,
+          "max": 1,
+          "step": 0.01,
+          "channel": "motion_x",
+          "bind": "motion_x"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "motion_x": 0.5,
+    "motion_y": 0.5
+  },
+  "rules": [
+    {
+      "id": "rule_1",
+      "event": "input.motion_x",
+      "actions": [
+        {
+          "op": "set",
+          "target": "motion_x",
+          "value": "$value"
+        }
+      ]
+    },
+    {
+      "id": "rule_2",
+      "event": "input.motion_y",
+      "actions": [
+        {
+          "op": "set",
+          "target": "motion_y",
+          "value": "$value"
+        }
+      ]
+    }
+  ],
+  "timelines": [],
+  "devices": [
+    {
+      "id": "vision",
+      "channels": [
+        {
+          "id": "motion_x",
+          "direction": "input"
+        },
+        {
+          "id": "motion_y",
+          "direction": "input"
+        }
+      ]
+    }
+  ],
+  "installation": {
+    "preset": "Interactive table",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "plane",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0.0,
+          0,
+          4
+        ],
+        "aim": [
+          0.0,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": ""
+  },
+  "extensions": {}
+}

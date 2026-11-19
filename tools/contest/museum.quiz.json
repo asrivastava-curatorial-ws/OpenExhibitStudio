@@ -1,0 +1,143 @@
+{
+  "format": "oes-quiz",
+  "version": 1,
+  "title": "Science after hours",
+  "teams": [
+    "Faraday",
+    "Raman",
+    "Curie"
+  ],
+  "speed_bonus": true,
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "Which planet takes the longest to orbit the Sun?",
+      "seconds": 30,
+      "points": 1000,
+      "options": [
+        "Earth",
+        "Neptune",
+        "Mars",
+        "Venus"
+      ],
+      "answer": "Neptune",
+      "explanation": "Neptune takes about 165 Earth years to complete one orbit."
+    },
+    {
+      "type": "multiple",
+      "prompt": "Select the two materials that are usually good electrical conductors.",
+      "seconds": 30,
+      "points": 1000,
+      "options": [
+        "Copper",
+        "Dry glass",
+        "Aluminium",
+        "Rubber"
+      ],
+      "answer": [
+        "Copper",
+        "Aluminium"
+      ]
+    },
+    {
+      "type": "order",
+      "prompt": "Arrange these planets from nearest to farthest from the Sun.",
+      "seconds": 30,
+      "points": 1000,
+      "options": [
+        "Earth",
+        "Mercury",
+        "Mars",
+        "Venus"
+      ],
+      "answer": [
+        "Mercury",
+        "Venus",
+        "Earth",
+        "Mars"
+      ]
+    },
+    {
+      "type": "text",
+      "prompt": "What do we call the change directly from solid to gas?",
+      "seconds": 30,
+      "points": 1000,
+      "answer": [
+        "sublimation"
+      ]
+    },
+    {
+      "type": "number",
+      "prompt": "A 6 V source supplies 0.5 A. How many watts of power does it deliver?",
+      "seconds": 30,
+      "points": 1000,
+      "answer": 3,
+      "tolerance": 0.01,
+      "explanation": "Power equals voltage multiplied by current."
+    },
+    {
+      "type": "match",
+      "prompt": "Match each instrument to what it measures.",
+      "seconds": 30,
+      "points": 1000,
+      "labels": [
+        "Thermometer",
+        "Ammeter",
+        "Barometer"
+      ],
+      "options": [
+        "Pressure",
+        "Temperature",
+        "Current"
+      ],
+      "answer": [
+        "Temperature",
+        "Current",
+        "Pressure"
+      ]
+    },
+    {
+      "type": "category",
+      "prompt": "Classify each example by its main energy store.",
+      "seconds": 30,
+      "points": 1000,
+      "labels": [
+        "Stretched spring",
+        "Moving trolley",
+        "Compressed spring"
+      ],
+      "options": [
+        "Kinetic",
+        "Elastic"
+      ],
+      "answer": [
+        "Elastic",
+        "Kinetic",
+        "Elastic"
+      ]
+    },
+    {
+      "type": "poll",
+      "prompt": "Which exhibit would you build next?",
+      "seconds": 30,
+      "points": 1000,
+      "options": [
+        "Projection globe",
+        "Human-sized logic game",
+        "Electricity bench"
+      ]
+    },
+    {
+      "type": "cloud",
+      "prompt": "Name one science word you would like to explore.",
+      "seconds": 30,
+      "points": 1000
+    },
+    {
+      "type": "scale",
+      "prompt": "How confident are you explaining power to a friend?",
+      "seconds": 30,
+      "points": 1000
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenExhibit Player
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/openexhibit-player --deployment %h/ExhibitReleases --kiosk
+EnvironmentFile=-%h/.config/openexhibit/operator.env
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target

@@ -1,0 +1,1 @@
+{"devices":[{"id":"meter","transport":"modbus_tcp","protocol":"modbus_tcp","host":"127.0.0.1","port":1502,"unit":1,"interval":0.25,"inputs":["dial"],"registers":{"dial":{"bank":"holding","address":10}}}]}

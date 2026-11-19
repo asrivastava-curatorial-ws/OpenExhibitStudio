@@ -1,0 +1,351 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Light and motion",
+  "canvas": [
+    1280,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "direction": {
+      "path": "assets/direction.svg",
+      "sha256": "dda515c36aed4557e16d40fdbdd804f50481594f643e458ce63a61396025e561"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Light and motion",
+      "background": "#101e2e",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "eyebrow",
+          "name": "Eyebrow",
+          "kind": "text",
+          "rect": [
+            48,
+            27,
+            1160,
+            35
+          ],
+          "text": "PHYSICAL COMPUTING   /   LOCAL MQTT",
+          "font": 17,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            46,
+            68,
+            1190,
+            78
+          ],
+          "text": "Light and motion",
+          "font": 54,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "subtitle",
+          "name": "Subtitle",
+          "kind": "text",
+          "rect": [
+            49,
+            151,
+            1175,
+            60
+          ],
+          "text": "Choose a position. The same cue requests an indicator and a bounded servo angle.",
+          "font": 23,
+          "color": "#a2b8ca"
+        },
+        {
+          "id": "angle",
+          "name": "Angle",
+          "kind": "text",
+          "rect": [
+            50,
+            235,
+            600,
+            150
+          ],
+          "text": "{angle}°",
+          "font": 100,
+          "color": "#ecc58a"
+        },
+        {
+          "id": "gauge",
+          "name": "Gauge",
+          "kind": "gauge",
+          "rect": [
+            55,
+            438,
+            1150,
+            64
+          ],
+          "bind": "angle",
+          "min": 30,
+          "max": 150
+        },
+        {
+          "id": "pos0",
+          "name": "Pos0",
+          "kind": "button",
+          "rect": [
+            56,
+            594,
+            220,
+            62
+          ],
+          "text": "30°",
+          "font": 23,
+          "event": "tap.pos0",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "pos1",
+          "name": "Pos1",
+          "kind": "button",
+          "rect": [
+            306,
+            594,
+            220,
+            62
+          ],
+          "text": "90°",
+          "font": 23,
+          "event": "tap.pos1",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "pos2",
+          "name": "Pos2",
+          "kind": "button",
+          "rect": [
+            556,
+            594,
+            220,
+            62
+          ],
+          "text": "150°",
+          "font": 23,
+          "event": "tap.pos2",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "angle": 90
+  },
+  "rules": [
+    {
+      "id": "rule_1",
+      "event": "tap.pos0",
+      "actions": [
+        {
+          "op": "set",
+          "target": "angle",
+          "value": 30
+        },
+        {
+          "op": "output",
+          "target": "servo",
+          "value": 30
+        },
+        {
+          "op": "output",
+          "target": "light",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "rule_2",
+      "event": "tap.pos1",
+      "actions": [
+        {
+          "op": "set",
+          "target": "angle",
+          "value": 90
+        },
+        {
+          "op": "output",
+          "target": "servo",
+          "value": 90
+        },
+        {
+          "op": "output",
+          "target": "light",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "rule_3",
+      "event": "tap.pos2",
+      "actions": [
+        {
+          "op": "set",
+          "target": "angle",
+          "value": 150
+        },
+        {
+          "op": "output",
+          "target": "servo",
+          "value": 150
+        },
+        {
+          "op": "output",
+          "target": "light",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "rule_4",
+      "event": "input.button",
+      "actions": [
+        {
+          "op": "emit",
+          "target": "tap.pos2",
+          "value": 1
+        }
+      ],
+      "if": {
+        "op": "==",
+        "left": "$value",
+        "right": 1
+      }
+    }
+  ],
+  "timelines": [],
+  "devices": [
+    {
+      "id": "esp32",
+      "channels": [
+        {
+          "id": "button",
+          "direction": "input"
+        },
+        {
+          "id": "light",
+          "direction": "output"
+        },
+        {
+          "id": "servo",
+          "direction": "output"
+        }
+      ]
+    }
+  ],
+  "installation": {
+    "preset": "Kiosk",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "plane",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0.0,
+          0,
+          4
+        ],
+        "aim": [
+          0.0,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": ""
+  },
+  "extensions": {}
+}

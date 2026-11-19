@@ -1,0 +1,1 @@
+{"devices":[{"id":"uno","transport":"serial","port":"/dev/ttyACM0","baud":115200,"protocol":"oes1","inputs":["dial","button","encoder"],"outputs":{"lamp":[0,1]},"filters":{"dial":{"alpha":0.3,"epsilon":0.3,"interval_ms":80}}}],"lockout":false}

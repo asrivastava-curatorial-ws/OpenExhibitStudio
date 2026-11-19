@@ -1,0 +1,350 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Earth in longitude",
+  "canvas": [
+    1440,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "earth": {
+      "path": "assets/earth.png",
+      "sha256": "3b309c498e91d0660cb0f9c619257e67a67fcb2df756955223f6c397a5181470"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Geographic layer",
+      "background": "#101e2e",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "earth",
+          "name": "Earth",
+          "kind": "image",
+          "rect": [
+            0,
+            0,
+            1440,
+            720
+          ],
+          "asset": "earth",
+          "stretch": true
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "longitude": 0
+  },
+  "rules": [
+    {
+      "id": "rule_1",
+      "event": "input.encoder",
+      "actions": [
+        {
+          "op": "set",
+          "target": "longitude",
+          "value": "$value"
+        }
+      ]
+    }
+  ],
+  "timelines": [],
+  "devices": [
+    {
+      "id": "uno",
+      "channels": [
+        {
+          "id": "encoder",
+          "direction": "input"
+        }
+      ]
+    }
+  ],
+  "installation": {
+    "preset": "Earth sphere",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "sphere",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -3.39411254969543,
+          0,
+          -3.39411254969543
+        ],
+        "aim": [
+          0,
+          0,
+          0
+        ],
+        "throw": 0.76,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_2",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 1,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -3.39411254969543,
+          0,
+          3.39411254969543
+        ],
+        "aim": [
+          0,
+          0,
+          0
+        ],
+        "throw": 0.76,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_3",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 2,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          3.39411254969543,
+          0,
+          3.39411254969543
+        ],
+        "aim": [
+          0,
+          0,
+          0
+        ],
+        "throw": 0.76,
+        "shift": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "out_4",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 3,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          3.39411254969543,
+          0,
+          -3.39411254969543
+        ],
+        "aim": [
+          0,
+          0,
+          0
+        ],
+        "throw": 0.76,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": ""
+  },
+  "extensions": {}
+}

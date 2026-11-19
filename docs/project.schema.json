@@ -1,0 +1,626 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenExhibit Studio project v1",
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^assets/.+"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": true
+    },
+    "object": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "kind": {
+          "enum": [
+            "text",
+            "panel",
+            "button",
+            "image",
+            "video",
+            "audio",
+            "slider",
+            "gauge",
+            "plot",
+            "orbit",
+            "grid",
+            "drawing",
+            "entry",
+            "model",
+            "particles",
+            "fractal",
+            "contest"
+          ]
+        },
+        "rect": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "color": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "asset": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "bind": {
+          "type": "string"
+        },
+        "event": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "rect"
+      ],
+      "additionalProperties": true
+    },
+    "scene": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/object"
+          }
+        },
+        "transition": {
+          "enum": [
+            "cut",
+            "fade",
+            "slide"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "objects"
+      ],
+      "additionalProperties": true
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "enum": [
+            "set",
+            "add",
+            "toggle",
+            "goto",
+            "emit",
+            "output",
+            "play",
+            "pause",
+            "reset",
+            "mul",
+            "random",
+            "append",
+            "clear"
+          ]
+        },
+        "target": {
+          "type": "string"
+        },
+        "value": {}
+      },
+      "required": [
+        "op"
+      ],
+      "additionalProperties": true
+    },
+    "rule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "event": {
+          "type": "string"
+        },
+        "if": {
+          "type": "object",
+          "properties": {
+            "left": {},
+            "op": {
+              "enum": [
+                "always",
+                "==",
+                "!=",
+                ">",
+                ">=",
+                "<",
+                "<=",
+                "contains"
+              ]
+            },
+            "right": {}
+          },
+          "required": [],
+          "additionalProperties": true
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "event",
+        "actions"
+      ],
+      "additionalProperties": true
+    },
+    "timeline": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "duration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "loop": {
+          "type": "boolean"
+        },
+        "cues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "type": "number"
+              },
+              "action": {
+                "$ref": "#/$defs/action"
+              }
+            },
+            "required": [
+              "at",
+              "action"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "type": "number"
+              },
+              "value": {
+                "type": "number"
+              },
+              "object": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,96}$"
+              },
+              "scene": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,96}$"
+              },
+              "property": {
+                "enum": [
+                  "x",
+                  "y",
+                  "opacity",
+                  "rotation"
+                ]
+              },
+              "curve": {
+                "enum": [
+                  "linear",
+                  "smooth",
+                  "step"
+                ]
+              }
+            },
+            "required": [
+              "at",
+              "value",
+              "object",
+              "scene",
+              "property"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "id",
+        "duration"
+      ],
+      "additionalProperties": true
+    },
+    "surface": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "kind": {
+          "enum": [
+            "plane",
+            "cylinder",
+            "sphere",
+            "dome",
+            "mesh"
+          ]
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "radius": {
+          "type": "number"
+        },
+        "arc": {
+          "type": "number"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "rotation": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "asset": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "source_layout": {
+          "enum": [
+            "equirectangular",
+            "cubemap_cross"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "additionalProperties": true
+    },
+    "out": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "scene": {
+          "type": "string"
+        },
+        "size": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "screen": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "view": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "warp": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "mesh": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "minItems": 9,
+          "maxItems": 9
+        },
+        "gain": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "blend": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "gamma": {
+          "type": "number"
+        },
+        "black": {
+          "type": "number"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "aim": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "shift": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "throw": {
+          "type": "number"
+        },
+        "up": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "id",
+        "surface",
+        "size",
+        "view",
+        "warp",
+        "blend"
+      ],
+      "additionalProperties": true
+    },
+    "device": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,96}$"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,96}$"
+              },
+              "direction": {
+                "enum": [
+                  "input",
+                  "output"
+                ]
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": "openexhibit"
+    },
+    "version": {
+      "const": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "canvas": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 32,
+        "maximum": 8192
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "start": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,96}$"
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/scene"
+      },
+      "minItems": 1
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "variables": {
+      "type": "object"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    },
+    "timelines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/timeline"
+      }
+    },
+    "devices": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/device"
+      }
+    },
+    "installation": {
+      "type": "object",
+      "properties": {
+        "preset": {
+          "type": "string"
+        },
+        "surfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/surface"
+          },
+          "minItems": 1
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/out"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "surfaces",
+        "outputs"
+      ],
+      "additionalProperties": true
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "idle_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "autoplay": {
+          "type": "string"
+        },
+        "expressions": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": true
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "format",
+    "version",
+    "title",
+    "canvas",
+    "start",
+    "scenes",
+    "assets",
+    "variables",
+    "rules",
+    "timelines",
+    "devices",
+    "installation",
+    "settings"
+  ],
+  "additionalProperties": true
+}

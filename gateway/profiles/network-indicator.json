@@ -1,0 +1,6 @@
+{
+  "lockout": false,
+  "devices": [
+    {"id":"dimmer","transport":"artnet","protocol":"artnet","host":"127.0.0.1","peer":"127.0.0.1","port":6454,"universe":4,"purpose":"indicator_lighting","receiver_loss_blackout":true,"slots":{"light":1},"inputs":[],"outputs":{"light":[0,120]}}
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "title": "Travelling waves",
+  "canvas": [
+    1280,
+    720
+  ],
+  "start": "main",
+  "assets": {
+    "travelling": {
+      "path": "assets/travelling.ogv",
+      "sha256": "9165d386d5ffd18e3e51630ac2496492be1f5e432cecbf78b8bfab889d0553a4"
+    },
+    "direction": {
+      "path": "assets/direction.svg",
+      "sha256": "dda515c36aed4557e16d40fdbdd804f50481594f643e458ce63a61396025e561"
+    },
+    "standing": {
+      "path": "assets/standing.ogv",
+      "sha256": "a873ba55098fd6196ca2a02544d61242e26f4388e6ffa1fccedc70023e1f274a"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "A travelling wave",
+      "background": "#101e2e",
+      "transition": "fade",
+      "objects": [
+        {
+          "id": "kicker",
+          "name": "Kicker",
+          "kind": "text",
+          "rect": [
+            42,
+            28,
+            1170,
+            40
+          ],
+          "text": "WAVE LAB   /   FILM 1",
+          "font": 18,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            42,
+            77,
+            1190,
+            82
+          ],
+          "text": "A travelling wave",
+          "font": 48,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "film",
+          "name": "Film",
+          "kind": "video",
+          "rect": [
+            44,
+            186,
+            780,
+            440
+          ],
+          "asset": "travelling"
+        },
+        {
+          "id": "description",
+          "name": "Description",
+          "kind": "text",
+          "rect": [
+            865,
+            207,
+            352,
+            292
+          ],
+          "text": "Follow one crest as the wave moves across the screen.",
+          "font": 29,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "next",
+          "name": "Next",
+          "kind": "button",
+          "rect": [
+            858,
+            545,
+            340,
+            62
+          ],
+          "text": "Next film  ›",
+          "font": 23,
+          "event": "tap.next0",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    },
+    {
+      "id": "standing",
+      "name": "A standing wave",
+      "background": "#101e2e",
+      "transition": "slide",
+      "objects": [
+        {
+          "id": "kicker",
+          "name": "Kicker",
+          "kind": "text",
+          "rect": [
+            42,
+            28,
+            1170,
+            40
+          ],
+          "text": "WAVE LAB   /   FILM 2",
+          "font": 18,
+          "color": "#75e2cb"
+        },
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            42,
+            77,
+            1190,
+            82
+          ],
+          "text": "A standing wave",
+          "font": 48,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "film",
+          "name": "Film",
+          "kind": "video",
+          "rect": [
+            44,
+            186,
+            780,
+            440
+          ],
+          "asset": "standing"
+        },
+        {
+          "id": "description",
+          "name": "Description",
+          "kind": "text",
+          "rect": [
+            865,
+            207,
+            352,
+            292
+          ],
+          "text": "Two equal waves travelling in opposite directions form stationary nodes.",
+          "font": 29,
+          "color": "#eaf2f9"
+        },
+        {
+          "id": "next",
+          "name": "Next",
+          "kind": "button",
+          "rect": [
+            858,
+            545,
+            340,
+            62
+          ],
+          "text": "Next film  ›",
+          "font": 23,
+          "event": "tap.next1",
+          "color": "#75e2cb"
+        },
+        {
+          "id": "direction",
+          "name": "Direction",
+          "kind": "image",
+          "rect": [
+            1125,
+            37,
+            108,
+            23
+          ],
+          "asset": "direction"
+        }
+      ]
+    }
+  ],
+  "variables": {},
+  "rules": [
+    {
+      "id": "rule_1",
+      "event": "tap.next0",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "standing",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "rule_2",
+      "event": "tap.next1",
+      "actions": [
+        {
+          "op": "goto",
+          "target": "main",
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "timelines": [
+    {
+      "id": "sequence",
+      "name": "Two films",
+      "duration": 12,
+      "loop": true,
+      "cues": [
+        {
+          "at": 0,
+          "action": {
+            "op": "goto",
+            "target": "main",
+            "value": 1
+          }
+        },
+        {
+          "at": 6,
+          "action": {
+            "op": "goto",
+            "target": "standing",
+            "value": 1
+          }
+        }
+      ],
+      "keys": []
+    }
+  ],
+  "devices": [],
+  "installation": {
+    "preset": "Kiosk",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "plane",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0.0,
+          0,
+          4
+        ],
+        "aim": [
+          0.0,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 120,
+    "autoplay": "sequence"
+  },
+  "extensions": {}
+}

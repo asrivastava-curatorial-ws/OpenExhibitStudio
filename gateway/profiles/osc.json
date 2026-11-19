@@ -1,0 +1,1 @@
+{"devices":[{"id":"floor","transport":"osc","protocol":"osc","port":9000,"routes":{"/floor/x":"motion_x","/floor/y":"motion_y"},"inputs":["motion_x","motion_y"]}]}

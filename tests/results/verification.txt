@@ -1,0 +1,334 @@
+Core with IP disabled
+Verified IPv4/IPv6 socket creation disabled for this process tree.
+PASS schema accepts a fresh exhibit
+PASS save a project
+PASS save and reopen preserve data
+PASS write an exhibit package
+PASS verify and reopen package
+PASS visitor rule updates session state
+PASS event cycles bounded and reported
+PASS independent saves preserve private extensions
+PASS interrupted-save backup restored
+PASS newer file version rejected
+PASS opt-in arithmetic expression
+PASS nested timeline cycle bounded
+12 checks, 0 failures
+
+Integration with IP disabled
+Verified IPv4/IPv6 socket creation disabled for this process tree.
+PASS checksum and schema · 01-solar
+PASS relocate assets · 01-solar
+PASS portable round trip · 01-solar
+PASS checksum and schema · 02-panorama
+PASS relocate assets · 02-panorama
+PASS portable round trip · 02-panorama
+PASS checksum and schema · 03-earth
+PASS relocate assets · 03-earth
+PASS portable round trip · 03-earth
+PASS checksum and schema · 04-cyclorama
+PASS relocate assets · 04-cyclorama
+PASS portable round trip · 04-cyclorama
+PASS checksum and schema · 05-room
+PASS relocate assets · 05-room
+PASS portable round trip · 05-room
+PASS checksum and schema · 06-digital-book
+PASS relocate assets · 06-digital-book
+PASS portable round trip · 06-digital-book
+PASS checksum and schema · 07-physical-book
+PASS relocate assets · 07-physical-book
+PASS portable round trip · 07-physical-book
+PASS checksum and schema · 08-arduino
+PASS relocate assets · 08-arduino
+PASS portable round trip · 08-arduino
+PASS checksum and schema · 09-esp32
+PASS relocate assets · 09-esp32
+PASS portable round trip · 09-esp32
+PASS checksum and schema · 10-floor
+PASS relocate assets · 10-floor
+PASS portable round trip · 10-floor
+PASS checksum and schema · 11-mixed
+PASS relocate assets · 11-mixed
+PASS portable round trip · 11-mixed
+PASS checksum and schema · 12-postcards
+PASS relocate assets · 12-postcards
+PASS portable round trip · 12-postcards
+PASS checksum and schema · 13-shows
+PASS relocate assets · 13-shows
+PASS portable round trip · 13-shows
+PASS all thirteen exhibit examples present
+PASS edited canvas text updates shared renderer
+PASS undo restores the exact previous object
+PASS redo returns the edited object
+PASS visitor button updates another native control
+PASS workspace opens · Canvas
+PASS workspace opens · Installation
+PASS workspace opens · 3D scene
+PASS workspace opens · Mapping
+PASS workspace opens · Timeline
+PASS workspace opens · Logic
+PASS workspace opens · Hardware
+PASS workspace opens · Flipbook
+PASS workspace opens · Science
+PASS workspace opens · Assets
+PASS workspace opens · Test
+PASS workspace opens · Deployment
+PASS canvas transform commits to project
+PASS undo canvas transform
+PASS duplicate obtains independent ID
+PASS authoring save entry point
+PASS concurrent modification detected
+PASS valid preset · Kiosk
+PASS valid preset · Multiple kiosks
+PASS valid preset · Interactive table
+PASS valid preset · Mixed displays
+PASS valid preset · Video wall
+PASS valid preset · Single projector
+PASS valid preset · Linear panorama
+PASS valid preset · Vertical panorama
+PASS valid preset · Cyclorama
+PASS valid preset · 360° ring
+PASS valid preset · Earth sphere
+PASS valid preset · Fulldome
+PASS valid preset · Immersive room
+PASS valid preset · L-shaped room
+PASS valid preset · U-shaped room
+PASS valid preset · CAVE
+PASS valid preset · Custom object
+PASS valid preset · Relief map
+PASS valid preset · Digital book
+PASS valid preset · Projected book
+PASS valid preset · Physical book
+PASS valid preset · Touchscreen + projection
+PASS valid preset · Pepper’s Ghost
+PASS valid preset · Mixed installation
+PASS corner pin is a perspective homography
+PASS mesh warp recovers displaced central control point
+PASS warp, blend and geometry persist
+PASS 360-degree cylinder seam and cardinal sectors
+PASS fixed cylinder height controls vertical mapping
+PASS equatorial projector layout flags uncovered north pole
+PASS equirectangular sphere rotation
+PASS two native windows with independent requested sizes
+PASS fresh runtime starts with outputs disarmed
+PASS one physical-channel event requests two output devices
+PASS one input updates kiosk and projector scene
+PASS visitor reset clears outputs and state
+PASS standalone feed maps pointer input to native scene button
+PASS timeline changes film at six seconds
+PASS seeking restores presentation and disarms outputs
+PASS submitted drawing is a snapshot
+PASS clearing kiosk preserves wall submission
+PASS page sensor selects a physical book spread
+PASS manual fallback turns one book page
+PASS traversal path rejected
+PASS 30,000 sensor events keep bounded traces and samples
+RESULT 106 integration checks, 0 failures.
+
+Display heads
+Monitors: 2
+ 0: +*DUMMY0 1280/339x720/190+0+0  DUMMY0
+ 1: +DUMMY1 1024/271x768/203+1280+0  DUMMY1
+
+Graphical integration
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+PASS checksum and schema · 01-solar
+PASS relocate assets · 01-solar
+PASS portable round trip · 01-solar
+PASS checksum and schema · 02-panorama
+PASS relocate assets · 02-panorama
+PASS portable round trip · 02-panorama
+PASS checksum and schema · 03-earth
+PASS relocate assets · 03-earth
+PASS portable round trip · 03-earth
+PASS checksum and schema · 04-cyclorama
+PASS relocate assets · 04-cyclorama
+PASS portable round trip · 04-cyclorama
+PASS checksum and schema · 05-room
+PASS relocate assets · 05-room
+PASS portable round trip · 05-room
+PASS checksum and schema · 06-digital-book
+PASS relocate assets · 06-digital-book
+PASS portable round trip · 06-digital-book
+PASS checksum and schema · 07-physical-book
+PASS relocate assets · 07-physical-book
+PASS portable round trip · 07-physical-book
+PASS checksum and schema · 08-arduino
+PASS relocate assets · 08-arduino
+PASS portable round trip · 08-arduino
+PASS checksum and schema · 09-esp32
+PASS relocate assets · 09-esp32
+PASS portable round trip · 09-esp32
+PASS checksum and schema · 10-floor
+PASS relocate assets · 10-floor
+PASS portable round trip · 10-floor
+PASS checksum and schema · 11-mixed
+PASS relocate assets · 11-mixed
+PASS portable round trip · 11-mixed
+PASS checksum and schema · 12-postcards
+PASS relocate assets · 12-postcards
+PASS portable round trip · 12-postcards
+PASS checksum and schema · 13-shows
+PASS relocate assets · 13-shows
+PASS portable round trip · 13-shows
+PASS all thirteen exhibit examples present
+PASS edited canvas text updates shared renderer
+PASS undo restores the exact previous object
+PASS redo returns the edited object
+PASS visitor button updates another native control
+PASS workspace opens · Canvas
+PASS workspace opens · Installation
+PASS workspace opens · 3D scene
+PASS workspace opens · Mapping
+PASS workspace opens · Timeline
+PASS workspace opens · Logic
+PASS workspace opens · Hardware
+PASS workspace opens · Flipbook
+PASS workspace opens · Science
+PASS workspace opens · Assets
+PASS workspace opens · Test
+PASS workspace opens · Deployment
+PASS canvas transform commits to project
+PASS undo canvas transform
+PASS duplicate obtains independent ID
+PASS authoring save entry point
+PASS concurrent modification detected
+PASS valid preset · Kiosk
+PASS valid preset · Multiple kiosks
+PASS valid preset · Interactive table
+PASS valid preset · Mixed displays
+PASS valid preset · Video wall
+PASS valid preset · Single projector
+PASS valid preset · Linear panorama
+PASS valid preset · Vertical panorama
+PASS valid preset · Cyclorama
+PASS valid preset · 360° ring
+PASS valid preset · Earth sphere
+PASS valid preset · Fulldome
+PASS valid preset · Immersive room
+PASS valid preset · L-shaped room
+PASS valid preset · U-shaped room
+PASS valid preset · CAVE
+PASS valid preset · Custom object
+PASS valid preset · Relief map
+PASS valid preset · Digital book
+PASS valid preset · Projected book
+PASS valid preset · Physical book
+PASS valid preset · Touchscreen + projection
+PASS valid preset · Pepper’s Ghost
+PASS valid preset · Mixed installation
+PASS corner pin is a perspective homography
+PASS mesh warp recovers displaced central control point
+PASS warp, blend and geometry persist
+PASS 360-degree cylinder seam and cardinal sectors
+PASS fixed cylinder height controls vertical mapping
+PASS equatorial projector layout flags uncovered north pole
+PASS equirectangular sphere rotation
+PASS two native windows with independent requested sizes
+PASS fresh runtime starts with outputs disarmed
+PASS one physical-channel event requests two output devices
+PASS one input updates kiosk and projector scene
+PASS OpenGL renders distinct exhibit colours in the scene texture
+PASS calibrated second window renders live projector feed
+PASS visitor reset clears outputs and state
+PASS standalone feed maps pointer input to native scene button
+PASS timeline changes film at six seconds
+PASS seeking restores presentation and disarms outputs
+PASS submitted drawing is a snapshot
+PASS clearing kiosk preserves wall submission
+PASS page sensor selects a physical book spread
+PASS manual fallback turns one book page
+PASS traversal path rejected
+PASS 30,000 sensor events keep bounded traces and samples
+RESULT 108 integration checks, 0 failures.
+
+Example player launches
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+PASS native example playback · 01-solar · 1 feed(s)
+PASS native example playback · 02-panorama · 3 feed(s)
+PASS native example playback · 03-earth · 4 feed(s)
+PASS native example playback · 04-cyclorama · 3 feed(s)
+PASS native example playback · 05-room · 6 feed(s)
+PASS native example playback · 06-digital-book · 1 feed(s)
+PASS native example playback · 07-physical-book · 2 feed(s)
+PASS native example playback · 08-arduino · 1 feed(s)
+PASS native example playback · 09-esp32 · 1 feed(s)
+PASS native example playback · 10-floor · 1 feed(s)
+PASS native example playback · 11-mixed · 2 feed(s)
+PASS native example playback · 12-postcards · 2 feed(s)
+PASS native example playback · 13-shows · 1 feed(s)
+RESULT 13 example launches, 0 failures.
+
+Custom UV mesh
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+PASS UV-mapped OBJ with perspective projector, dark background and sampled content; colours (1.0, 0.1255, 0.1961, 1.0) (0.0, 0.0, 0.0, 1.0)
+
+Clock on loopback
+PASS native LAN clock follower + Python publisher, authenticated reply, timeline running; RTT 1 ms
+
+Python suite
+test_corrupt_update_leaves_active_release (test_deploy.DeploymentTests.test_corrupt_update_leaves_active_release) ... ok
+test_reference_schema (test_deploy.DeploymentTests.test_reference_schema) ... ok
+test_traversal_rejected (test_deploy.DeploymentTests.test_traversal_rejected) ... ok
+test_update_rollback_and_idempotency (test_deploy.DeploymentTests.test_update_rollback_and_idempotency) ... ok
+test_firmata_fragmentation (test_gateway.ProtocolTests.test_firmata_fragmentation) ... ok
+test_input_filter (test_gateway.ProtocolTests.test_input_filter) ... ok
+test_legacy_csv_json_ascii (test_gateway.ProtocolTests.test_legacy_csv_json_ascii) ... ok
+test_osc_scalar (test_gateway.ProtocolTests.test_osc_scalar) ... ok
+test_profile_conflict (test_gateway.ProtocolTests.test_profile_conflict) ... ok
+test_stale_lease (test_gateway.ProtocolTests.test_stale_lease) ... ok
+test_unknown_channel_and_lockout (test_gateway.ProtocolTests.test_unknown_channel_and_lockout) ... ok
+test_bidirectional_real_tty_and_controller_disconnect (test_gateway.SerialEndToEnd.test_bidirectional_real_tty_and_controller_disconnect) ... ok
+test_block_generator (test_tools.ToolTests.test_block_generator) ... ok
+test_clock_auth_and_nonce (test_tools.ToolTests.test_clock_auth_and_nonce) ... ok
+test_page_codes_and_rotations (test_tools.ToolTests.test_page_codes_and_rotations) ... ok
+test_pdf_book_import (test_tools.ToolTests.test_pdf_book_import) ... ok
+Ran 16 tests in 3.172s
+OK
+
+Native firmware protocol
+PASS native firmware protocol: handshake, arming, duplicate, watchdog, stale session, out-of-range.
+
+Warped feed capture
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+Rendered 12 frames at 1024 × 768.
+
+Shipped entry points
+PASS packaged entry point: Orbital atlas
+PASS packaged entry point: Travelling waves
+PASS packaged entry point: A field guide to rocks
+PASS packaged entry point: A field guide to rocks
+PASS player-only directory opened the exported book before and after process termination.
+
+Linux packs
+Built player.pck 426736
+Built studio.pck 494408
+Bundled Godot 4.6.3.stable.official.7d41c59c4
+
+Windows-target packs
+Built player.pck 426736
+Built studio.pck 494408
+
+ffprobe for exported AVI
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "ffv1",
+            "width": 1024,
+            "height": 768,
+            "nb_frames": "12"
+        }
+    ]
+}
+
+Debian package payload checks
+PASS packaged entry point: Orbital atlas
+PASS packaged entry point: Travelling waves
+PASS packaged entry point: A field guide to rocks
+PASS packaged entry point: A field guide to rocks
+PASS player-only directory opened the exported book before and after process termination.

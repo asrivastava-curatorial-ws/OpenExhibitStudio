@@ -1,0 +1,1 @@
+{"devices":[{"id":"firmata_uno","transport":"serial","protocol":"firmata","port":"/dev/ttyACM0","baud":57600,"inputs":["dial","button"],"pins":[{"channel":"dial","mode":"analog","pin":0},{"channel":"button","mode":"digital","pin":2,"pullup":true,"invert":true}],"filters":{"dial":{"scale":0.09775171,"alpha":0.4,"epsilon":0.2}}}]}
