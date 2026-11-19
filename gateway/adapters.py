@@ -1,21 +1,25 @@
 """Local transport adapters. The host selects endpoints in its own configuration."""
+
 import glob
 import os
-import queue
 import select
 import struct
 import threading
-import time
 
 
 def serial_ports():
     try:
         from serial.tools import list_ports
-        return [dict(path=p.device, name=p.description, serial=p.serial_number) for p in list_ports.comports()]
+
+        return [
+            dict(path=p.device, name=p.description, serial=p.serial_number) for p in list_ports.comports()
+        ]
     except ImportError:
         if os.name == "nt":
             raise RuntimeError("Install pyserial on Windows to discover serial ports.")
-        paths = sorted(set(glob.glob("/dev/serial/by-id/*") + glob.glob("/dev/ttyACM*") + glob.glob("/dev/ttyUSB*")))
+        paths = sorted(
+            set(glob.glob("/dev/serial/by-id/*") + glob.glob("/dev/ttyACM*") + glob.glob("/dev/ttyUSB*"))
+        )
         return [dict(path=p, name=os.path.basename(p)) for p in paths]
 
 
@@ -30,6 +34,7 @@ class SerialPort:
                 raise RuntimeError("The Windows serial adapter requires pyserial.")
             import termios
             import tty
+
             speed = getattr(termios, "B" + str(baud))
             fd = os.open(path, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
             try:
@@ -105,8 +110,10 @@ class SerialAdapter:
 
 class MQTTAdapter:
     """One account and exact pair of topics per configured device."""
+
     def __init__(self, config, on_data, on_open, on_close):
         import paho.mqtt.client as mqtt
+
         self.cfg = config
         self.stop = threading.Event()
         self.online = False
@@ -119,7 +126,9 @@ class MQTTAdapter:
         self.client.on_connect = self._connected
         self.client.on_subscribe = lambda *args: on_open() if self.online else None
         self.client.on_disconnect = lambda *args: self._lost(on_close)
-        self.client.on_message = lambda c, u, m: on_data(m.payload.rstrip(b"\r\n") + b"\n") if not m.retain and len(m.payload) < 512 else None
+        self.client.on_message = lambda c, u, m: (
+            on_data(m.payload.rstrip(b"\r\n") + b"\n") if not m.retain and len(m.payload) < 512 else None
+        )
 
     def _connected(self, client, userdata, flags, reason, props):
         self.online = reason == 0
@@ -147,6 +156,7 @@ class MQTTAdapter:
 
 class FirmataInput:
     """Standard reports and explicitly configured noncritical indicator pins."""
+
     def __init__(self, pins):
         self.pins = pins
         self.command = None
@@ -158,22 +168,23 @@ class FirmataInput:
 
     @staticmethod
     def indicator(pin, value):
-        n=pin["pin"]
-        if pin["mode"]=="led":
-            return bytes([0xf5,n,int(value!=0)])
-        if n<16:return bytes([0xe0|n,value&127,(value>>7)&127])
-        return bytes([0xf0,0x6f,n,value&127,(value>>7)&127,0xf7])
+        n = pin["pin"]
+        if pin["mode"] == "led":
+            return bytes([0xF5, n, int(value != 0)])
+        if n < 16:
+            return bytes([0xE0 | n, value & 127, (value >> 7) & 127])
+        return bytes([0xF0, 0x6F, n, value & 127, (value >> 7) & 127, 0xF7])
 
     def safe(self):
-        return b"".join(self.indicator(pin,0) for pin in self.pins if pin["mode"] in {"led","led_pwm"})
+        return b"".join(self.indicator(pin, 0) for pin in self.pins if pin["mode"] in {"led", "led_pwm"})
 
     def subscribe(self):
         result = bytearray([0xF9])
         for pin in self.pins:
             n = pin["pin"]
-            if pin["mode"] in {"led","led_pwm"}:
-                result.extend([0xf4,n,1 if pin["mode"]=="led" else 3])
-                result.extend(self.indicator(pin,0))
+            if pin["mode"] in {"led", "led_pwm"}:
+                result.extend([0xF4, n, 1 if pin["mode"] == "led" else 3])
+                result.extend(self.indicator(pin, 0))
             elif pin["mode"] == "analog":
                 result.extend([0xC0 | n, 1])
             else:
@@ -188,10 +199,13 @@ class FirmataInput:
                 self.sysex = False
             elif not self.sysex and byte & 0x80:
                 self.command, self.data = byte, []
-            elif not self.sysex and self.command==0xf9:
+            elif not self.sysex and self.command == 0xF9:
                 self.data.append(byte)
-                if len(self.data)==2:
-                    self.version=tuple(self.data);self.version_count+=1;self.command=None;self.data=[]
+                if len(self.data) == 2:
+                    self.version = tuple(self.data)
+                    self.version_count += 1
+                    self.command = None
+                    self.data = []
             elif not self.sysex and self.command is not None and self.command & 0xF0 in (0xE0, 0x90):
                 self.data.append(byte)
                 if len(self.data) != 2:
@@ -212,9 +226,11 @@ class FirmataInput:
 
 def osc_scalar(data):
     """Decode a single OSC 1.0 message with one scalar argument."""
+
     def string_at(pos):
         end = data.index(0, pos)
         return data[pos:end].decode("utf-8"), (end + 4) & ~3
+
     address, pos = string_at(0)
     tags, pos = string_at(pos)
     if not address.startswith("/") or tags not in (",i", ",f", ",s", ",T", ",F"):

@@ -1,0 +1,7 @@
+tools/contest/web/vendor/
+firmware/blockly/vendor/
+firmware/blockly/node_modules/
+examples/
+docs/
+*.json
+*.md

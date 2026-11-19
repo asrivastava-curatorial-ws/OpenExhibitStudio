@@ -1,4 +1,5 @@
 """The block editor's sketch generator: validation, and generated C++ that actually compiles."""
+
 import json
 import shutil
 import subprocess
@@ -7,7 +8,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GENERATOR = ROOT/"firmware/blockly/generate.js"
+GENERATOR = ROOT / "firmware/blockly/generate.js"
 ARDUINO_STUB = """
 #include <cstdio>
 #define F(s) s
@@ -31,7 +32,11 @@ unsigned long pulseIn(int, int, unsigned long) { return 580; }
 
 def generate(blocks, **options):
     script = "const m=require(process.argv[1]);process.stdout.write(m.generateExhibitSketch(JSON.parse(process.argv[2]),JSON.parse(process.argv[3])))"
-    result = subprocess.run(["node", "-e", script, str(GENERATOR), json.dumps(blocks), json.dumps(options)], capture_output=True, text=True)
+    result = subprocess.run(
+        ["node", "-e", script, str(GENERATOR), json.dumps(blocks), json.dumps(options)],
+        capture_output=True,
+        text=True,
+    )
     if result.returncode:
         errors = [line for line in result.stderr.splitlines() if line.startswith("Error:")]
         raise ValueError(errors[0] if errors else "generator failed")
@@ -60,9 +65,14 @@ class FirmwareBlockTests(unittest.TestCase):
     def test_generated_sketch_compiles_and_prints_the_ascii_protocol(self):
         sketch = generate(self.ALL, board="uno", interval=100)
         with tempfile.TemporaryDirectory() as tmp:
-            source = Path(tmp)/"sketch.cpp"
-            source.write_text(ARDUINO_STUB + sketch + "\nint main(){setup();for(int i=0;i<3;i++)loop();return 0;}\n")
-            subprocess.run(["g++", "-std=c++17", "-Wall", "-Werror", "-o", str(Path(tmp)/"sketch"), str(source)], check=True)
+            source = Path(tmp) / "sketch.cpp"
+            source.write_text(
+                ARDUINO_STUB + sketch + "\nint main(){setup();for(int i=0;i<3;i++)loop();return 0;}\n"
+            )
+            subprocess.run(
+                ["g++", "-std=c++17", "-Wall", "-Werror", "-o", str(Path(tmp) / "sketch"), str(source)],
+                check=True,
+            )
         for channel in ("dial", "button", "presence", "distance"):
             self.assertIn('Serial.print(F("%s "))' % channel, sketch)
 

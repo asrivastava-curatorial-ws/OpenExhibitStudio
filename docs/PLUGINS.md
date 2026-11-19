@@ -25,9 +25,11 @@ For an external simulator already on the exhibit computer, use the OSC input gat
 import socket
 import struct
 
+
 def osc_string(value):
     data = value.encode("utf8") + b"\0"
     return data + bytes((-len(data)) % 4)
+
 
 packet = osc_string("/pendulum/angle") + osc_string(",f") + struct.pack(">f", 18.5)
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sender:

@@ -5,6 +5,7 @@ slide type is an audience activity (poll, word cloud, rating, ranking, open-ende
 spinner wheel) or plain content. The format stays "oes-quiz" version 1: 0.3 only adds optional
 fields, so 0.2 decks load unchanged.
 """
+
 import base64
 import math
 import re
@@ -14,19 +15,49 @@ GRADED = {"choice", "multiple", "text", "number", "order", "match", "category"}
 AUDIENCE = {"poll", "scale", "cloud", "rank", "open", "qa", "spinner"}
 TYPES = GRADED | AUDIENCE | {"slide"}
 WITH_OPTIONS = {"choice", "multiple", "order", "match", "category", "poll", "rank"}
-LIVE_DEFAULT = {"poll", "scale", "rank", "open"}           # results visible while answering
-PUBLIC = ("type", "prompt", "options", "labels", "seconds", "points", "image", "body", "layout",
-          "scale_max", "low_label", "high_label", "max_entries", "source", "live_results")
+LIVE_DEFAULT = {"poll", "scale", "rank", "open"}  # results visible while answering
+PUBLIC = (
+    "type",
+    "prompt",
+    "options",
+    "labels",
+    "seconds",
+    "points",
+    "image",
+    "body",
+    "layout",
+    "scale_max",
+    "low_label",
+    "high_label",
+    "max_entries",
+    "source",
+    "live_results",
+)
 LAYOUTS = ("auto", "title", "image-left", "image-right", "big")
 LABELS = {
-    "slide": "Content slide", "choice": "Pick one", "multiple": "Pick several", "text": "Type an answer",
-    "number": "Numeric answer", "order": "Correct order", "match": "Match pairs", "category": "Categorise",
-    "poll": "Poll", "scale": "Rating scale", "cloud": "Word cloud", "rank": "Ranking poll",
-    "open": "Open-ended ideas", "qa": "Audience Q&A", "spinner": "Spinner wheel",
+    "slide": "Content slide",
+    "choice": "Pick one",
+    "multiple": "Pick several",
+    "text": "Type an answer",
+    "number": "Numeric answer",
+    "order": "Correct order",
+    "match": "Match pairs",
+    "category": "Categorise",
+    "poll": "Poll",
+    "scale": "Rating scale",
+    "cloud": "Word cloud",
+    "rank": "Ranking poll",
+    "open": "Open-ended ideas",
+    "qa": "Audience Q&A",
+    "spinner": "Spinner wheel",
 }
 DECK_SETTINGS = {  # name: (default, allowed values or type)
-    "speed_bonus": (True, bool), "anonymous": (False, bool), "auto_close": (True, bool),
-    "reactions": (True, bool), "qa": (True, bool), "leaderboard": ("each", ("each", "end", "never")),
+    "speed_bonus": (True, bool),
+    "anonymous": (False, bool),
+    "auto_close": (True, bool),
+    "reactions": (True, bool),
+    "qa": (True, bool),
+    "leaderboard": ("each", ("each", "end", "never")),
     "theme": ("dark", ("dark", "light")),
 }
 
@@ -75,8 +106,11 @@ def image_data(image):
     if not isinstance(image, str) or len(image) > 700_000:
         raise Invalid("Slide images must be under 512 KiB.")
     meta, sep, encoded = image.partition(",")
-    headers = {"data:image/png;base64": b"\x89PNG\r\n\x1a\n", "data:image/jpeg;base64": b"\xff\xd8\xff",
-               "data:image/webp;base64": b"RIFF"}
+    headers = {
+        "data:image/png;base64": b"\x89PNG\r\n\x1a\n",
+        "data:image/jpeg;base64": b"\xff\xd8\xff",
+        "data:image/webp;base64": b"RIFF",
+    }
     if not sep or meta not in headers:
         raise Invalid("Use a local PNG, JPEG or WebP image.")
     try:
@@ -94,16 +128,22 @@ def question(raw):
     typ = raw["type"]
     # Audience activities may be untimed (0 seconds): they stay open until the presenter moves on.
     timed = typ in GRADED
-    q = {"type": typ, "prompt": string(raw.get("prompt"), 500, "Prompt"),
-         "seconds": integer(raw.get("seconds", 30 if timed else 0), 3 if timed else 0, 600, "Time limit"),
-         "points": integer(raw.get("points", 1000), 0, 10000, "Points") if typ in GRADED else 0}
+    q = {
+        "type": typ,
+        "prompt": string(raw.get("prompt"), 500, "Prompt"),
+        "seconds": integer(raw.get("seconds", 30 if timed else 0), 3 if timed else 0, 600, "Time limit"),
+        "points": integer(raw.get("points", 1000), 0, 10000, "Points") if typ in GRADED else 0,
+    }
     if typ in {"poll", "scale", "cloud", "rank", "open"}:
         show = raw.get("live_results", typ in LIVE_DEFAULT)
         if type(show) is not bool:
             raise Invalid("Live results must be on or off.")
         q["live_results"] = show
-    for key, limit, label in (("explanation", 600, "Explanation"), ("notes", 2000, "Presenter notes"),
-                              ("body", 1500, "Slide text")):
+    for key, limit, label in (
+        ("explanation", 600, "Explanation"),
+        ("notes", 2000, "Presenter notes"),
+        ("body", 1500, "Slide text"),
+    ):
         value = optional_string(raw, key, limit, label)
         if value:
             q[key] = value
@@ -157,8 +197,12 @@ def validate(raw):
     qs = raw.get("questions")
     if not isinstance(qs, list) or not 1 <= len(qs) <= 150:
         raise Invalid("A deck needs 1–150 slides.")
-    deck = {"format": "oes-quiz", "version": 1, "title": string(raw.get("title"), 120, "Title"),
-            "teams": strings(raw.get("teams", []), "Teams", 0, 32, 40)}
+    deck = {
+        "format": "oes-quiz",
+        "version": 1,
+        "title": string(raw.get("title"), 120, "Title"),
+        "teams": strings(raw.get("teams", []), "Teams", 0, 32, 40),
+    }
     for key, (default, allowed) in DECK_SETTINGS.items():
         value = raw.get(key, default)
         if (allowed is bool and type(value) is not bool) or (allowed is not bool and value not in allowed):
@@ -246,14 +290,39 @@ def from_text(text, title="Imported questions"):
         labels = [v for _, v in options]
         if answer and all(a in letters for a in answer):
             if len(answer) == 1:
-                slides.append({"type": "choice", "prompt": " ".join(prompt)[:500], "options": labels,
-                               "answer": letters[answer[0]], "seconds": 30, "points": 1000})
+                slides.append(
+                    {
+                        "type": "choice",
+                        "prompt": " ".join(prompt)[:500],
+                        "options": labels,
+                        "answer": letters[answer[0]],
+                        "seconds": 30,
+                        "points": 1000,
+                    }
+                )
             else:
-                slides.append({"type": "multiple", "prompt": " ".join(prompt)[:500], "options": labels,
-                               "answer": sorted(letters[a] for a in answer), "seconds": 45, "points": 1000})
+                slides.append(
+                    {
+                        "type": "multiple",
+                        "prompt": " ".join(prompt)[:500],
+                        "options": labels,
+                        "answer": sorted(letters[a] for a in answer),
+                        "seconds": 45,
+                        "points": 1000,
+                    }
+                )
         else:
-            slides.append({"type": "poll", "prompt": " ".join(prompt)[:500], "options": labels, "seconds": 60})
+            slides.append(
+                {"type": "poll", "prompt": " ".join(prompt)[:500], "options": labels, "seconds": 60}
+            )
     if not slides:
         raise Invalid("No questions were found. Separate questions with a blank line.")
-    return validate({"format": "oes-quiz", "version": 1, "title": title[:120] or "Imported questions",
-                     "teams": [], "questions": slides[:150]})
+    return validate(
+        {
+            "format": "oes-quiz",
+            "version": 1,
+            "title": title[:120] or "Imported questions",
+            "teams": [],
+            "questions": slides[:150],
+        }
+    )

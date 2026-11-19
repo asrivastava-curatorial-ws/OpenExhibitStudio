@@ -1,4 +1,5 @@
 """Run a contest across two host addresses or an isolated Linux veth pair."""
+
 import argparse
 import http.client
 import ipaddress
@@ -49,11 +50,16 @@ def visit(folder, client_address, isolated):
         headers = {"Content-Type": "application/json"}
         if token:
             headers["Authorization"] = "Bearer " + token
-        conn = http.client.HTTPConnection(info["host"], info["port"], timeout=3,
-                                          source_address=(client_address, 0))
+        conn = http.client.HTTPConnection(
+            info["host"], info["port"], timeout=3, source_address=(client_address, 0)
+        )
         try:
-            conn.request("POST" if data is not None else "GET", path,
-                         json.dumps(data).encode() if data is not None else None, headers)
+            conn.request(
+                "POST" if data is not None else "GET",
+                path,
+                json.dumps(data).encode() if data is not None else None,
+                headers,
+            )
             reply = conn.getresponse()
             out = json.loads(reply.read())
             if reply.status != status:
@@ -84,7 +90,7 @@ def run(host, source, isolated):
         verify_namespace()
         ip("link", "set", "lo", "up")
         ip("link", "add", "oes-host", "type", "veth", "peer", "name", "oes-phone")
-    elif (host == source or ipaddress.ip_address(host).is_loopback or ipaddress.ip_address(source).is_loopback):
+    elif host == source or ipaddress.ip_address(host).is_loopback or ipaddress.ip_address(source).is_loopback:
         raise ValueError("Supply two distinct, assigned, non-loopback IPv4 addresses.")
     with tempfile.TemporaryDirectory() as temp:
         folder = Path(temp)
@@ -102,8 +108,12 @@ def run(host, source, isolated):
             room = quiz.Room(folder / "room.sqlite", json.loads(quiz.EXAMPLE.read_text()))
             server = quiz.Contest(room, host, 0, 0)
             server.start()
-            info = {"host": host, "port": server.public.server_port, "private_port": server.operator.server_port,
-                    "code": room.meta()["code"]}
+            info = {
+                "host": host,
+                "port": server.public.server_port,
+                "private_port": server.operator.server_port,
+                "code": room.meta()["code"],
+            }
             staging = folder / "prepared.json"
             staging.write_text(json.dumps(info))
             staging.rename(folder / "start.json")
@@ -113,8 +123,16 @@ def run(host, source, isolated):
             room.control("reveal", "open", 0)
             if process.wait(timeout=10):
                 raise RuntimeError("Participant process failed.")
-            topology = "two isolated network namespaces with no default route" if isolated else "two non-loopback addresses on one host"
-            print("PASS", topology, "with separate processes: joined, scored, read ranking, operator paths inaccessible.")
+            topology = (
+                "two isolated network namespaces with no default route"
+                if isolated
+                else "two non-loopback addresses on one host"
+            )
+            print(
+                "PASS",
+                topology,
+                "with separate processes: joined, scored, read ranking, operator paths inaccessible.",
+            )
         finally:
             if process.poll() is None:
                 process.kill()
@@ -127,7 +145,9 @@ def run(host, source, isolated):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--isolated", action="store_true", help="Linux iproute2, veth and a new network namespace required.")
+    parser.add_argument(
+        "--isolated", action="store_true", help="Linux iproute2, veth and a new network namespace required."
+    )
     parser.add_argument("--host", default="192.168.76.1")
     parser.add_argument("--source", default="192.168.76.2")
     parser.add_argument("--visit", type=Path, help=argparse.SUPPRESS)

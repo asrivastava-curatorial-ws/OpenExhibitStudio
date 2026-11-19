@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """OpenExhibit hardware gateway, Python 3.10+. See docs/PROTOCOL.md."""
+
 import argparse
-import collections
 import csv
 import hmac
 import json
@@ -12,7 +12,6 @@ import secrets
 import socket
 import socketserver
 import sqlite3
-import sys
 import threading
 import time
 from pathlib import Path
@@ -32,42 +31,96 @@ def valid_config(cfg):
         ids.add(ident)
         transport = d.get("transport", "serial")
         field_io.validate(d)
-        if transport not in ("serial","mqtt","osc","tcp","udp","artnet","sacn","modbus_tcp","modbus_rtu","midi","hid"):
+        if transport not in (
+            "serial",
+            "mqtt",
+            "osc",
+            "tcp",
+            "udp",
+            "artnet",
+            "sacn",
+            "modbus_tcp",
+            "modbus_rtu",
+            "midi",
+            "hid",
+        ):
             raise ValueError("Unknown transport.")
         protocol = d.get("protocol", "oes1")
-        if protocol not in ("oes1","firmata","jsonl","csv","ascii","osc","binary","artnet","sacn","modbus_tcp","modbus_rtu","midi","hid"):
+        if protocol not in (
+            "oes1",
+            "firmata",
+            "jsonl",
+            "csv",
+            "ascii",
+            "osc",
+            "binary",
+            "artnet",
+            "sacn",
+            "modbus_tcp",
+            "modbus_rtu",
+            "midi",
+            "hid",
+        ):
             raise ValueError("Unknown input protocol.")
         if transport == "osc" and protocol != "osc":
             raise ValueError("OSC transport requires the OSC protocol.")
-        endpoint = (transport, str(d.get("host","")), str(d.get("port","")), str(d.get("topic",d["id"]) if transport=="mqtt" else (d.get("vendor"),d.get("product"),d.get("serial_number")) if transport=="hid" else ""))
+        endpoint = (
+            transport,
+            str(d.get("host", "")),
+            str(d.get("port", "")),
+            str(
+                d.get("topic", d["id"])
+                if transport == "mqtt"
+                else (d.get("vendor"), d.get("product"), d.get("serial_number"))
+                if transport == "hid"
+                else ""
+            ),
+        )
         if endpoint in endpoints:
             raise ValueError("Two devices claim the same endpoint.")
         endpoints.add(endpoint)
         occupied = set()
-        led_channels={}
-        digital_pins=set()
+        led_channels = {}
+        digital_pins = set()
         for pin in d.get("pins", []):
             n = pin["pin"]
-            mode=pin["mode"]
-            if mode not in {"analog","digital","led","led_pwm"}:raise ValueError("Unsupported Firmata pin mode.")
+            mode = pin["mode"]
+            if mode not in {"analog", "digital", "led", "led_pwm"}:
+                raise ValueError("Unsupported Firmata pin mode.")
             max_pin = 15 if mode == "analog" else 127
-            if mode!="analog":
-                if n in digital_pins:raise ValueError("A digital pin has two functions.")
+            if mode != "analog":
+                if n in digital_pins:
+                    raise ValueError("A digital pin has two functions.")
                 digital_pins.add(n)
-            if mode in {"led","led_pwm"}:
-                if pin.get("channel") in led_channels:raise ValueError("Duplicate indicator binding.")
-                led_channels[pin["channel"]]=1 if mode=="led" else 255
+            if mode in {"led", "led_pwm"}:
+                if pin.get("channel") in led_channels:
+                    raise ValueError("Duplicate indicator binding.")
+                led_channels[pin["channel"]] = 1 if mode == "led" else 255
             if type(n) is not int or not 0 <= n <= max_pin or (pin["mode"], n) in occupied:
                 raise ValueError("Conflicting or invalid Firmata pin.")
             occupied.add((pin["mode"], n))
-        if protocol=="firmata" and (d.get("outputs") or led_channels):
-            if transport!="serial" or set(led_channels)!=set(d.get("outputs",{})) or d.get("purpose")!="indicator_lighting":raise ValueError("Firmata output requires declared indicator pins on a serial board.")
-            for channel,bounds in d["outputs"].items():
-                if len(bounds)!=2 or bounds[0]!=0 or bounds[1]>led_channels[channel]:raise ValueError("Firmata LED range exceeds its output mode.")
+        if protocol == "firmata" and (d.get("outputs") or led_channels):
+            if (
+                transport != "serial"
+                or set(led_channels) != set(d.get("outputs", {}))
+                or d.get("purpose") != "indicator_lighting"
+            ):
+                raise ValueError("Firmata output requires declared indicator pins on a serial board.")
+            for channel, bounds in d["outputs"].items():
+                if len(bounds) != 2 or bounds[0] != 0 or bounds[1] > led_channels[channel]:
+                    raise ValueError("Firmata LED range exceeds its output mode.")
         for channel, limits in d.get("outputs", {}).items():
-            if protocol not in ("oes1","firmata","artnet","sacn") or channel in outputs or not channel.replace("_", "").isalnum():
+            if (
+                protocol not in ("oes1", "firmata", "artnet", "sacn")
+                or channel in outputs
+                or not channel.replace("_", "").isalnum()
+            ):
                 raise ValueError("Output conflict or unsupported protocol.")
-            if not all(isinstance(x, (int, float)) and math.isfinite(x) for x in limits) or len(limits) != 2 or limits[0] > limits[1]:
+            if (
+                not all(isinstance(x, (int, float)) and math.isfinite(x) for x in limits)
+                or len(limits) != 2
+                or limits[0] > limits[1]
+            ):
                 raise ValueError("Invalid output range.")
             outputs.add(channel)
     return cfg
@@ -102,8 +155,9 @@ class Link:
         with self.hub.lock:
             self.hub.disarm()
             self.connected, self.ready = True, False
-            self.last_fault=""
-            if self.protocol=="firmata":self.firmata=FirmataInput(self.cfg.get("pins",[]))
+            self.last_fault = ""
+            if self.protocol == "firmata":
+                self.firmata = FirmataInput(self.cfg.get("pins", []))
             self.buffer.clear()
             self.last_seen = time.monotonic()
             if self.protocol == "oes1":
@@ -115,12 +169,13 @@ class Link:
     def closed(self, reason):
         with self.hub.lock:
             previously_live = self.connected or self.ready
-            changed=getattr(self,"last_fault",None)!=reason
-            self.last_fault=reason
+            changed = getattr(self, "last_fault", None) != reason
+            self.last_fault = reason
             self.connected = self.ready = self.armed = False
             if previously_live:
                 self.hub.disarm()
-            if previously_live or changed:self.hub.report_error(self.ident + ": " + reason)
+            if previously_live or changed:
+                self.hub.report_error(self.ident + ": " + reason)
 
     def begin(self, boot):
         self.hub.disarm()
@@ -133,23 +188,26 @@ class Link:
     def feed(self, chunk):
         with self.hub.lock:
             if self.protocol == "firmata":
-                previous=self.firmata.version_count
+                previous = self.firmata.version_count
                 for channel, value in self.firmata.feed(chunk):
-                    if not self.cfg.get("outputs"):self.ready = True
+                    if not self.cfg.get("outputs"):
+                        self.ready = True
                     self.last_seen = time.monotonic()
                     self.sample(channel, value)
-                if previous!=self.firmata.version_count:
-                    self.last_seen=time.monotonic()
-                    self.ready=not self.cfg.get("outputs") or self.firmata.version >= (2,5)
-                    self.firmware="Firmata "+ ".".join(map(str,self.firmata.version))
+                if previous != self.firmata.version_count:
+                    self.last_seen = time.monotonic()
+                    self.ready = not self.cfg.get("outputs") or self.firmata.version >= (2, 5)
+                    self.firmware = "Firmata " + ".".join(map(str, self.firmata.version))
                 return
             self.buffer.extend(chunk)
-            if self.protocol=="binary":
-                size=self.cfg["frame_bytes"]
-                while len(self.buffer)>=size:
-                    payload=bytes(self.buffer[:size]);del self.buffer[:size]
-                    self.ready,self.last_seen=True,time.monotonic()
-                    for channel,value in field_io.fields(payload,self.cfg["fields"]):self.sample(channel,value)
+            if self.protocol == "binary":
+                size = self.cfg["frame_bytes"]
+                while len(self.buffer) >= size:
+                    payload = bytes(self.buffer[:size])
+                    del self.buffer[:size]
+                    self.ready, self.last_seen = True, time.monotonic()
+                    for channel, value in field_io.fields(payload, self.cfg["fields"]):
+                        self.sample(channel, value)
                 return
             while b"\n" in self.buffer:
                 line, _, self.buffer = self.buffer.partition(b"\n")
@@ -218,38 +276,57 @@ class Link:
         opts = self.cfg.get("filters", {}).get(channel, {})
         now = time.monotonic()
         if opts and isinstance(value, (int, float)):
-            record = self.filters.setdefault(channel, {"last": None, "at": 0, "average": None, "candidate": None, "since": 0})
+            record = self.filters.setdefault(
+                channel, {"last": None, "at": 0, "average": None, "candidate": None, "since": 0}
+            )
             value = value * opts.get("scale", 1) + opts.get("offset", 0)
             alpha = min(1, max(0, float(opts.get("alpha", 1))))
-            value = value if record["average"] is None else alpha * value + (1-alpha) * record["average"]
+            value = value if record["average"] is None else alpha * value + (1 - alpha) * record["average"]
             record["average"] = value
             if record["candidate"] != value:
                 record.update(candidate=value, since=now)
-            if now - record["since"] < opts.get("debounce_ms", 0)/1000 or now - record["at"] < opts.get("interval_ms", 0)/1000:
+            if (
+                now - record["since"] < opts.get("debounce_ms", 0) / 1000
+                or now - record["at"] < opts.get("interval_ms", 0) / 1000
+            ):
                 return
-            if record["last"] is not None and abs(value-record["last"]) < opts.get("epsilon", 0):
+            if record["last"] is not None and abs(value - record["last"]) < opts.get("epsilon", 0):
                 return
             record.update(last=value, at=now)
         self.hub.broadcast(dict(op="input", device=self.ident, channel=channel, value=value))
         if self.hub.recorder is not None:
-            self.hub.recorder.execute("insert into samples values(?,?,?,?)", (time.time(), self.ident, channel, json.dumps(value)))
+            self.hub.recorder.execute(
+                "insert into samples values(?,?,?,?)", (time.time(), self.ident, channel, json.dumps(value))
+            )
             self.hub.recorder.commit()
 
     def output(self, channel, value, now):
         limits = self.cfg["outputs"][channel]
-        if not self.ready or not self.armed or isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not limits[0] <= value <= limits[1]:
+        if (
+            not self.ready
+            or not self.armed
+            or isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+            or not limits[0] <= value <= limits[1]
+        ):
             raise ValueError("Output rejected by device state or configured limits.")
         if now - self.last_out.get(channel, 0) < 0.05:
             raise ValueError("Output rate limit (20 Hz).")
         self.last_out[channel] = now
-        if self.protocol=="firmata":
-            pin=next(p for p in self.cfg["pins"] if p["channel"]==channel and p["mode"] in {"led","led_pwm"})
-            try:self.transport.write(self.firmata.indicator(pin,int(round(value))))
+        if self.protocol == "firmata":
+            pin = next(
+                p for p in self.cfg["pins"] if p["channel"] == channel and p["mode"] in {"led", "led_pwm"}
+            )
+            try:
+                self.transport.write(self.firmata.indicator(pin, int(round(value))))
             except OSError as exc:
-                self.closed(str(exc));raise ValueError("Indicator board disconnected.") from exc
+                self.closed(str(exc))
+                raise ValueError("Indicator board disconnected.") from exc
             return
-        if isinstance(self.transport,field_io.LightingOutput):
-            try:self.transport.set_level(channel,value)
+        if isinstance(self.transport, field_io.LightingOutput):
+            try:
+                self.transport.set_level(channel, value)
             except OSError as exc:
                 self.closed(str(exc))
                 raise ValueError("Lighting socket failed.") from exc
@@ -283,8 +360,22 @@ class Hub:
 
     def summary(self):
         outputs = [l for l in self.links.values() if l.cfg.get("outputs")]
-        return dict(op="state", armed=bool(self.owner and outputs and all(l.armed for l in outputs)),
-                    devices={l.ident: ("armed" if l.armed else "ready " + l.firmware if l.ready else "awaiting data" if l.connected else "offline") for l in self.links.values()})
+        return dict(
+            op="state",
+            armed=bool(self.owner and outputs and all(l.armed for l in outputs)),
+            devices={
+                l.ident: (
+                    "armed"
+                    if l.armed
+                    else "ready " + l.firmware
+                    if l.ready
+                    else "awaiting data"
+                    if l.connected
+                    else "offline"
+                )
+                for l in self.links.values()
+            },
+        )
 
     def state(self):
         self.broadcast(self.summary())
@@ -299,12 +390,16 @@ class Hub:
             link.pending.clear()
             if link.protocol == "oes1" and link.connected:
                 link.write("OFF")
-            elif link.protocol=="firmata" and link.cfg.get("outputs") and link.connected:
-                try:link.transport.write(link.firmata.safe())
-                except OSError:link.ready=link.connected=False
-            elif isinstance(link.transport,field_io.LightingOutput) and link.connected:
-                try:link.transport.blackout()
-                except OSError:link.ready=link.connected=False
+            elif link.protocol == "firmata" and link.cfg.get("outputs") and link.connected:
+                try:
+                    link.transport.write(link.firmata.safe())
+                except OSError:
+                    link.ready = link.connected = False
+            elif isinstance(link.transport, field_io.LightingOutput) and link.connected:
+                try:
+                    link.transport.blackout()
+                except OSError:
+                    link.ready = link.connected = False
         self.state()
 
     def command(self, client, msg):
@@ -318,21 +413,31 @@ class Hub:
                 self.disarm()
             elif op == "arm":
                 links = [l for l in self.links.values() if l.cfg.get("outputs")]
-                if self.lockout or self.owner not in (None, client) or not links or not all(l.ready and now-l.last_seen < 1.5 for l in links):
-                    raise ValueError("Arming requires ready devices, exclusive control and maintenance lockout off.")
+                if (
+                    self.lockout
+                    or self.owner not in (None, client)
+                    or not links
+                    or not all(l.ready and now - l.last_seen < 1.5 for l in links)
+                ):
+                    raise ValueError(
+                        "Arming requires ready devices, exclusive control and maintenance lockout off."
+                    )
                 self.owner, self.lease = client, now
                 for link in links:
-                    if link.protocol=="firmata":
-                        try:link.transport.write(link.firmata.safe())
+                    if link.protocol == "firmata":
+                        try:
+                            link.transport.write(link.firmata.safe())
                         except OSError as exc:
-                            self.disarm();raise ValueError("Indicator board disconnected.") from exc
-                        link.armed=True
-                    elif isinstance(link.transport,field_io.LightingOutput):
+                            self.disarm()
+                            raise ValueError("Indicator board disconnected.") from exc
+                        link.armed = True
+                    elif isinstance(link.transport, field_io.LightingOutput):
                         link.transport.blackout()
-                        link.armed=True
-                    else:link.write("ARM " + link.nonce)
+                        link.armed = True
+                    else:
+                        link.write("ARM " + link.nonce)
             elif op == "out":
-                if self.owner is not client or now-self.lease > 1.5:
+                if self.owner is not client or now - self.lease > 1.5:
                     raise ValueError("Physical outputs are disarmed.")
                 channel = msg.get("channel", "")
                 for link in self.links.values():
@@ -340,11 +445,20 @@ class Hub:
                         link.output(channel, msg.get("value"), now)
                         return None
                 raise ValueError("Unknown output channel.")
-            elif op == "inject" and msg.get("channel") in ("page", "motion_x", "motion_y", "presence", "gesture"):
+            elif op == "inject" and msg.get("channel") in (
+                "page",
+                "motion_x",
+                "motion_y",
+                "presence",
+                "gesture",
+            ):
                 value = msg.get("value")
-                if not isinstance(value,(float,int)) or not math.isfinite(value):
+                if not isinstance(value, (float, int)) or not math.isfinite(value):
                     raise ValueError("Invalid sensor value.")
-                self.broadcast(dict(op="input", device="local-plugin", channel=msg["channel"], value=value), exclude=client)
+                self.broadcast(
+                    dict(op="input", device="local-plugin", channel=msg["channel"], value=value),
+                    exclude=client,
+                )
             else:
                 raise ValueError("Unknown command.")
             return self.summary()
@@ -352,30 +466,41 @@ class Hub:
     def tick(self):
         now = time.monotonic()
         with self.lock:
-            if self.owner is not None and now-self.lease > 1.5:
+            if self.owner is not None and now - self.lease > 1.5:
                 self.disarm()
             for l in self.links.values():
                 if not l.connected:
                     continue
                 if l.protocol == "oes1":
-                    if l.ready and (now-l.last_seen > 1.5 or any(now-t > 0.9 for t in l.pending.values())):
+                    if l.ready and (
+                        now - l.last_seen > 1.5 or any(now - t > 0.9 for t in l.pending.values())
+                    ):
                         self.disarm()
                         l.ready = False
                         l.boot = ""
                         self.report_error(l.ident + ": device heartbeat or output acknowledgement expired")
-                    if now-l.sent > 0.3:
+                    if now - l.sent > 0.3:
                         l.write(("HB " + l.nonce) if l.ready else "PROBE")
                         l.sent = now
-                elif l.cfg.get("transport") in ("udp","artnet","sacn") and isinstance(l.transport,field_io.Input) and l.ready and now-l.last_seen>2.5:
-                    l.ready=False
+                elif (
+                    l.cfg.get("transport") in ("udp", "artnet", "sacn")
+                    and isinstance(l.transport, field_io.Input)
+                    and l.ready
+                    and now - l.last_seen > 2.5
+                ):
+                    l.ready = False
                     self.state()
-                elif l.protocol=="firmata" and l.cfg.get("outputs") and now-l.last_probe>.45:
-                    if now-l.last_seen>1.5 and l.ready:
-                        self.disarm();l.ready=False;self.report_error(l.ident+": Firmata heartbeat expired")
-                    try:l.transport.write(bytes([0xf9]))
-                    except OSError as exc:l.closed(str(exc))
-                    l.last_probe=now
-                elif l.protocol == "firmata" and not l.ready and now-l.last_probe > 2:
+                elif l.protocol == "firmata" and l.cfg.get("outputs") and now - l.last_probe > 0.45:
+                    if now - l.last_seen > 1.5 and l.ready:
+                        self.disarm()
+                        l.ready = False
+                        self.report_error(l.ident + ": Firmata heartbeat expired")
+                    try:
+                        l.transport.write(bytes([0xF9]))
+                    except OSError as exc:
+                        l.closed(str(exc))
+                    l.last_probe = now
+                elif l.protocol == "firmata" and not l.ready and now - l.last_probe > 2:
                     try:
                         l.transport.write(l.firmata.subscribe())
                     except OSError as exc:
@@ -385,9 +510,13 @@ class Hub:
     def start(self):
         for l in self.links.values():
             transport = l.cfg.get("transport", "serial")
-            if transport in {"tcp","udp","artnet","sacn","modbus_tcp","modbus_rtu","midi","hid"}:
-                l.transport=field_io.LightingOutput(l) if transport in {"artnet","sacn"} and l.cfg.get("outputs") else field_io.Input(l)
-                t=threading.Thread(target=l.transport.run,daemon=True)
+            if transport in {"tcp", "udp", "artnet", "sacn", "modbus_tcp", "modbus_rtu", "midi", "hid"}:
+                l.transport = (
+                    field_io.LightingOutput(l)
+                    if transport in {"artnet", "sacn"} and l.cfg.get("outputs")
+                    else field_io.Input(l)
+                )
+                t = threading.Thread(target=l.transport.run, daemon=True)
             elif transport == "osc":
                 t = threading.Thread(target=self.osc_loop, args=(l,), daemon=True)
             else:
@@ -396,16 +525,18 @@ class Hub:
                 t = threading.Thread(target=l.transport.run, daemon=True)
             t.start()
             self.threads.append(t)
+
         def clock():
-            while not self.stopping.wait(.1):
+            while not self.stopping.wait(0.1):
                 self.tick()
+
         threading.Thread(target=clock, daemon=True).start()
 
     def osc_loop(self, link):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
                 sock.bind(("127.0.0.1", int(link.cfg["port"])))
-                sock.settimeout(.3)
+                sock.settimeout(0.3)
                 with self.lock:
                     link.connected = True
                 while not self.stopping.is_set():
@@ -434,14 +565,14 @@ class Hub:
 
 class Handler(socketserver.BaseRequestHandler):
     def handle(self):
-        self.request.settimeout(.10)
+        self.request.settimeout(0.10)
         responses = queue.Queue(maxsize=256)
         hub = self.server.hub
         authenticated = False
         buf = bytearray()
         last = time.monotonic()
         try:
-            while not hub.stopping.is_set() and time.monotonic()-last < 4:
+            while not hub.stopping.is_set() and time.monotonic() - last < 4:
                 try:
                     chunk = self.request.recv(4096)
                     if not chunk:
@@ -459,7 +590,13 @@ class Handler(socketserver.BaseRequestHandler):
                     if not isinstance(msg, dict):
                         return
                     if not authenticated:
-                        if msg.get("op") != "hello" or msg.get("v") != 1 or not hmac.compare_digest(str(msg.get("token","")).encode(), self.server.token.encode()):
+                        if (
+                            msg.get("op") != "hello"
+                            or msg.get("v") != 1
+                            or not hmac.compare_digest(
+                                str(msg.get("token", "")).encode(), self.server.token.encode()
+                            )
+                        ):
                             return
                         authenticated = True
                         with hub.lock:
@@ -474,7 +611,7 @@ class Handler(socketserver.BaseRequestHandler):
                             responses.put_nowait(reply)
                     last = time.monotonic()
                 while not responses.empty():
-                    payload = json.dumps(responses.get_nowait(), separators=(",",":")) + "\n"
+                    payload = json.dumps(responses.get_nowait(), separators=(",", ":")) + "\n"
                     self.request.sendall(payload.encode())
         except (OSError, UnicodeError, ValueError, queue.Full):
             pass
@@ -503,11 +640,13 @@ def main():
     token = os.getenv("OPENEXHIBIT_TOKEN") or secrets.token_urlsafe(24)
     if len(token) < 16:
         raise SystemExit("Use a gateway token of at least 16 characters.")
-    cfg = json.loads(args.config.read_text(encoding="utf-8")) if args.config else {"devices":[]}
+    cfg = json.loads(args.config.read_text(encoding="utf-8")) if args.config else {"devices": []}
     hub = Hub(cfg)
     if args.record:
         hub.recorder = sqlite3.connect(args.record, check_same_thread=False)
-        hub.recorder.execute("create table if not exists samples(time real, device text, channel text, value text)")
+        hub.recorder.execute(
+            "create table if not exists samples(time real, device text, channel text, value text)"
+        )
     with Server(("127.0.0.1", args.port), Handler) as server:
         server.hub, server.token = hub, token
         hub.start()
@@ -515,7 +654,7 @@ def main():
         if not os.getenv("OPENEXHIBIT_TOKEN"):
             print("Local operator token: " + token, flush=True)
         try:
-            server.serve_forever(.2)
+            server.serve_forever(0.2)
         except KeyboardInterrupt:
             pass
         finally:
