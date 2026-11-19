@@ -76,12 +76,24 @@ python3 tools/firmware.py upload --board uno --port /dev/ttyACM0
 
 Compilation works offline once the cores and libraries are installed.
 
-## Release archives
+## Packages
 
-```sh
-python3 tools/release.py --source --out dist/OpenExhibit-Studio-0.3.0-source.zip
-bash packaging/build-deb.sh dist
-```
+| Command | Output (in `dist/`) | Needs on the build machine |
+| --- | --- | --- |
+| `python3 packaging/build_appimage.py` | `OpenExhibit-Studio-0.3.0-x86_64.AppImage` | squashfs-tools |
+| `python3 packaging/build_windows_installer.py` | `OpenExhibit-Studio-0.3.0-Windows-x64-Setup.exe` | NSIS 3 (`sudo apt install nsis`); runs on Linux or Windows |
+| `python3 tools/release.py` | `OpenExhibit-Studio-0.3.0-source.zip` | — |
+| `bash packaging/build-deb.sh dist` | Debian package (needs `bin/` from `setup.sh`; not rebuilt for 0.3.0) | dpkg-deb |
 
-The source archive contains no engine or build output: setup downloads and verifies the engine
-and builds the packs on the target computer.
+Both package builders export the packs with the pinned Godot 4.7.1 Linux engine and take every
+third-party file from `packaging/runtimes.py`, which downloads it once into `downloads/` and checks
+its pinned SHA-512 or SHA-256 before use: the Godot engines, CPython 3.12.13 for Windows
+(python-build-standalone) and the pyserial and paho-mqtt wheels. Run
+`python3 packaging/runtimes.py` on a connected machine, then build anywhere with `--offline`.
+The AppImage runtime is published only as a rolling build, so it is not pinned; the builder prints
+its SHA-256, and `--runtime FILE` uses a copy you keep. `--appdir DIR` / `--stage DIR` keep the
+assembled files for inspection.
+
+The AppImage is assembled with `mksquashfs` and the runtime directly, so no downloaded build tool
+runs. Check a build on an X11 display with
+`python3 tests/window_smoke.py "Orbital atlas" -- ./OpenExhibit-Studio-0.3.0-x86_64.AppImage`.

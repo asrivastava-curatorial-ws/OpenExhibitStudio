@@ -30,7 +30,7 @@ Type=Application
 Name=OpenExhibit $role
 Exec=openexhibit-$role
 Icon=openexhibit
-Categories=Education;AudioVideo;
+Categories=Education;
 Terminal=false
 EOF
 done

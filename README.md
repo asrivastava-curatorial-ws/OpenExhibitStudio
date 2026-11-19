@@ -9,6 +9,33 @@ telemetry. Studio authors exhibits; the standalone Player runs them on exhibit c
 
 ## Install and start
 
+### Ready-to-run packages
+
+**Linux (x86-64)** — `OpenExhibit-Studio-0.3.0-x86_64.AppImage`, one file, nothing to install:
+
+```sh
+chmod +x OpenExhibit-Studio-0.3.0-x86_64.AppImage
+./OpenExhibit-Studio-0.3.0-x86_64.AppImage                              # Studio
+./OpenExhibit-Studio-0.3.0-x86_64.AppImage player exhibit.oex --kiosk   # Player
+./OpenExhibit-Studio-0.3.0-x86_64.AppImage desktop                      # add both to the app menu
+```
+
+Live audience and hardware use the computer's `python3` (3.10 or newer, standard on Ubuntu,
+Kubuntu, Debian and Fedora); the serial and MQTT libraries are inside the AppImage. If it reports a
+FUSE problem, start it with `--appimage-extract-and-run` or install FUSE (`sudo apt install fuse3`).
+
+**Windows 10/11 (x64)** — `OpenExhibit-Studio-0.3.0-Windows-x64-Setup.exe` installs for the
+current user without administrator rights: Start-menu entries for Studio and Player, optional
+desktop shortcuts, and double-click on an `.oex` package to play it. Python 3.12 is included. The
+installer is not code-signed, so SmartScreen may say *Windows protected your PC*: choose
+*More info → Run anyway*. Allow Python through the firewall on private networks the first time a
+live-audience session starts, so phones can join.
+
+Build both with `packaging/build_appimage.py` and `packaging/build_windows_installer.py`
+([build guide](docs/BUILD.md)).
+
+### From source
+
 **Ubuntu / Kubuntu / Debian (x86-64; ARM64 is supported by setup but untested)** — from the extracted folder:
 
 ```sh

@@ -178,7 +178,7 @@ Comment=Offline interactive exhibits, projection mapping and live audience quizz
 Exec=bash "$ROOT/$role.sh" %f
 Icon=$ROOT/app/assets/icon.svg
 Terminal=false
-Categories=Education;Graphics;
+Categories=Education;
 MimeType=application/x-openexhibit;
 EOF
   done

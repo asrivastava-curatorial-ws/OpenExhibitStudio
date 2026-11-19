@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=OpenExhibit Studio
+Comment=Author interactive museum exhibits
+Exec=AppRun %f
+Icon=openexhibit
+Terminal=false
+Categories=Education;

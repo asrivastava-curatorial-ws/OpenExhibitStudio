@@ -57,6 +57,26 @@ Studio (`studio.sh`, showing *Orbital atlas*) and the Player (`player.sh`, *Trav
 a player-only copy holding just `bin/godot`, `bin/player.pck` and `player.sh` opened an exported
 book package before and after its process was killed.
 
+## Packages
+
+**Linux AppImage** (`packaging/build_appimage.py`, 76 MB). The file starts with the AppImage type-2
+runtime, followed by a zstd squashfs image of the application folder. Studio (its start-up exhibit
+and example 15) and the Player (example 13) opened native X11 windows without engine errors, both
+from the assembled folder and from the AppImage file itself. This container has no FUSE, so the
+file ran in its extract-and-run mode, not mounted. With the system python3 limited to the bundled
+`pylib/` (`python3 -S`), the serial and MQTT libraries imported from the package, the gateway
+listed serial ports, and the live-audience service started from the package, served its state
+and accepted a join. The `desktop` command wrote menu entries that pass `desktop-file-validate`.
+
+**Windows installer** (`packaging/build_windows_installer.py`, NSIS 3.09 on Linux, 83 MB).
+makensis reported no warnings. Extracting the installer with 7-Zip gave all 1,897 staged files,
+byte-identical, plus the generated uninstaller. That includes the official Godot 4.7.1 engine
+(SHA-512 checked), the Studio and Player packs, and CPython 3.12.13 (SHA-256 checked against its
+release) with pyserial and paho-mqtt in its site-packages. **The installer was not run:** no
+Windows computer was available, and Wine 9.0 aborts on start-up in this container (as for 0.2.0).
+The bundled CPython was not executed either. Installing, the shortcuts and file association,
+uninstalling, and running Studio, the Player and the Python services on Windows are untested.
+
 ## Not tested
 
 - **Physical hardware.** No Arduino, ESP32, sensor or actuator was connected. Serial was exercised
@@ -66,8 +86,9 @@ book package before and after its process was killed.
   not on Android or iOS devices, and not over Wi-Fi.
 - **Projectors and cameras.** Mapping and calibration were verified against rendered pixels and
   synthetic captures only; optical alignment needs the installed projectors.
-- **Windows.** No Windows execution. PowerShell 7 on Linux ran the download, SHA-512 check and
-  extraction steps of `Setup-Windows.ps1`, which then stops where it starts the Windows engine.
+- **Windows.** Nothing ran on Windows: neither the installer (see *Packages*) nor the source
+  setup. PowerShell 7 on Linux ran the download, SHA-512 check and extraction steps of
+  `Setup-Windows.ps1`, which stops where it starts the Windows engine.
 - **Other platforms and packages.** ARM64 Linux, the `.deb` package and native single-file exports
   were not built or installed for 0.3.0.
 - **Long runs.** The resource soak (`tools/soak.py`) was not repeated for 0.3.0.

@@ -22,7 +22,19 @@ Set **OPENEXHIBIT_OPERATOR_KEY** to a private password of at least 16 characters
 
 On Ubuntu install the .deb, copy **packaging/openexhibit-player.service** to the kiosk user’s systemd user directory and edit its exhibit path for the installed site. Enable it with **systemctl --user enable --now openexhibit-player.service** from the graphical desktop. Its restart policy recovers an unexpected process failure. On desktops without graphical-session.target, use the desktop’s Startup Applications entry with the same command. The display server and active desktop session must already exist.
 
-On Windows, use the installed Player executable/pack command shown in the Start shortcut. Add it to the kiosk account’s Task Scheduler at logon with **Restart on failure** enabled. Working directory, examples path, package path and environment must point to the local installation. Use the headless gateway as a separate background process if required.
+With the AppImage, add an autostart entry for the kiosk account (paths are examples):
+
+```sh
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/openexhibit-player.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=OpenExhibit Player
+Exec=/opt/exhibits/OpenExhibit-Studio-0.3.0-x86_64.AppImage player /opt/exhibits/exhibit.oex --kiosk
+EOF
+```
+
+On Windows, the installer's *OpenExhibit Player* Start-menu shortcut shows the full command (`bin\godot.exe --main-pack bin\player.pck -- --examples …`); append `--project <package> --kiosk`. Add it to the kiosk account’s Task Scheduler at logon with **Restart on failure** enabled. Working directory, examples path, package path and environment must point to the local installation. Use the headless gateway as a separate background process if required.
 
 ## Synchronized shows over a private LAN
 

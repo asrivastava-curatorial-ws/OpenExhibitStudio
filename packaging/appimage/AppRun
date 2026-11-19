@@ -1,0 +1,60 @@
+#!/bin/sh
+# OpenExhibit Studio AppImage entry point.
+#
+#   OpenExhibit-Studio.AppImage [exhibit]                         start Studio
+#   OpenExhibit-Studio.AppImage player [exhibit] [--fullscreen] [--kiosk] [--output ID]
+#   OpenExhibit-Studio.AppImage desktop                           add Studio and Player to the app menu
+#
+# Live audience and hardware services run with the system's python3 (3.10 or newer); the
+# serial and MQTT libraries they need are bundled in pylib/.
+set -eu
+here=$(dirname "$(readlink -f "$0")")
+base="$here/usr/lib/openexhibit"
+role=studio
+case "$(basename "${ARGV0:-$0}")" in *[Pp]layer*) role=player ;; esac
+
+usage() { sed -n '4,6p' "$here/AppRun" | sed 's/^# \{0,1\}//'; }
+
+add_to_menu() {
+  image=${APPIMAGE:-}
+  if [ -z "$image" ]; then
+    echo "Run this command from the AppImage file itself." >&2
+    exit 1
+  fi
+  data=${XDG_DATA_HOME:-$HOME/.local/share}
+  mkdir -p "$data/applications" "$data/icons/hicolor/256x256/apps"
+  cp "$here/openexhibit.png" "$data/icons/hicolor/256x256/apps/openexhibit.png"
+  for entry in "studio:OpenExhibit Studio:Author interactive exhibits" "player:OpenExhibit Player:Play an exhibit"; do
+    key=${entry%%:*}
+    rest=${entry#*:}
+    cat > "$data/applications/openexhibit-$key.desktop" << EOF
+[Desktop Entry]
+Type=Application
+Name=${rest%%:*}
+Comment=${rest#*:}
+Exec="$image" $key %f
+Icon=openexhibit
+Terminal=false
+Categories=Education;
+EOF
+  done
+  echo "Added OpenExhibit Studio and Player to the application menu."
+}
+
+case "${1:-}" in
+  player | --player) role=player; shift ;;
+  studio | --studio) role=studio; shift ;;
+  desktop | --desktop) add_to_menu; exit 0 ;;
+  -h | --help) usage; exit 0 ;;
+esac
+
+if [ "$#" -ge 1 ] && [ -f "$1" ]; then
+  project=$(realpath -- "$1")
+  shift
+  set -- --project "$project" "$@"
+fi
+set -- -- --examples "$base/examples" "$@"
+if [ -n "${OPENEXHIBIT_AUDIO_DRIVER:-}" ]; then set -- --audio-driver "$OPENEXHIBIT_AUDIO_DRIVER" "$@"; fi
+PYTHONPATH="$base/pylib${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH
+exec "$base/bin/godot" --main-pack "$base/bin/$role.pck" "$@"

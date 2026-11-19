@@ -72,6 +72,20 @@ unchanged, so 0.2 exhibits and slide decks open as they are.
   resume a saved session; network choice in plain words.
 - New example 15: an interactive science talk using every slide type.
 
+### Packages
+
+- **Linux AppImage** (x86-64): Studio and Player in one file — `player` opens the Player, `desktop`
+  adds both to the application menu. The serial and MQTT libraries are bundled; the live-audience
+  and hardware services use the computer's python3.
+- **Windows installer** (x64): per-user install without administrator rights, Start-menu entries,
+  optional desktop shortcuts and `.oex` double-click to play, and an uninstaller that removes only
+  what it installed. Bundles CPython 3.12.13 with pyserial and paho-mqtt.
+- `packaging/runtimes.py` pins every bundled third-party file by SHA-512 or SHA-256. It replaces
+  `tools/windows_runtime.py`, whose embedded-Python digest could not be verified;
+  `tools/release.py` now builds only the source archive.
+- `gateway/requirements-field.txt` pinned paho-mqtt 2.2.0 against the tested 2.1.0 in
+  `requirements-optional.txt`; both now use 2.1.0. Desktop entries use one menu category.
+
 ### Tests
 
 - `bash tests/run_all.sh` runs every suite the computer supports and reports PASS, FAIL or SKIP
