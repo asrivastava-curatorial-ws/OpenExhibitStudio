@@ -1,1 +1,45 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'"><title>OpenExhibit · Firmware blocks</title><link rel="stylesheet" href="style.css"><header><b>OpenExhibit Studio</b><span>Firmware blocks · classic Uno / Nano / Mega</span><button id="save" disabled>Export Arduino sketch</button></header><main><div id="workspace"></div><section><h2>Arduino source</h2><p id="status">Install the local Blockly dependency as described in docs/HARDWARE.md, then reopen this page.</p><pre id="code"></pre></section></main><script src="node_modules/blockly/blockly_compressed.js"></script><script src="node_modules/blockly/msg/en.js"></script><script src="generate.js"></script><script src="editor.js"></script></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'">
+<title>OpenExhibit · Firmware blocks</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <b>OpenExhibit</b><span>Firmware blocks</span>
+  <label>Board
+    <select id="board">
+      <option value="uno">Arduino Uno</option>
+      <option value="nano">Arduino Nano</option>
+      <option value="mega">Arduino Mega 2560</option>
+    </select>
+  </label>
+  <label>Report every <input id="interval" type="number" min="20" max="5000" value="100"> ms</label>
+  <span class="spacer"></span>
+  <button id="copy" disabled>Copy code</button>
+  <button id="save" class="primary" disabled>Export sketch (.ino)</button>
+</header>
+<main>
+  <div id="workspace"></div>
+  <section>
+    <h2>Arduino sketch</h2>
+    <p id="status">Loading…</p>
+    <pre id="code"></pre>
+    <h2>Next steps</h2>
+    <ol>
+      <li>Upload: open the .ino in Arduino IDE, or run<br><code>python3 tools/firmware.py compile --board uno</code><br><code>python3 tools/firmware.py upload --board uno --port /dev/ttyACM0</code></li>
+      <li>In Studio → Hardware choose <i>Any Arduino or ESP32 sketch that prints “name value” lines</i>, pick the port and press <i>Start hardware service</i>.</li>
+      <li>Use the channel names in Interactions (<i>Sensor “dial” sends a value</i>).</li>
+    </ol>
+  </section>
+</main>
+<script src="vendor/blockly/blockly_compressed.js"></script>
+<script src="vendor/blockly/blocks_compressed.js"></script>
+<script src="vendor/blockly/msg/en.js"></script>
+<script src="generate.js"></script>
+<script src="editor.js"></script>
+</body>
+</html>

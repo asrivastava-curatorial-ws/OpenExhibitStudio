@@ -253,6 +253,11 @@ func _start(entry: Array) -> void:
 		for device in profile.get("devices", []):
 			if device.get("transport") == "serial":
 				device.port = ports[port_index].get("path", "")
+			if device.get("protocol") in ["ascii", "csv", "jsonl"]:
+				# Text sketches may report any channel the exhibit uses; accept them all.
+				for channel in RuleText.input_channels(host.p):
+					if not channel in device.get("inputs", []):
+						device.inputs.append(channel)
 	var config := Storage.absolute("user://hardware/site.json")
 	var problem := Storage.write_json(config, profile)
 	if problem:

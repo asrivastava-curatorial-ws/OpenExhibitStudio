@@ -1,1 +1,7 @@
-{"name":"openexhibit-firmware-blocks","version":"0.1.0","private":true,"dependencies":{"blockly":"11.2.2"}}
+{
+  "name": "openexhibit-firmware-blocks",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Blockly 12.5.1 is vendored in vendor/blockly so the editor works offline; this file records the version for updates.",
+  "dependencies": { "blockly": "12.5.1" }
+}
