@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Offline quiz host with distinct operator and visitor listeners."""
+"""Offline live-audience host (AhaSlides-style polls, quizzes, word clouds, Q&A, ideas, spinner).
+
+Two listeners: the public one serves participants and the projector; the private operator one
+(loopback only, bearer token) serves the presenter console and slide editor.
+"""
 import argparse
 import base64
 import subprocess
@@ -21,7 +25,7 @@ import webbrowser
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, parse_qs
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from contest import deck
@@ -32,6 +36,12 @@ ROOT = Path(__file__).resolve().parent
 WEB = ROOT/"contest"/"web"
 EXAMPLE = ROOT/"contest"/"museum.quiz.json"
 LIMIT = 8 * 1024 * 1024
+ASSETS = {name: mime for name, mime in [
+    ("app.js","text/javascript; charset=utf-8"),("present.js","text/javascript; charset=utf-8"),
+    ("editor.js","text/javascript; charset=utf-8"),("style.css","text/css; charset=utf-8"),
+    ("mono.woff2","font/woff2"),("bengali.ttf","font/ttf"),("devanagari.ttf","font/ttf"),
+    ("vendor/wordcloud2.js","text/javascript; charset=utf-8"),("vendor/confetti.browser.js","text/javascript; charset=utf-8"),
+    ("vendor/Sortable.min.js","text/javascript; charset=utf-8")]}
 
 
 @functools.lru_cache(maxsize=16)
@@ -56,22 +66,22 @@ class Server(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "OpenExhibit/0.2"
+    server_version = "OpenExhibit/0.3"
 
     def log_message(self, *_):
         pass
 
-    def reply(self, value, status=200, mime="application/json; charset=utf-8"):
+    def reply(self, value, status=200, mime="application/json; charset=utf-8", filename=None, cache=False):
         raw = value if isinstance(value,bytes) else (dump(value) if mime.startswith("application/json") else value).encode()
         self.send_response(status)
         self.send_header("Content-Type", mime)
         self.send_header("Content-Length", str(len(raw)))
-        self.send_header("Cache-Control", "no-store")
+        self.send_header("Cache-Control", "max-age=300" if cache else "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Content-Security-Policy", "default-src 'self'; connect-src 'self'; script-src 'self'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'")
-        if mime.startswith("text/csv"):
-            self.send_header("Content-Disposition", 'attachment; filename="contest-results.csv"')
+        if filename:
+            self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
         self.end_headers()
         self.wfile.write(raw)
 
@@ -102,6 +112,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply({"token":room.join(data.get("code",""),data.get("name"),data.get("team"))})
             if op == "/api/practice/next":
                 room.practice_next(token,data.get("round"))
+            elif op == "/api/react":
+                room.react(token,data.get("emoji"))
+            elif op == "/api/idea":
+                room.idea(token,data.get("round"),data.get("text"))
+            elif op == "/api/idea/vote":
+                room.idea_vote(token,deck.integer(data.get("id"),1,2**31,"Idea"))
             elif op == "/api/answer":
                 room.submit(token,data.get("round"),data.get("value"))
             elif op == "/api/ask":
@@ -110,10 +126,17 @@ class Handler(BaseHTTPRequestHandler):
                 room.qa(token,"vote",deck.integer(data.get("id"),1,2**31,"Question"))
             elif op.startswith("/api/host/") and not host:
                 raise Forbidden("Host access is available on the operator computer.")
+            elif op == "/api/host/text":
+                return self.reply(deck.from_text(data.get("text"),str(data.get("title") or "Imported questions")))
+            elif op == "/api/host/moderate-idea":
+                room.moderate_idea(deck.integer(data.get("id"),1,2**31,"Idea"),data.get("status"))
             elif op == "/api/host/import":
                 from contest.slides import convert
                 if not isinstance(data.get("file"),str) or not isinstance(data.get("name"),str):
                     raise deck.Invalid("Select a local presentation.")
+                if data["name"].lower().endswith(".txt"):
+                    raw = base64.b64decode(data["file"],validate=True).decode("utf-8-sig")
+                    return self.reply(deck.from_text(raw,Path(data["name"]).stem.replace("_"," ")[:120]))
                 try:
                     new=convert(base64.b64decode(data["file"],validate=True),data["name"])
                 except (zipfile.BadZipFile,ParseError,subprocess.SubprocessError,KeyError) as error:
@@ -123,29 +146,40 @@ class Handler(BaseHTTPRequestHandler):
                 service.stop.set()
             elif op == "/api/host/action":
                 room.control(data.get("action"),data.get("phase"),data.get("round"),data.get("deck"))
+                state = room.snapshot(None, host=True)   # the presenter continues from the new state at once
+                state.update(join_url=service.join_url, audience_url=service.audience_url, join_host=service.join_host)
+                return self.reply(state)
             elif op == "/api/host/moderate":
                 room.moderate(deck.integer(data.get("id"),1,2**31,"Question"),data.get("status"))
             else:
                 return self.reply({"error":"Unknown request."},404)
             return self.reply({"ok":True})
-        if op == "/api/host/state" or op == "/api/host/results":
+        if op in {"/api/host/state","/api/host/results","/api/host/summary"}:
             if not host:
                 raise Forbidden("Open the host link on the operator computer.")
             if op.endswith("/results"):
-                return self.reply("\ufeff"+room.export(),mime="text/csv; charset=utf-8")
+                return self.reply("\ufeff"+room.export(),mime="text/csv; charset=utf-8",filename="session-answers.csv")
+            if op.endswith("/summary"):
+                return self.reply("\ufeff"+room.summary(),mime="text/csv; charset=utf-8",filename="session-summary.csv")
         if op in {"/api/state","/api/host/state"}:
+            query = parse_qs(url.query)
+            since = query.get("since",[""])[0]
+            if since.isdecimal():
+                pulse = query.get("pulse",[""])[0]
+                room.wait(int(since), int(pulse) if pulse.isdecimal() else None)
             state = room.snapshot(None if host else token, host=host)
-            state.update(join_url=service.join_url, audience_url=service.audience_url)
+            state.update(join_url=service.join_url, audience_url=service.audience_url, join_host=service.join_host)
             return self.reply(state)
+        if op == "/favicon.ico":
+            self.send_response(204); self.send_header("Content-Length","0"); self.end_headers(); return None
         if op == "/join.svg":
             return self.reply(qr_svg(service.join_url),mime="image/svg+xml")
-        if op in {"/","/display","/host"}:
-            if op == "/host" and not self.server.operator:
-                raise Forbidden("Open the private host link on the operator computer.")
+        if op in {"/","/display","/host","/edit"}:
+            if op in {"/host","/edit"} and not self.server.operator:
+                raise Forbidden("Open the private presenter link on the operator computer.")
             return self.reply((WEB/"index.html").read_bytes(),mime="text/html; charset=utf-8")
-        assets = {"app.js":"text/javascript; charset=utf-8","style.css":"text/css; charset=utf-8","mono.woff2":"font/woff2","bengali.ttf":"font/ttf","devanagari.ttf":"font/ttf"}
-        if op[1:] in assets:
-            return self.reply((WEB/op[1:]).read_bytes(),mime=assets[op[1:]])
+        if op[1:] in ASSETS:
+            return self.reply((WEB/op[1:]).read_bytes(),mime=ASSETS[op[1:]],cache=True)
         return self.reply({"error":"Page not found."},404)
 
     def handle_request(self, post):
@@ -191,6 +225,7 @@ class Contest:
             srv.http_host_ok = allowed.__contains__
         root = "http://%s:%d" % self.public.server_address
         self.join_url = root + "/?room=" + room.meta()["code"]
+        self.join_host = "%s:%d" % self.public.server_address
         self.audience_url = root + "/display"
         self.host_url = "http://%s:%d/host#%s" % (*self.operator.server_address,self.secret)
         self.threads = []

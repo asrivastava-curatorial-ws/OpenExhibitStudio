@@ -1,168 +1,338 @@
 'use strict';
-const $=id=>document.getElementById(id);
-const mode=location.pathname==='/host'?'host':location.pathname==='/display'?'display':'player';
-const key='oes-quiz-'+mode+'-'+location.host;
-let token=(mode==='host'?sessionStorage:localStorage).getItem(key)||'';
-if(mode==='host'&&location.hash.length>1){token=location.hash.slice(1);sessionStorage.setItem(key,token);history.replaceState(null,'',location.pathname);}
-document.body.className=mode;
-$('role').textContent={player:'Participant',host:'Host console',display:'Projector'}[mode];
-let state=null,lastMain='',lastSide='',lastMessages='',busy=false,deadline=0,joined=false,editing=null,editIndex=0,stopped=false;
-const names={choice:'Pick one',multiple:'Pick several',text:'Type an answer',number:'Numeric answer',order:'Correct order',match:'Match pairs',category:'Categorise',poll:'Audience poll',scale:'Rating scale',cloud:'Word cloud',slide:'Content slide'};
-const publicNames={practice:'Self-paced play',lobby:'Lobby',open:'Accepting answers',closed:'Time is up',paused:'Paused',reveal:'Round result',standings:'Leaderboard',finished:'Final standings'};
-function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
-function btn(text,fn,cls){const b=el('button',text,cls);b.type='button';b.addEventListener('click',()=>Promise.resolve().then(fn).catch(fail));return b;}
-function field(label,control){control.setAttribute('aria-label',label);const l=el('label',undefined,'field');l.append(document.createTextNode(label),control);return l;}
-function input(type,value){const i=el('input');i.type=type;i.value=value??'';return i;}
-function select(opts,value){const s=el('select');for(const [v,label] of opts){const o=el('option',label);o.value=v;s.append(o);}s.value=value??opts[0]?.[0];return s;}
-function clear(e,...children){e.replaceChildren(...children);}
-function fail(e){$('error').textContent=e.message||String(e);$('error').hidden=false;}
-function message(text,cls='muted'){return el('p',text,cls);}
-async function api(path,body,withToken=true){const headers={};if(withToken&&token)headers.Authorization='Bearer '+token;
- const opts={headers,cache:'no-store'};if(body!==undefined){headers['Content-Type']='application/json';opts.method='POST';opts.body=JSON.stringify(body);}
- const r=await fetch(path,opts);const d=await r.json();if(!r.ok){const err=new Error(d.error||'Request failed');err.status=r.status;throw err;}return d;}
-async function refresh(){if(busy||stopped)return;busy=true;
- try{const s=await api(mode==='host'?'/api/host/state':'/api/state');state=s;deadline=performance.now()+s.seconds_left*1000;joined=!!s.me;
- $('connection').textContent='Connected';render(s);}
- catch(e){if(mode==='player'&&e.status===403&&token){token='';localStorage.removeItem(key);lastMain='';}else if(e.status===403&&mode==='host'){stopped=true;fail(e);}else{$('connection').textContent='Reconnecting…';}}
- finally{busy=false;}}
-async function action(act,more={}){const s=state;await api('/api/host/action',{action:act,phase:s.phase,round:s.index,...more});$('error').hidden=true;await refresh();}
-function joinForm(s){
- const joinKey=JSON.stringify([s.code,s.teams]);if($('join').childElementCount&&$('join').dataset.room===joinKey)return;
- const box=$('join'),f=el('form');box.dataset.room=joinKey;
- const name=input('text',''),code=input('text',new URLSearchParams(location.search).get('room')||''),team=select(s.teams.map(x=>[x,x]));
- name.maxLength=32;name.required=true;name.autocomplete='nickname';code.required=true;code.inputMode='numeric';code.maxLength=6;
- f.append(field('Room code',code),field('Display name',name));if(s.teams.length)f.append(field('Team',team));
- const b=el('button','Join contest','primary');b.type='submit';f.append(b);
- f.onsubmit=async e=>{e.preventDefault();try{const a=await api('/api/join',{name:name.value,code:code.value,team:team.value},false);token=a.token;localStorage.setItem(key,token);$('error').hidden=true;lastMain='';await refresh();}catch(err){fail(err);}};
- clear(box,el('h2','Join this contest'),f);
-}
-function render(s){
- $('phase').textContent=(s.index<0?'':('Round '+(s.index+1)+' of '+s.rounds+' · '))+publicNames[s.phase];
- $('title').textContent=s.title;$('code').textContent=(mode==='player'?'':'Room ')+s.code;
- const login=mode==='player'&&!joined;$('join').hidden=!login;
- if(login){joinForm(s);$('discussion').hidden=true;return;}
- const signature=JSON.stringify([s.code,s.index,s.phase,s.question,s.me?.submitted,s.answer,s.distribution,s.leaders,s.team_leaders,s.explanation,s.session_phase,s.total_score]);
- if(signature!==lastMain){main(s);lastMain=signature;}
- const aside=JSON.stringify([s.code,s.phase,s.index,s.locked,s.players,s.rounds,s.me?.name,s.me?.team,s.deck?.title]);
- if(aside!==lastSide){side(s);lastSide=aside;}
- const count=$('count');if(count)count.textContent=s.received+' / '+s.players+' answered';
- const msg=JSON.stringify([s.qa,s.phase==='finished',joined]);
- if(msg!==lastMessages){discussion(s);lastMessages=msg;}
- tick();
-}
-function main(s){
- const box=$('stage');clear(box);
- if(s.phase==='practice'){box.append(el('h2','Self-paced contest in progress'),message('Each participant advances through the rounds on their device.'));return;}
- if(s.self_paced&&s.session_phase==='practice'&&mode==='player'){
-  const advance=()=>api('/api/practice/next',{round:s.index}).then(refresh);
-  if(s.phase==='lobby'){box.append(el('h2','Ready to play?'),btn('Begin my rounds',advance,'primary'));return;}
-  if(s.phase==='finished'){box.append(el('h2','You finished'),message('Your total: '+s.total_score+' points. Final standings appear when the host closes the contest.'));return;}
- }
- if(s.phase==='lobby'){box.append(el('h2',mode==='host'?'Ready to begin':'Waiting for the first round'),message(mode==='host'?'Open the projector view and invite the audience to join.':'The host will start the contest here.'));return;}
- const stats=el('div',undefined,'stats'),timer=el('b','','timer'),count=el('span','','metric');timer.id='timer';count.id='count';stats.append(timer,count);box.append(stats);
- if(['standings','finished'].includes(s.phase)){box.append(el('h2',s.phase==='finished'?'Final standings':'Leaderboard'));ranking(box,s);return;}
- const q=s.question;box.append(el('div',names[q.type]+(q.points?' · '+q.points+' pts':''),'tag'),el('h2',q.prompt));
- if(q.image){const im=el('img');im.src=q.image;im.alt='Question illustration';im.className='questionImage';box.append(im);}
- if(mode==='player'&&s.self_paced&&s.phase==='open'&&q.type==='slide'){box.append(message('The next round becomes available when this slide’s timer ends.'));}
- if(mode==='player'&&s.phase==='open'&&!s.me.submitted&&q.type!=='slide'){responseForm(box,q,s.index);return;}
- if(q.options&&!['standings','finished'].includes(s.phase))for(const v of q.options)box.append(el('div',v,'option'));
- if(q.labels)box.append(message('Items: '+q.labels.join(' · ')));
- if(s.phase==='paused'||s.phase==='closed')box.append(message(s.phase==='paused'?'The host paused the clock.':'Answers are closed. The host will reveal the result.','stateNote'));
- if(s.me?.submitted&&s.phase!=='reveal')box.append(message('Answer recorded','stateNote'));
- if(s.phase==='reveal'){if(s.self_paced&&s.session_phase==='practice'&&mode==='player')box.append(btn(s.index+1<s.rounds?'Next question':'Finish my quiz',()=>api('/api/practice/next',{round:s.index}).then(refresh),'primary'));
- if(s.answer!==null&&s.answer!==undefined){
-   const a=Array.isArray(s.answer)?s.answer.map((x,i)=>q.labels?q.labels[i]+' → '+x:x).join(q.type==='order'?' → ':' · '):String(s.answer);
-   box.append(el('h3','Answer'),message(a,'stateNote'));}
-   if(s.explanation)box.append(message(s.explanation));if(s.me)box.append(message('Your score this round: '+(s.me.points??0)+' pts'));
-   }
- if(s.distribution?.length){const total=Math.max(1,...s.distribution.map(v=>v[1]));
-    if(q.type==='cloud'){const cloud=el('div',undefined,'cloud');for(const [w,n] of s.distribution){const span=el('span',w+' ×'+n);span.style.fontSize=(1+n/total)+'rem';cloud.append(span);}box.append(cloud);}
-    else{for(const [w,n] of s.distribution){const item=el('div',w+' · '+n,'option'),bar=el('div',undefined,'bar');bar.style.width=(100*n/total)+'%';item.append(bar);box.append(item);}}}
-}
-function tick(){const t=$('timer');if(t&&state)t.textContent=state.phase==='open'?Math.max(0,Math.ceil((deadline-performance.now())/1000))+' s':(['paused','closed'].includes(state.phase)?publicNames[state.phase]:'');}
-function responseForm(box,q,idx){
- const f=el('form'),area=el('div',undefined,'options');let get;const opts=q.options||[];
- if(['choice','multiple','poll','scale'].includes(q.type)){
-  const many=q.type==='multiple',values=q.type==='scale'?['1','2','3','4','5']:opts;
-  const controls=values.map((v,i)=>{const c=input(many?'checkbox':'radio',v);c.name='pick';c.id='ans'+i;
-   const l=el('label',undefined,'check');l.append(c,document.createTextNode(v));area.append(l);return c;});
-  get=()=>{const out=controls.filter(v=>v.checked).map(v=>v.value);return many?out:q.type==='scale'?Number(out[0]):out[0];};
- }else if(q.type==='order'){
-  const order=opts.slice();const renderOrder=()=>{clear(area);order.forEach((v,i)=>{const line=el('div',undefined,'line'),buttons=el('div',undefined,'toolbar');
-   function move(n){[order[i],order[n]]=[order[n],order[i]];renderOrder();}
-   const up=btn('↑',()=>move(i-1)),down=btn('↓',()=>move(i+1));up.disabled=i===0;down.disabled=i===order.length-1;up.setAttribute('aria-label','Move '+v+' up');down.setAttribute('aria-label','Move '+v+' down');buttons.append(up,down);line.append(el('span',(i+1)+'. '+v),buttons);area.append(line);});};renderOrder();get=()=>order;
- }else if(['match','category'].includes(q.type)){const controls=q.labels.map(l=>{const c=select([['','Choose…'],...opts.map(v=>[v,v])]);c.required=true;area.append(field(l,c));return c;});get=()=>controls.map(c=>c.value);
- }else{const c=input(q.type==='number'?'number':'text','');c.required=true;c.maxLength=q.type==='cloud'?48:180;if(q.type==='number')c.step='any';area.append(field('Your answer',c));get=()=>q.type==='number'?c.valueAsNumber:c.value;}
- const b=el('button','Submit answer','primary');b.type='submit';f.append(area,b);
- f.onsubmit=async e=>{e.preventDefault();b.disabled=true;try{await api('/api/answer',{round:idx,value:get()});$('error').hidden=true;await refresh();}catch(err){fail(err);b.disabled=false;}};
- box.append(f);
-}
-function ranking(box,s){for(const [title,rows] of [['Teams',s.team_leaders],['Players',s.leaders]]){
- if(!rows?.length)continue;box.append(el('h3',title));for(const r of rows){const line=el('div',undefined,'score');line.append(el('span','#'+r.rank),el('span',r.name),el('b',String(r.score)));box.append(line);}}}
-function side(s){const dest=$('side');clear(dest);
- if(mode!=='player'){const entry=el('section'),url=el('a',s.join_url,'joinUrl');url.href=s.join_url;url.target='_blank';url.rel='noopener';
- const qr=el('img');qr.className='qr';qr.src='/join.svg';qr.alt='QR code to join this contest';entry.append(el('h3','Join the room'),qr,url,message(s.players+' joined · '+(s.locked?'joining closed':'joining open')));dest.append(entry);}
- if(mode==='player'&&s.me){const card=el('section');card.append(el('h3',s.me.name),message(s.me.team||'Individual standings'));dest.append(card);}
- if(mode!=='host')return;
- const h=el('section'),buttons=el('div',undefined,'toolbar');h.append(el('h3','Host controls'),buttons);
- if(s.phase==='lobby'){buttons.append(btn('Start contest',()=>action('next'),'primary'),btn('Edit contest',()=>editor(s.deck)));}
- if(s.phase==='open')buttons.append(btn('Pause',()=>action('pause')));
- if(s.phase==='paused')buttons.append(btn('Resume',()=>action('resume'),'primary'));
- if(['open','paused','closed'].includes(s.phase))buttons.append(btn('Reveal answer',()=>action('reveal'),'primary'));
- if(s.phase==='reveal')buttons.append(btn('Show standings',()=>action('standings')));
- if(s.phase==='practice')buttons.append(btn('Finish contest',()=>{if(confirm('Close self-paced entries and show final standings?'))return action('finish');}));
- if(['reveal','standings'].includes(s.phase)){
-  if(s.index+1<s.rounds)buttons.append(btn('Next round',()=>action('next'),'primary'));
-  buttons.append(btn('Finish contest',()=>{if(confirm('Finish this contest and close entries?'))return action('finish');}));}
- if(s.phase!=='finished')buttons.append(btn(s.locked?'Open joining':'Lock joining',()=>action('lock')));
- buttons.append(btn('Projector view',()=>window.open(s.audience_url,'_blank','noopener')),btn('Export results',exportCSV));dest.prepend(h);
-}
-async function exportCSV(){const r=await fetch('/api/host/results',{headers:{Authorization:'Bearer '+token}});if(!r.ok)throw new Error('Could not export results.');saveBlob(await r.blob(),'contest-results.csv');}
-function saveBlob(blob,name){const a=el('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);}
-function discussion(s){$('discussion').hidden=mode==='display'&&!s.qa.length;
- if(mode==='player'&&s.phase!=='finished'&&!$('ask').childElementCount){
-  const f=el('form'),i=input('text','');i.maxLength=240;i.required=true;const b=el('button','Send question');b.type='submit';f.append(field('Ask the host',i),b);
-  f.onsubmit=async e=>{e.preventDefault();try{await api('/api/ask',{text:i.value});i.value='';i.placeholder='Sent for moderation';}catch(err){fail(err);}};$('ask').append(f);}
- if(s.phase==='finished')clear($('ask'));const msgs=$('messages');clear(msgs);
- for(const q of s.qa){const r=el('div',undefined,'qaRow');r.append(el('strong',q.body),message(q.status+' · '+q.votes+' votes'));const t=el('div',undefined,'toolbar');
- if(mode==='host')for(const [status,title] of [['published','Publish'],['hidden','Hide'],['answered','Mark answered']]){if(q.status!==status)t.append(btn(title,async()=>{await api('/api/host/moderate',{id:q.id,status});await refresh();}));}
- if(mode==='player'&&q.status==='published'&&s.phase!=='finished')t.append(btn('Upvote',async()=>{await api('/api/vote',{id:q.id});await refresh();}));
- r.append(t);msgs.append(r);}
-}
-function editor(deck){editing=JSON.parse(JSON.stringify(deck));editIndex=0;$('editError').textContent='';drawEditor();$('editor').showModal();}
-function lines(s){return s.split('\n').map(x=>x.trim()).filter(Boolean);}
-function area(value){const t=el('textarea');t.value=Array.isArray(value)?value.join('\n'):(value??'');return t;}
-function drawEditor(){
- const box=$('editBody'),q=editing.questions[editIndex];clear(box);
- function connect(e,handler){e.addEventListener('input',handler);return e;}
- const title=input('text',editing.title);box.append(field('Contest title',connect(title,()=>editing.title=title.value)));
- const teams=area(editing.teams);box.append(field('Team names · one per line, or leave empty for individual play',connect(teams,()=>editing.teams=lines(teams.value))));
- const speed=input('checkbox','');speed.checked=editing.speed_bonus;const sp=el('label',undefined,'check');sp.append(connect(speed,()=>editing.speed_bonus=speed.checked),document.createTextNode('Award a speed bonus for correct answers'));box.append(sp);
- const tools=el('div',undefined,'toolbar'),jump=select(editing.questions.map((x,i)=>[String(i),String(i+1)+'. '+x.prompt.slice(0,48)]),String(editIndex));jump.onchange=()=>{editIndex=Number(jump.value);drawEditor();};box.append(field('Round',jump));
- tools.append(btn('Add round',()=>{editing.questions.splice(editIndex+1,0,{type:'choice',prompt:'New question',options:['First option','Second option'],answer:'First option',seconds:30,points:1000});editIndex++;drawEditor();}));
- if(editing.questions.length>1)tools.append(btn('Delete round',()=>{editing.questions.splice(editIndex,1);editIndex=Math.min(editIndex,editing.questions.length-1);drawEditor();}));
- for(const [delta,label] of [[-1,'Move earlier'],[1,'Move later']]){const n=editIndex+delta;if(n>=0&&n<editing.questions.length)tools.append(btn(label,()=>{[editing.questions[n],editing.questions[editIndex]]=[editing.questions[editIndex],editing.questions[n]];editIndex=n;drawEditor();}));}
- box.append(tools);
- const type=select(Object.entries(names),q.type);type.onchange=()=>{q.type=type.value;delete q.answer;drawEditor();};box.append(field('Round type',type));
- const prompt=area(q.prompt);box.append(field('Question or slide text',connect(prompt,()=>q.prompt=prompt.value)));
- const pair=el('div',undefined,'editGroups'),secs=input('number',q.seconds),points=input('number',q.points);secs.min=3;secs.max=600;points.min=0;points.max=10000;
- pair.append(field('Seconds',connect(secs,()=>q.seconds=Number(secs.value))),field('Maximum points',connect(points,()=>q.points=Number(points.value))));box.append(pair);
- const hasOpts=['choice','multiple','order','match','category','poll'].includes(q.type);
- if(hasOpts){const opts=area(q.options);box.append(field('Choices in display order · one per line',connect(opts,()=>q.options=lines(opts.value))));}
- if(['match','category'].includes(q.type)){const labels=area(q.labels);box.append(field('Left-hand items · one per line',connect(labels,()=>q.labels=lines(labels.value))));}
- if(!['scale','poll','cloud','slide'].includes(q.type)){
-  const labels={choice:'Correct choice',multiple:'All correct choices · one per line',order:'Correct sequence · one choice per line',match:'Correct choice for each left-hand item · one per line',category:'Category for each item · one per line',text:'Accepted spellings · one per line',number:'Correct numerical value'};
-  const ans=area(q.answer);box.append(field(labels[q.type],connect(ans,()=>q.answer=q.type==='number'?Number(ans.value):q.type==='choice'?ans.value.trim():lines(ans.value))));
-  if(q.type==='number'){const tol=input('number',q.tolerance??0);tol.min=0;tol.step='any';box.append(field('Absolute tolerance',connect(tol,()=>q.tolerance=Number(tol.value))));}}
- if(['poll','cloud','scale'].includes(q.type)){const live=input('checkbox','');live.checked=q.live_results??(q.type!=='cloud');const l=el('label',undefined,'check');l.append(connect(live,()=>q.live_results=live.checked),document.createTextNode('Show incoming responses live'));box.append(l);}
- const why=area(q.explanation);box.append(field('Explanation after reveal',connect(why,()=>q.explanation=why.value)));
- const pic=input('file','');pic.accept='image/png,image/jpeg';pic.onchange=async()=>{const f=pic.files[0];if(!f)return;if(f.size>524288){$('editError').textContent='Use an image under 512 KiB.';return;}const reader=new FileReader();reader.onload=()=>{q.image=reader.result;drawEditor();};reader.readAsDataURL(f);};
- box.append(field('Question image · local PNG or JPEG',pic));if(q.image){const im=el('img');im.className='questionImage';im.src=q.image;im.alt='Current illustration';box.append(im,btn('Remove image',()=>{delete q.image;drawEditor();}));}
-}
-$('dismiss').onclick=()=>$('editor').close();
-$('editForm').onsubmit=async e=>{e.preventDefault();try{await action('deck',{deck:editing});$('editor').close();lastSide='';await refresh();}catch(err){$('editError').textContent=err.message;}};
-$('exportDeck').onclick=()=>saveBlob(new Blob([JSON.stringify(editing,null,2)],{type:'application/json'}),'contest.quiz.json');
-$('importDeck').onchange=async e=>{try{const file=e.target.files[0];if(!file||file.size>8*1024*1024)throw new Error('Select a quiz deck smaller than 8 MiB.');let d;if(/\.(pptx|pdf)$/i.test(file.name)){
- const reader=new FileReader();const uri=await new Promise((ok,no)=>{reader.onload=()=>ok(reader.result);reader.onerror=()=>no(new Error('File could not be read.'));reader.readAsDataURL(file);});
- d=await api('/api/host/import',{file:uri.split(',')[1],name:file.name});}else{d=JSON.parse(await file.text());}if(d.format!=='oes-quiz'||!Array.isArray(d.questions)||!d.questions.length||!Array.isArray(d.teams))throw new Error('Invalid quiz deck.');editing=d;editIndex=0;drawEditor();}catch(err){$('editError').textContent=err.message;}};
-refresh();setInterval(refresh,1000);setInterval(tick,200);
+/* OpenExhibit live audience — core helpers and the participant (phone) view.
+   present.js adds the projector and presenter views; editor.js adds the slide editor. */
+const OES = window.OES = {};
+(() => {
+  const mode = {'/host': 'host', '/display': 'display', '/edit': 'edit'}[location.pathname] || 'player';
+  const operator = mode === 'host' || mode === 'edit';
+  const key = 'oes-live-' + (operator ? 'host' : 'player') + '-' + location.host;
+  const store = operator ? sessionStorage : localStorage;
+  let token = store.getItem(key) || '';
+  if (operator && location.hash.length > 1) {
+    token = location.hash.slice(1); store.setItem(key, token);
+    history.replaceState(null, '', location.pathname);
+  }
+  const $ = (sel, el = document) => el.querySelector(sel);
+
+  /** Tiny element builder: h('button', {class: 'btn', onclick: fn}, 'Label', child…) */
+  function h(tag, props, ...kids) {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(props || {})) {
+      if (v === undefined || v === null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+      else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), e => { try { const r = v(e); if (r && r.catch) r.catch(toast); } catch (err) { toast(err); } });
+      else if (k in el && typeof v !== 'string') el[k] = v;
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat(Infinity)) if (kid !== null && kid !== undefined && kid !== false) el.append(kid instanceof Node ? kid : String(kid));
+    return el;
+  }
+  let toastTimer = 0;
+  function toast(err, ok = false) {
+    const t = $('#toast'); t.textContent = err && err.message ? err.message : String(err);
+    t.className = 'toast' + (ok ? ' ok' : ''); t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, ok ? 2500 : 5000);
+  }
+  async function api(path, body, raw = false, signal = null) {
+    const headers = {};
+    if (token) headers.Authorization = 'Bearer ' + token;
+    const opts = {headers, cache: 'no-store'};
+    if (body !== undefined) { headers['Content-Type'] = 'application/json'; opts.method = 'POST'; opts.body = JSON.stringify(body); }
+    if (signal) opts.signal = signal;
+    const r = await fetch(path, opts);
+    if (raw) { if (!r.ok) throw new Error('Request failed (' + r.status + ')'); return r; }
+    let d;
+    try { d = await r.json(); }
+    catch (e) {   // an aborted long-poll must stay an AbortError, never become a fake state
+      if (e.name === 'AbortError') throw e;
+      const err = new Error('Unexpected reply from the session service.'); err.status = r.status; throw err;
+    }
+    if (!r.ok) { const e = new Error(d.error || 'Request failed'); e.status = r.status; throw e; }
+    return d;
+  }
+  /** replaceChildren that accepts nested arrays and skips null/false (used for every re-render). */
+  const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(k => k !== null && k !== undefined && k !== false));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  /** Long-poll loop: the server answers as soon as anything changes (or after ~20 s). */
+  function live(path, onState, {withPulse = false} = {}) {
+    let version = 0, pulse = null, ctl = null, stopped = false, delay = 600;
+    const setDot = on => { const d = $('#dot'); if (d) d.className = 'dot' + (on ? ' on' : ''); const c = $('#conn'); if (c) c.textContent = on ? '' : 'Reconnecting…'; };
+    (async () => {
+      while (!stopped) {
+        try {
+          ctl = new AbortController();
+          const q = version ? '?since=' + version + (withPulse && pulse !== null ? '&pulse=' + pulse : '') : '';
+          const s = await api(path + q, undefined, false, ctl.signal);
+          version = s.version; pulse = s.pulse; delay = 600; setDot(true);
+          onState(s);
+        } catch (e) {
+          if (e.name === 'AbortError') { version = 0; continue; }
+          if (e.status === 403 && !operator && token) { token = ''; localStorage.removeItem(key); version = 0; continue; }
+          if (e.status === 403 && operator) { stopped = true; onState(null, e); return; }
+          setDot(false); await sleep(delay); delay = Math.min(delay * 1.6, 5000); version = 0;
+        }
+      }
+    })();
+    return {refresh() { if (ctl) ctl.abort(); }, stop() { stopped = true; if (ctl) ctl.abort(); }};
+  }
+  function loadScript(src) {
+    return new Promise((ok, no) => { const s = h('script', {src}); s.onload = ok; s.onerror = () => no(new Error('Could not load ' + src)); document.head.append(s); });
+  }
+  function download(blob, name) {
+    const a = h('a', {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+  }
+  const TYPE_NAMES = {slide: 'Content', choice: 'Pick one', multiple: 'Pick several', text: 'Type an answer', number: 'Numeric answer',
+    order: 'Correct order', match: 'Match pairs', category: 'Categorise', poll: 'Poll', scale: 'Rating scale', cloud: 'Word cloud',
+    rank: 'Ranking', open: 'Open-ended', qa: 'Q&A', spinner: 'Spinner wheel'};
+  const GRADED = new Set(['choice', 'multiple', 'text', 'number', 'order', 'match', 'category']);
+  const REACTIONS = ['👍', '❤️', '😂', '😮', '👏', '🤔'];
+  const answerText = (q, a) => Array.isArray(a) ? a.map((x, i) => q.labels ? q.labels[i] + ' → ' + x : x).join(q.type === 'order' ? '  →  ' : ' · ') : String(a);
+  Object.assign(OES, {mode, h, $, put, api, live, toast, sleep, loadScript, download, TYPE_NAMES, GRADED, REACTIONS, answerText,
+    get token() { return token; }});
+
+  // ======================================================================== participant
+  function player() {
+    document.body.className = 'player';
+    const root = $('#root');
+    const main = h('main', {class: 'p-main', id: 'p-main'});
+    const extra = h('section', {id: 'p-extra'});
+    root.append(h('header', {class: 'p-head'}, h('span', {class: 'dot', id: 'dot'}), h('b', {id: 'p-title'}, 'Live session'),
+      h('span', {class: 'spacer'}), h('span', {class: 'dim', id: 'p-me'})), main, h('div', {class: 'p-main', style: {paddingTop: 0}}, extra));
+    const bar = h('nav', {class: 'reactbar', hidden: true});
+    const qaDialog = h('dialog', {}, h('div', {class: 'd-head'}, h('b', {}, 'Ask the presenter'), h('span', {class: 'spacer'}),
+      h('button', {class: 'btn icon', onclick: () => qaDialog.close()}, '✕')), h('div', {class: 'd-body', id: 'qa-body'}));
+    root.append(bar, qaDialog);
+    let state = null, sig = '', extraSig = '', qaSig = '', deadline = 0, total = 1, busy = false, refreshedAt = -1;
+    const loop = live('/api/state', s => { state = s; render(s); });
+
+    function send(path, body) {
+      if (busy) return Promise.resolve();
+      busy = true;
+      return api(path, body).then(() => loop.refresh()).catch(toast).finally(() => { busy = false; });
+    }
+    function timerBar() {
+      const t = h('div', {class: 'p-timer', id: 'p-timer'}, h('i'));
+      return t;
+    }
+    setInterval(() => {
+      const t = $('#p-timer'); if (!t || !state) return;
+      const left = Math.max(0, (deadline - performance.now()) / 1000);
+      t.firstChild.style.width = (100 * left / total) + '%';
+      t.className = 'p-timer' + (left < 5 ? ' low' : '');
+      if (left <= 0 && state.self_paced && state.phase === 'open' && refreshedAt !== deadline) { refreshedAt = deadline; loop.refresh(); }
+    }, 200);
+
+    function joinForm(s) {
+      const params = new URLSearchParams(location.search);
+      const code = h('input', {type: 'text', inputmode: 'numeric', maxlength: 6, value: params.get('room') || '', autocomplete: 'off', 'aria-label': 'Room code'});
+      const name = h('input', {type: 'text', maxlength: 32, autocomplete: 'nickname', 'aria-label': 'Display name',
+        placeholder: s.settings && s.settings.anonymous ? 'Optional — leave empty to stay anonymous' : 'Your name or nickname'});
+      const team = h('select', {'aria-label': 'Team'}, s.teams.map(t => h('option', {value: t}, t)));
+      const prefilled = (params.get('room') || '') === s.code;
+      const form = h('form', {class: 'stack', onsubmit: async e => {
+        e.preventDefault();
+        const r = await api('/api/join', {code: code.value.trim(), name: name.value, team: team.value});
+        token = r.token; localStorage.setItem(key, token); sig = ''; loop.refresh();
+      }},
+      prefilled ? h('p', {class: 'dim mono'}, 'Room ' + s.code) : h('label', {class: 'field'}, 'Room code', code),
+      h('label', {class: 'field'}, 'Display name', name),
+      s.teams.length ? h('label', {class: 'field'}, 'Team', team) : null,
+      h('button', {class: 'btn primary big', type: 'submit'}, 'Join'));
+      put(main, h('h2', {}, s.title), h('p', {class: 'dim'}, 'No app or account needed. Your answers stay on this local network.'), form);
+      setTimeout(() => name.focus(), 50);
+    }
+
+    function render(s) {
+      if (!s || typeof s.code !== 'string') return;
+      $('#p-title').textContent = s.title;
+      document.body.classList.toggle('light', !!(s.settings && s.settings.theme === 'light'));
+      const joined = !!s.me;
+      $('#p-me').textContent = joined ? s.me.name + (s.me.team ? ' · ' + s.me.team : '') : '';
+      if (!joined) {
+        bar.hidden = true; put(extra, );
+        if (s.phase === 'finished') { put(main, h('div', {class: 'done'}, h('div', {class: 'big'}, '👋'), h('h2', {}, 'This session has ended'))); return; }
+        if (sig !== 'join:' + s.code) { sig = 'join:' + s.code; joinForm(s); }
+        return;
+      }
+      renderBar(s);
+      const q = s.question;
+      if (s.phase === 'open') { deadline = performance.now() + s.seconds_left * 1000; total = q ? q.seconds : 1; }
+      const nextSig = JSON.stringify([s.code, s.index, s.phase, s.session_phase, q && q.prompt, s.me.submitted, s.me.points, s.answer,
+        s.leaders && s.leaders.slice(0, 5), s.me.rank, s.total_score, q && q.type === 'open' && s.me.ideas, s.spinner && s.spinner.seq,
+        q && q.type === 'spinner' && s.spinner && s.spinner.entries.length,
+        (q && !GRADED.has(q.type) && (s.me.submitted || s.phase !== 'open')) ? s.distribution : null]);
+      if (nextSig !== sig) { sig = nextSig; renderMain(s); }
+      const eSig = JSON.stringify([s.index, s.phase, s.ideas, s.me.voted, q && q.type === 'qa' && s.qa]);
+      if (eSig !== extraSig) { extraSig = eSig; renderExtra(s); }
+      const qSig = JSON.stringify(s.qa);
+      if (qSig !== qaSig) { qaSig = qSig; renderQA(s); }
+    }
+
+    function renderBar(s) {
+      const want = s.phase !== 'finished';
+      bar.hidden = !want;
+      if (!want || bar.childElementCount) return;
+      if (!s.settings || s.settings.reactions !== false) for (const e of REACTIONS) bar.append(h('button', {'aria-label': 'React ' + e, onclick: () => api('/api/react', {emoji: e}).catch(toast)}, e));
+      if (!s.settings || s.settings.qa !== false) bar.append(h('button', {class: 'ask', onclick: () => { renderQA(state); qaDialog.showModal(); }}, '? Ask'));
+    }
+
+    function renderQA(s) {
+      const body = $('#qa-body'); if (!s) return;
+      const input = h('input', {type: 'text', maxlength: 240, placeholder: 'Type your question', 'aria-label': 'Your question'});
+      put(body, h('form', {class: 'row', onsubmit: async e => {
+        e.preventDefault(); if (!input.value.trim()) return;
+        await api('/api/ask', {text: input.value}); input.value = ''; toast('Sent to the presenter for review', true);
+      }}, input, h('button', {class: 'btn primary', type: 'submit'}, 'Send')),
+      h('p', {class: 'dim', style: {marginTop: '12px'}}, 'Questions appear here after the presenter approves them. Upvote the ones you want answered.'),
+      (s.qa || []).map(q => h('div', {class: 'idea'}, h('p', {}, q.body), q.status === 'answered' ? h('span', {class: 'tag'}, 'answered')
+        : h('button', {class: 'vote', onclick: () => send('/api/vote', {id: q.id})}, '▲ ' + q.votes))));
+    }
+
+    function verdict(s, q) {
+      if (!GRADED.has(q.type)) return null;
+      if (!s.me.submitted) return h('div', {class: 'verdict wrong'}, h('b', {}, 'No answer this time'), h('div', {}, 'Correct: ' + answerText(q, s.answer)));
+      const right = s.me.points > 0;
+      return h('div', {class: 'verdict ' + (right ? 'right' : 'wrong')},
+        h('h2', {}, right ? '✓ Correct!  +' + s.me.points : '✗ Not quite'),
+        right ? null : h('div', {}, 'Correct answer: ' + answerText(q, s.answer)),
+        s.me.total !== undefined ? h('div', {class: 'dim'}, 'Total ' + s.me.total + ' pts' + (s.me.rank ? ' · rank #' + s.me.rank : '')) : null);
+    }
+
+    function results(s, q) {
+      const d = s.distribution || [];
+      if (!d.length) return null;
+      const max = Math.max(1, ...d.map(x => x[1]));
+      return h('div', {class: 'stack', style: {marginTop: '14px'}}, d.slice(0, 12).map(([label, n], i) =>
+        h('div', {}, h('div', {class: 'row'}, h('span', {}, q.type === 'scale' ? '★ ' + label : label), h('span', {class: 'spacer'}), h('b', {class: 'mono'}, n)),
+          h('div', {class: 'p-timer', style: {margin: '4px 0 0'}}, h('i', {style: {width: (100 * n / max) + '%', background: 'var(--blue)'}})))));
+    }
+
+    function renderMain(s) {
+      const q = s.question;
+      const practice = s.self_paced && s.session_phase === 'practice';
+      const advance = () => send('/api/practice/next', {round: s.index});
+      if (practice && s.phase === 'lobby') return put(main, h('div', {class: 'done'}, h('div', {class: 'big'}, '🚀'), h('h2', {}, 'Ready?'), h('p', {class: 'dim'}, 'Go through the questions at your own pace.'), h('button', {class: 'btn primary big', onclick: advance}, 'Begin')));
+      if (practice && s.phase === 'finished') return put(main, h('div', {class: 'done'}, h('div', {class: 'big'}, '🏁'), h('h2', {}, 'You finished!'), h('p', {}, 'Your total: ' + s.total_score + ' points.'), h('p', {class: 'dim'}, 'Final standings appear when the presenter closes the session.')));
+      if (s.phase === 'lobby' || s.phase === 'practice') return put(main, h('div', {class: 'done'}, h('div', {class: 'big'}, '✅'), h('h2', {}, 'You’re in, ' + s.me.name + '!'), h('p', {class: 'dim'}, 'Watch the big screen. Questions will appear here.')));
+      if (s.phase === 'finished') {
+        const graded = s.graded_rounds > 0;
+        return put(main, h('div', {class: 'done'}, h('div', {class: 'big'}, graded && s.me.rank === 1 ? '🏆' : '🎉'),
+          h('h2', {}, graded ? 'Final rank #' + (s.me.rank || '–') : 'Thanks for taking part!'),
+          graded ? h('p', {}, (s.me.total || 0) + ' points') : null));
+      }
+      if (s.phase === 'standings') return put(main, h('div', {class: 'done'}, h('div', {class: 'big'}, '📊'), h('h2', {}, 'You are #' + (s.me.rank || '–')), h('p', {}, (s.me.total || 0) + ' points so far'),
+        h('div', {class: 'stack', style: {textAlign: 'left', marginTop: '16px'}}, (s.leaders || []).slice(0, 5).map(r => h('div', {class: 'row idea'}, h('b', {class: 'mono'}, '#' + r.rank), h('span', {}, r.name), h('span', {class: 'spacer'}), h('b', {class: 'mono'}, r.score))))));
+      const kids = [h('span', {class: 'tag'}, (TYPE_NAMES[q.type] || q.type) + (q.points ? ' · ' + q.points + ' pts' : '')), h('h2', {style: {marginTop: '10px'}}, q.prompt)];
+      if (q.type === 'slide') {
+        if (q.body) kids.push(h('p', {style: {whiteSpace: 'pre-wrap'}}, q.body));
+        if (q.image) kids.push(h('img', {src: q.image, alt: '', style: {maxWidth: '100%', borderRadius: '10px'}}));
+        return put(main, ...kids);
+      }
+      if (q.image) kids.push(h('img', {src: q.image, alt: 'Question illustration', style: {maxWidth: '100%', borderRadius: '10px', margin: '6px 0 12px'}}));
+      if (s.phase === 'reveal') {
+        kids.push(verdict(s, q));
+        if (s.explanation) kids.push(h('p', {class: 'dim'}, s.explanation));
+        if (!GRADED.has(q.type)) kids.push(results(s, q));
+        if (practice) kids.push(h('button', {class: 'btn primary big', style: {marginTop: '12px'}, onclick: advance}, s.index + 1 < s.rounds ? 'Next question' : 'Finish'));
+        return put(main, ...kids);
+      }
+      if (q.type === 'spinner') {
+        const sp = s.spinner || {};
+        kids.push(sp.winner ? h('div', {class: 'done'}, h('div', {class: 'big'}, '🎯'), h('h2', {}, sp.winner)) : h('p', {class: 'dim'}, 'Watch the big screen — the wheel is about to spin!'));
+        return put(main, ...kids);
+      }
+      if (q.type === 'qa') { kids.push(h('p', {class: 'dim'}, 'Send your question below or with the “? Ask” button.')); return put(main, ...kids); }
+      if (s.phase === 'open' && q.seconds) kids.push(timerBar());
+      if (s.phase !== 'open') {
+        kids.push(h('p', {class: 'dim mono'}, s.phase === 'paused' ? '⏸ The presenter paused the timer.' : '⏱ Answers are closed. Results are coming…'));
+        if (!GRADED.has(q.type)) kids.push(results(s, q));
+        return put(main, ...kids);
+      }
+      if (q.type === 'open') return put(main, ...kids, ideaForm(s, q));
+      if (s.me.submitted) {
+        kids.push(h('div', {class: 'done'}, h('div', {class: 'big'}, '✓'), h('h2', {}, 'Answer sent'), h('p', {class: 'dim'}, answerText(q, s.me.value))));
+        if (!GRADED.has(q.type)) kids.push(results(s, q));
+        return put(main, ...kids);
+      }
+      kids.push(answerForm(s, q));
+      put(main, ...kids);
+    }
+
+    function ideaForm(s, q) {
+      const left = q.max_entries - (s.me.ideas || 0);
+      if (left <= 0) return h('p', {class: 'dim mono'}, '✓ Thanks — you shared ' + q.max_entries + (q.max_entries > 1 ? ' ideas.' : ' idea.'));
+      const t = h('textarea', {maxlength: 200, placeholder: 'Your idea', 'aria-label': 'Your idea', rows: 3});
+      return h('form', {class: 'stack', onsubmit: async e => { e.preventDefault(); if (!t.value.trim()) return; await send('/api/idea', {round: s.index, text: t.value}); }},
+        t, h('button', {class: 'btn primary big', type: 'submit'}, 'Share idea' + (q.max_entries > 1 ? ' (' + left + ' left)' : '')));
+    }
+
+    function renderExtra(s) {
+      const q = s.question;
+      if (!s.me || !q) return put(extra, );
+      if (q.type === 'open' && s.ideas && s.ideas.length && (q.live_results || s.phase === 'reveal')) {
+        const voted = new Set(s.me.voted || []);
+        return put(extra, h('h3', {style: {margin: '18px 0 10px'}}, 'Ideas — tap ▲ to support'), s.ideas.map(i =>
+          h('div', {class: 'idea'}, h('p', {}, i.body), h('button', {class: 'vote' + (voted.has(i.id) ? ' on' : ''), disabled: voted.has(i.id) || s.phase !== 'open', onclick: () => send('/api/idea/vote', {id: i.id})}, '▲ ' + i.votes))));
+      }
+      if (q.type === 'qa') {
+        const input = h('input', {type: 'text', maxlength: 240, placeholder: 'Type your question'});
+        return put(extra, h('form', {class: 'row', onsubmit: async e => { e.preventDefault(); if (!input.value.trim()) return; await api('/api/ask', {text: input.value}); input.value = ''; toast('Sent for review', true); }},
+          input, h('button', {class: 'btn primary', type: 'submit'}, 'Send')),
+        (s.qa || []).map(x => h('div', {class: 'idea', style: {marginTop: '8px'}}, h('p', {}, x.body), h('button', {class: 'vote', onclick: () => send('/api/vote', {id: x.id})}, '▲ ' + x.votes))));
+      }
+      put(extra, );
+    }
+
+    function answerForm(s, q) {
+      const submit = value => send('/api/answer', {round: s.index, value});
+      const opts = q.options || [];
+      if (q.type === 'choice' || q.type === 'poll') {
+        return h('div', {class: 'choices'}, opts.map((o, i) => h('button', {class: 'choice c' + i, onclick: e => { e.currentTarget.classList.add('sel'); return submit(o); }}, h('span', {class: 'key'}, String.fromCharCode(65 + i)), o)));
+      }
+      if (q.type === 'multiple') {
+        const picked = new Set();
+        return h('div', {class: 'stack'}, h('p', {class: 'dim'}, 'Select every correct choice.'), h('div', {class: 'choices'}, opts.map((o, i) => h('button', {class: 'choice c' + i,
+          onclick: e => { picked.has(o) ? picked.delete(o) : picked.add(o); e.currentTarget.classList.toggle('sel'); }}, h('span', {class: 'key'}, String.fromCharCode(65 + i)), o))),
+        h('button', {class: 'btn primary big', onclick: () => picked.size ? submit([...picked]) : toast('Choose at least one option.')}, 'Submit'));
+      }
+      if (q.type === 'scale') {
+        let pick = 0;
+        const btns = Array.from({length: q.scale_max || 5}, (_, i) => h('button', {onclick: e => { pick = i + 1; btns.forEach(b => b.classList.remove('sel')); e.currentTarget.classList.add('sel'); }}, String(i + 1)));
+        return h('div', {class: 'stack'}, h('div', {class: 'scale'}, btns),
+          h('div', {class: 'row dim mono'}, h('span', {}, q.low_label || ''), h('span', {class: 'spacer'}), h('span', {}, q.high_label || '')),
+          h('button', {class: 'btn primary big', onclick: () => pick ? submit(pick) : toast('Choose a rating.')}, 'Submit'));
+      }
+      if (q.type === 'order' || q.type === 'rank') {
+        const list = h('div', {class: 'sortable'});
+        const items = opts.slice();
+        const draw = () => put(list, ...items.map((v, i) => h('div', {class: 'item', 'data-v': v}, h('span', {class: 'grip', 'aria-hidden': 'true'}, '⠿'), h('b', {class: 'mono'}, (i + 1) + '.'), h('span', {}, v),
+          h('button', {class: 'btn icon', disabled: i === 0, 'aria-label': 'Move ' + v + ' up', onclick: () => { [items[i - 1], items[i]] = [items[i], items[i - 1]]; draw(); }}, '↑'),
+          h('button', {class: 'btn icon', disabled: i === items.length - 1, 'aria-label': 'Move ' + v + ' down', onclick: () => { [items[i + 1], items[i]] = [items[i], items[i + 1]]; draw(); }}, '↓'))));
+        draw();
+        if (window.Sortable) window.Sortable.create(list, {handle: '.grip', animation: 150, ghostClass: 'ghost', onEnd: () => { const now = [...list.children].map(c => c.dataset.v); items.splice(0, items.length, ...now); draw(); }});
+        return h('div', {class: 'stack'}, h('p', {class: 'dim'}, q.type === 'rank' ? 'Drag (or use the arrows) — your favourite on top.' : 'Drag (or use the arrows) into the correct order.'), list,
+          h('button', {class: 'btn primary big', onclick: () => submit(items.slice())}, 'Submit order'));
+      }
+      if (q.type === 'match' || q.type === 'category') {
+        const sels = q.labels.map(l => h('select', {'aria-label': l}, h('option', {value: ''}, 'Choose…'), opts.map(o => h('option', {value: o}, o))));
+        return h('div', {class: 'stack'}, q.labels.map((l, i) => h('label', {class: 'field'}, l, sels[i])),
+          h('button', {class: 'btn primary big', onclick: () => sels.some(x => !x.value) ? toast('Complete every row.') : submit(sels.map(x => x.value))}, 'Submit'));
+      }
+      const input = h('input', {type: q.type === 'number' ? 'number' : 'text', step: 'any', maxlength: q.type === 'cloud' ? 48 : 180,
+        inputmode: q.type === 'number' ? 'decimal' : 'text', placeholder: q.type === 'cloud' ? 'One word or short phrase' : 'Your answer', 'aria-label': 'Your answer'});
+      setTimeout(() => input.focus(), 50);
+      return h('form', {class: 'stack', onsubmit: e => { e.preventDefault(); if (!input.value.trim()) return; return submit(q.type === 'number' ? input.valueAsNumber : input.value); }},
+        input, h('button', {class: 'btn primary big', type: 'submit'}, 'Submit'));
+    }
+  }
+
+  // ======================================================================== boot
+  const extras = mode === 'player' ? ['/vendor/Sortable.min.js'] : ['/vendor/wordcloud2.js', '/vendor/confetti.browser.js', '/vendor/Sortable.min.js', '/present.js'].concat(mode === 'edit' ? ['/editor.js'] : []);
+  extras.reduce((p, src) => p.then(() => loadScript(src)), Promise.resolve()).catch(toast).finally(() => {
+    if (mode === 'player') player();
+    else if (OES.start) OES.start(mode);
+  });
+})();

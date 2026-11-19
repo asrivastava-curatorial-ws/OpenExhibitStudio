@@ -1,0 +1,27 @@
+{
+  "format": "oes-quiz",
+  "version": 1,
+  "title": "Science after dark · live show",
+  "teams": [],
+  "speed_bonus": true,
+  "leaderboard": "each",
+  "theme": "dark",
+  "anonymous": false,
+  "reactions": true,
+  "qa": true,
+  "auto_close": true,
+  "questions": [
+    {"type": "slide", "prompt": "Welcome to Science after dark", "body": "- Scan the code on the screen\n- Pick a nickname\n- Answer on your phone — no app needed", "layout": "title", "notes": "Greet the audience. Wait until most people have joined before pressing Next."},
+    {"type": "poll", "prompt": "Which gallery did you visit first today?", "options": ["Space", "Engines", "Life sciences", "Electricity"], "seconds": 0, "live_results": true},
+    {"type": "cloud", "prompt": "One word that comes to mind when you hear “energy”", "seconds": 0, "live_results": true},
+    {"type": "choice", "prompt": "Which planet takes the longest to orbit the Sun?", "options": ["Mars", "Jupiter", "Neptune", "Earth"], "answer": "Neptune", "seconds": 20, "points": 1000, "explanation": "Neptune takes about 165 Earth years to complete one orbit."},
+    {"type": "multiple", "prompt": "Select the two good electrical conductors", "options": ["Copper", "Glass", "Aluminium", "Rubber"], "answer": ["Aluminium", "Copper"], "seconds": 25, "points": 1000},
+    {"type": "number", "prompt": "A 6 V battery drives 0.5 A through a bulb. How many watts?", "answer": 3, "tolerance": 0.01, "seconds": 30, "points": 1000, "explanation": "Power = voltage × current = 6 × 0.5 = 3 W."},
+    {"type": "scale", "prompt": "How confident are you explaining electric power now?", "scale_max": 5, "low_label": "Not yet", "high_label": "Very", "seconds": 0, "live_results": true},
+    {"type": "rank", "prompt": "Rank the exhibits you would like to see next", "options": ["Robotics lab", "Tsunami tank", "Planetarium show", "Bio-lab"], "seconds": 0, "live_results": true},
+    {"type": "open", "prompt": "What should our next hands-on exhibit be about?", "max_entries": 2, "moderate": false, "seconds": 0, "live_results": true},
+    {"type": "qa", "prompt": "Ask our scientist anything", "seconds": 0, "notes": "Approve questions in the Q&A tab on the right; they appear on screen sorted by votes."},
+    {"type": "spinner", "prompt": "Who wins the museum goodie bag?", "source": "players", "remove_winner": true, "seconds": 0},
+    {"type": "slide", "prompt": "Thank you!", "body": "See you at the next Science after dark.", "layout": "big"}
+  ]
+}
