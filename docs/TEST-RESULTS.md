@@ -72,7 +72,7 @@ service for example 16 from inside the image, which answered with the three back
 listed serial ports, and the live-audience service started from the package, served its state
 and accepted a join. The `desktop` command wrote menu entries that pass `desktop-file-validate`.
 
-**Windows installer** (`packaging/build_windows_installer.py`, NSIS 3.09 on Linux, 83 MB).
+**Windows installer** (`packaging/build_windows_installer.py`, NSIS 3.09 on Linux, 84 MB).
 makensis reported no warnings. Extracting the installer with 7-Zip gave all 1,909 staged files,
 byte-identical, plus the generated uninstaller. That includes the official Godot 4.7.1 engine
 (SHA-512 checked), the Studio and Player packs, and CPython 3.12.13 (SHA-256 checked against its
