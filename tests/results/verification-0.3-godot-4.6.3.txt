@@ -1,9 +1,9 @@
-OpenExhibit Studio checks — 2026-11-19 15:29 UTC
-Godot 4.6.3.stable.official.7d41c59c4 · Python 3.13.18 · Linux 6.18.44-fc-v653 x86_64
+OpenExhibit Studio checks — 2026-11-20 06:37 UTC
+Godot 4.6.3.stable.official.7d41c59c4 · Python 3.13.18 · Linux 6.18.44-fc-v726 x86_64
 
 ===== GDScript parse check
 $ parse_all
-Parsed 37 scripts.
+Parsed 39 scripts.
 
 ===== Core project and rule suite
 $ /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --headless --path app --script res://qa/check_core.gd
@@ -73,7 +73,10 @@ PASS portable round trip · 14-live-quiz
 PASS checksum and schema · 15-live-show
 PASS relocate assets · 15-live-show
 PASS portable round trip · 15-live-show
-PASS all fifteen exhibit examples present
+PASS checksum and schema · 16-green-screen
+PASS relocate assets · 16-green-screen
+PASS portable round trip · 16-green-screen
+PASS all sixteen exhibit examples present
 PASS edited canvas text updates shared renderer
 PASS undo restores the exact previous object
 PASS redo returns the edited object
@@ -90,6 +93,7 @@ PASS workspace opens · 3D scene
 PASS workspace opens · Mapping
 PASS workspace opens · Test
 PASS workspace opens · Live audience
+PASS workspace opens · Green screen
 PASS workspace opens · Deployment
 PASS canvas transform commits to project
 PASS undo canvas transform
@@ -144,7 +148,7 @@ PASS page sensor selects a physical book spread
 PASS manual fallback turns one book page
 PASS traversal path rejected
 PASS 30,000 sensor events keep bounded traces and samples
-RESULT 116 integration checks, 0 failures.
+RESULT 120 integration checks, 0 failures.
 
 ===== LAN timeline clock (Godot follower + Python publisher)
 $ clock_check
@@ -152,6 +156,23 @@ Clock listening at ('127.0.0.1', 18442)
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
 PASS native LAN clock follower + Python publisher, authenticated reply, timeline running; RTT 7 ms
+
+===== Studio runs the green-screen booth service
+$ /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --headless --path app --script res://qa/check_greenscreen.gd -- --examples /tmp/oes463/examples --project /tmp/oes463/examples/16-green-screen/project.oes.json
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS example booth has three backgrounds
+PASS Studio starts the booth service
+PASS booth serves the exhibit's backgrounds
+PASS booth uses the exhibit's title
+PASS booth setup changes are accepted
+PASS Save booth settings into this exhibit copies the calibration
+PASS calibration includes the mirror setting
+PASS saving calibration marks the exhibit changed
+PASS undo removes the copied calibration
+PASS capture clearing answers
+PASS Stop booth ends the service
+RESULT green-screen Studio checks, 0 failures.
 
 ===== Integration on two X11 heads
 $ on_two_heads /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --audio-driver Dummy --path app --script res://qa/check_integration.gd -- --examples /tmp/oes463/examples
@@ -208,7 +229,10 @@ PASS portable round trip · 14-live-quiz
 PASS checksum and schema · 15-live-show
 PASS relocate assets · 15-live-show
 PASS portable round trip · 15-live-show
-PASS all fifteen exhibit examples present
+PASS checksum and schema · 16-green-screen
+PASS relocate assets · 16-green-screen
+PASS portable round trip · 16-green-screen
+PASS all sixteen exhibit examples present
 PASS edited canvas text updates shared renderer
 PASS undo restores the exact previous object
 PASS redo returns the edited object
@@ -225,6 +249,7 @@ PASS workspace opens · 3D scene
 PASS workspace opens · Mapping
 PASS workspace opens · Test
 PASS workspace opens · Live audience
+PASS workspace opens · Green screen
 PASS workspace opens · Deployment
 PASS canvas transform commits to project
 PASS undo canvas transform
@@ -281,7 +306,7 @@ PASS page sensor selects a physical book spread
 PASS manual fallback turns one book page
 PASS traversal path rejected
 PASS 30,000 sensor events keep bounded traces and samples
-RESULT 118 integration checks, 0 failures.
+RESULT 122 integration checks, 0 failures.
 
 ===== Every example launches in the Player
 $ on_two_heads /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --audio-driver Dummy --path app --script res://qa/check_examples.gd -- --examples /tmp/oes463/examples
@@ -308,7 +333,8 @@ PASS native example playback · 12-postcards · 2 feed(s)
 PASS native example playback · 13-shows · 1 feed(s)
 PASS native example playback · 14-live-quiz · 1 feed(s)
 PASS native example playback · 15-live-show · 1 feed(s)
-RESULT 15 example launches, 0 failures.
+PASS native example playback · 16-green-screen · 1 feed(s)
+RESULT 16 example launches, 0 failures.
 
 ===== UV-mapped mesh rendering
 $ on_two_heads /root/tools/godot/Godot_v4.6.3-stable_linux.x86_64 --audio-driver Dummy --path app --script res://qa/check_mesh.gd -- --examples /tmp/oes463/examples
@@ -363,13 +389,14 @@ BOARD standings
 PASS native contest layer and rendered scoreboard
 
 Summary
-  PASS  GDScript parse check (10 s)
+  PASS  GDScript parse check (12 s)
   PASS  Core project and rule suite (0 s)
   PASS  Integration, headless, IPv4/IPv6 sockets denied (2 s)
   PASS  LAN timeline clock (Godot follower + Python publisher) (1 s)
+  PASS  Studio runs the green-screen booth service (1 s)
   PASS  Integration on two X11 heads (5 s)
-  PASS  Every example launches in the Player (6 s)
+  PASS  Every example launches in the Player (7 s)
   PASS  UV-mapped mesh rendering (1 s)
   PASS  Rendered mapping pixels vs independent model (3 s)
-  PASS  Player live-audience board against a real service (4 s)
+  PASS  Player live-audience board against a real service (5 s)
 Full log: /home/claude/work/OpenExhibitStudio/tests/results/verification-0.3-godot-4.6.3.txt

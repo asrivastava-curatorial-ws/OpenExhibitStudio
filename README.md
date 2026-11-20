@@ -1,8 +1,9 @@
 # OpenExhibit Studio 0.3.0
 
 Free, offline software for building museum and science-centre exhibits: touchscreen kiosks,
-projection-mapped installations, digital and physical flipbooks, Arduino/ESP32 interactives, and
-AhaSlides-style live audience sessions (polls, quizzes, word clouds, Q&A) on visitors' phones.
+projection-mapped installations, digital and physical flipbooks, Arduino/ESP32 interactives,
+AhaSlides-style live audience sessions (polls, quizzes, word clouds, Q&A) on visitors' phones, and
+a green-screen photo booth that puts visitors into your videos.
 
 Everything runs on your own computers. There are no accounts, no cloud services and no
 telemetry. Studio authors exhibits; the standalone Player runs them on exhibit computers.
@@ -87,6 +88,14 @@ categorise, poll, word cloud, rating scale, ranking, open-ended ideas with votin
 and a spinner wheel — with leaderboards, team play, emoji reactions and CSV exports.
 → [Live audience guide](docs/LIVE-AUDIENCE.md)
 
+## Green-screen photo booth
+
+Visitors stand in front of a green cloth and appear in your videos and pictures. A webcam films
+them, the green is replaced live (WebGL in the browser on the booth computer), and they take a
+photo or a short video home by scanning a QR code — over the local network, deleted after 30
+minutes. Add your backgrounds under **Green screen**, press **Start booth**, calibrate with
+**Ctrl+Shift+S**. → [Green-screen guide](docs/GREEN-SCREEN.md)
+
 ## Hardware
 
 **Hardware → Try it without hardware** gives virtual sliders and lamps for every channel. To use a
@@ -101,6 +110,7 @@ The firmware block editor (Blockly, works offline) writes Arduino sketches for y
 | --- | --- |
 | Learn Studio step by step | [User manual](docs/USER-MANUAL.md) |
 | Run polls, quizzes and Q&A | [Live audience](docs/LIVE-AUDIENCE.md) |
+| Run a green-screen photo booth | [Green screen](docs/GREEN-SCREEN.md) |
 | Set up projectors, a dome, a sphere or a book | [Installation and mapping](docs/MAPPING.md) · [Calibration](docs/CALIBRATION.md) |
 | Connect Arduino, ESP32, OSC, DMX, Modbus | [Hardware](docs/HARDWARE.md) · [Field devices](docs/FIELD-IO.md) · [Protocol](docs/PROTOCOL.md) |
 | Run exhibits unattended | [Deployment](docs/DEPLOYMENT.md) |
@@ -114,10 +124,10 @@ The firmware block editor (Blockly, works offline) writes Arduino sketches for y
 | Folder | Contents |
 | --- | --- |
 | `app/` | Godot project. `core/` is shared by Studio and Player (project model, session engine, renderer, mapping); `studio/` is the authoring shell; `player/` the runtime; `qa/` native test suites. |
-| `tools/` | Python services and utilities: `quiz.py` + `contest/` (live audience), calibration, PDF import, packaging, deployment. |
+| `tools/` | Python services and utilities: `quiz.py` + `contest/` (live audience), `greenscreen.py` + `booth/` (green-screen booth), calibration, PDF import, packaging, deployment. |
 | `gateway/` | Hardware service: serial, Firmata, MQTT, OSC, Art-Net/sACN, Modbus, MIDI, HID adapters and board profiles. |
 | `firmware/` | Arduino and ESP32 sketches, the shared protocol library and the offline block editor. |
-| `examples/` | Fifteen ready-to-run exhibits with their own assets. |
+| `examples/` | Sixteen ready-to-run exhibits with their own assets. |
 | `tests/` | Python, browser and protocol tests; `tests/results/` holds recorded runs. |
 
 Licence: MIT for the project's own code and example content. Bundled third-party components keep

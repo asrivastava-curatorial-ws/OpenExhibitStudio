@@ -59,6 +59,10 @@ salted, iterated SHA-256 hash in the Player's user-data folder
 `%APPDATA%\OpenExhibitStudio\operator.json` on Windows). Delete that file to reset it. A site can
 instead set `OPENEXHIBIT_OPERATOR_KEY` (16+ characters) in the service environment.
 
+## Green-screen booths
+
+A booth runs without Studio from an exported package: `python3 tools/greenscreen.py --project booth.oex --bind 192.168.1.20 --kiosk --settings booth-calibration.json` (AppImage: `… greenscreen booth.oex …`). See [GREEN-SCREEN.md](GREEN-SCREEN.md#running-a-booth-without-studio) for Windows, ports and the one-time camera permission.
+
 ## Live audience sessions on a show computer
 
 Sessions need Python 3.10+ (installed by setup on Linux; `Setup-Windows.cmd` offers winget on

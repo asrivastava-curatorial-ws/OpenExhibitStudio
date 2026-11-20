@@ -18,6 +18,7 @@ const Workspaces := preload("res://studio/workspaces.gd")
 const LogicSpace := preload("res://studio/logic_space.gd")
 const HardwareSpace := preload("res://studio/hardware_space.gd")
 const AudienceSpace := preload("res://studio/audience_space.gd")
+const GreenScreenSpace := preload("res://studio/greenscreen_space.gd")
 const RuleText := preload("res://studio/rule_text.gd")
 const Welcome := preload("res://studio/welcome.gd")
 
@@ -35,6 +36,7 @@ const SPACES := [
 	"Mapping",
 	"Test",
 	"Live audience",
+	"Green screen",
 	"Deployment",
 ]
 const SPACE_INFO := {
@@ -50,6 +52,7 @@ const SPACE_INFO := {
 	"Mapping": ["▱", "Projection", "Warp, blend and calibrate projector outputs", "INSTALL"],
 	"Test": ["◎", "Try it", "Use the exhibit as a visitor (F5)", "RUN"],
 	"Live audience": ["◉", "Live audience", "Polls, quizzes, word clouds and Q&A on phones", "RUN"],
+	"Green screen": ["◧", "Green screen", "Camera photo booth: visitors appear in your videos", "RUN"],
 	"Deployment": ["⇧", "Publish", "Package the exhibit and run it on a player", "RUN"],
 }
 ## Component kinds offered in the Add dialog, grouped, with plain names.
@@ -92,6 +95,7 @@ var work
 var logic
 var hardware
 var audience
+var greenscreen
 var edit_scene := ""
 var selected := ""
 var space := "Canvas"
@@ -134,6 +138,7 @@ func _ready() -> void:
 	logic = LogicSpace.new(self)
 	hardware = HardwareSpace.new(self)
 	audience = AudienceSpace.new(self)
+	greenscreen = GreenScreenSpace.new(self)
 	get_viewport().files_dropped.connect(_on_files_dropped)
 
 	var source := Paths.first_project()
@@ -236,6 +241,7 @@ func _ask_save_before_quit() -> void:
 
 func _quit() -> void:
 	audience.shutdown()
+	greenscreen.shutdown()
 	hardware.shutdown()
 	get_tree().quit()
 
@@ -520,6 +526,8 @@ func refresh(keep_inspector := false) -> void:
 		hardware.show(center)
 	elif space == "Live audience":
 		audience.show(center)
+	elif space == "Green screen":
+		greenscreen.show(center)
 	else:
 		work.show_space(space, center)
 	if not keep_inspector:
@@ -832,6 +840,9 @@ func add_asset_path(path: String, kind: String) -> void:
 func _on_files_dropped(files: PackedStringArray) -> void:
 	for file in files:
 		var ext := file.get_extension().to_lower()
+		if space == "Green screen" and ext in GreenScreenSpace.VIDEO_TYPES + GreenScreenSpace.IMAGE_TYPES:
+			greenscreen.add_background(file)
+			continue
 		if ext in ["json", "oex"]:
 			request_open(file)
 			return
@@ -1628,7 +1639,8 @@ func guide() -> void:
 		"5. Interactions builds richer rules: When something happens → If a condition → Do actions.",
 		"6. Press F5 (Try it) to use the exhibit as a visitor; F5 again returns to editing.",
 		"7. Live audience runs polls, quizzes and Q&A on visitors' phones over the local network.",
-		"8. Save as into an empty folder; File → Export package makes a .oex for the Player.",
+		"8. Green screen runs a camera photo booth: visitors appear in your videos and take a photo home by QR code.",
+		"9. Save as into an empty folder; File → Export package makes a .oex for the Player.",
 	]:
 		box.add_child(_hint(line))
 

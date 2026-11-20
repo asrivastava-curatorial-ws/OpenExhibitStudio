@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Green screen</title>
+    <link rel="stylesheet" href="/booth.css" />
+    <script src="/keyer.js" defer></script>
+    <script src="/booth.js" defer></script>
+  </head>
+  <body data-camera="starting" data-present="no" data-busy="no">
+    <canvas id="stage" width="1920" height="1080"></canvas>
+    <header id="title"></header>
+    <div id="hint">Step in front of the green screen</div>
+    <nav id="backgrounds" aria-label="Backgrounds"></nav>
+    <div id="actions">
+      <button id="photo" type="button">Take a photo</button>
+      <button id="clip" type="button">Record a video</button>
+    </div>
+    <div id="countdown" hidden></div>
+    <div id="recording" hidden><span class="dot"></span><span id="rec-left"></span></div>
+    <div id="flash"></div>
+    <section id="result" hidden>
+      <img id="qr" alt="QR code to download" />
+      <div class="text">
+        <h2 id="result-title">Scan to take it home</h2>
+        <p id="result-url"></p>
+        <p id="result-note"></p>
+        <button id="done" type="button">Done</button>
+      </div>
+      <div class="timer"><i></i></div>
+    </section>
+    <div id="message" role="status" hidden></div>
+    <aside id="setup" hidden></aside>
+  </body>
+</html>

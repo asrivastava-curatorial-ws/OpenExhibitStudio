@@ -106,6 +106,9 @@ clock_check() {
   return "$status"
 }
 run "LAN timeline clock (Godot follower + Python publisher)" clock_check
+run "Studio runs the green-screen booth service" "$godot" --headless --path app \
+  --script res://qa/check_greenscreen.gd -- --examples "$root/examples" \
+  --project "$root/examples/16-green-screen/project.oes.json"
 
 on_two_heads() { bash tests/dual_display.sh "$@"; }
 if [ -x /usr/lib/xorg/Xorg ] && command -v xrandr > /dev/null &&
@@ -133,6 +136,12 @@ if [ "$engine_only" -eq 0 ]; then
       python3 tests/audience_browser.py --chromium "$chrome"
   else
     skip "Live audience in Chrome" "pass --chrome PATH and install playwright"
+  fi
+  if [ -n "$chrome" ] && has_py playwright && has_py numpy && command -v ffprobe > /dev/null; then
+    run "Green-screen booth in Chrome (simulated camera, keying, photo, video)" \
+      python3 tests/greenscreen_browser.py --chromium "$chrome"
+  else
+    skip "Green-screen booth in Chrome" "needs --chrome PATH, playwright, NumPy and FFmpeg"
   fi
   if command -v unshare > /dev/null && unshare -Urn true 2> /dev/null; then
     run "Live audience across an isolated network namespace" python3 tests/isolated_contest.py

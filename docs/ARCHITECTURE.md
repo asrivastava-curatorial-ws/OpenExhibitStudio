@@ -50,6 +50,9 @@ Structured-light acquisition stores raw images. A separate calibration process e
 | `app/studio/welcome.gd`, `canvas.gd`, `calibration_tools.gd` | Start screen; canvas editing; calibration wizard and measured-warp import. |
 | `app/player/` | Standalone runtime, output windows and the password-protected operator panel. |
 | `tools/quiz.py`, `tools/contest/` | Live-audience service: `deck.py` (slide types, validation, Aiken import), `room.py` (session state machine in SQLite), `web/` (phone, presenter, projector and editor pages). |
+| `app/studio/greenscreen_space.gd` | Green screen workspace: backgrounds, visitor options, starting and stopping the booth, saving its calibration. |
+| `tools/greenscreen.py`, `tools/booth/` | Green-screen booth service: `config.py` (settings, exhibit media), `captures.py` (expiring photo/video store), `web/` (booth page with the WebGL keyer, phone download style). |
+| `tools/servicekit.py` | Pieces shared by both services: threaded server, host checks, private files, QR codes. |
 | `gateway/` | Hardware gateway: transports, protocol adapters, arming and board profiles. |
 
 ### Live-audience data flow
@@ -64,3 +67,13 @@ network. Pages wait for changes with long polls (`/api/state?since=…`) that th
 change, so answers, reactions and phase changes arrive without a refresh loop. The room is the only
 writer: every answer and phase change is one SQLite transaction, and the snapshot it returns is
 filtered by role so phones never see unrevealed answers.
+
+### Green-screen data flow
+
+Studio writes a run file (settings and absolute media paths) and starts `tools/greenscreen.py`, which
+listens on 127.0.0.1 for the booth page and on the chosen LAN address for download pages only. The
+booth page, opened on the booth computer because browsers allow cameras only on local addresses,
+keys and composites the camera in WebGL and uploads photos (JPEG) and videos (MP4/WebM) with the
+bearer token. The service stores each under a random code with an expiry and answers with the
+download address that the page shows as a QR code. Calibration changed on the booth goes back to
+the service; Studio reads it with “Save booth settings into this exhibit”.

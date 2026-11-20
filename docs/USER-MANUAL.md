@@ -10,7 +10,7 @@ once and prepares the app (about half a minute).
 The **start screen** offers:
 
 - **Blank exhibit** — one empty scene at 1280 × 720.
-- **Templates** — the fifteen bundled examples (kiosk, flipbook, live talk, video show, Arduino,
+- **Templates** — the sixteen bundled examples (kiosk, flipbook, live talk, green-screen booth, video show, Arduino,
   projection panorama, sphere, cyclorama, immersive room, physical book, and more).
 - **Recent** exhibits and **Open** for a project (`project.oes.json`) or package (`.oex`).
 
@@ -114,7 +114,14 @@ hard-wired emergency stop and suitable drivers — see [HARDWARE.md](HARDWARE.md
 Polls, quizzes, word clouds, idea boards, Q&A and a spinner wheel on visitors' phones. See
 [LIVE-AUDIENCE.md](LIVE-AUDIENCE.md).
 
-## 9. Screens and projectors
+## 9. Green screen
+
+A camera photo booth. Visitors stand in front of a green cloth, appear in your background videos or
+pictures, and take a photo or a short video home by scanning a QR code (local network only).
+**Green screen → Add video or picture…**, then **Start booth**; calibrate on the booth with
+**Ctrl+Shift+S**. See [GREEN-SCREEN.md](GREEN-SCREEN.md).
+
+## 10. Screens and projectors
 
 **Installation** chooses a layout preset (kiosk, video wall, panorama, cyclorama, 360° ring,
 sphere, dome, immersive room, CAVE, physical book, Pepper's ghost …) with real dimensions in
@@ -126,7 +133,7 @@ sets the screen number, resolution, which scene it shows, gamma, black lift and 
 Calibration profiles can be saved and reused. The camera wizard and measured reports are described
 in [CALIBRATION.md](CALIBRATION.md).
 
-## 10. Publish and run
+## 11. Publish and run
 
 **Publish → Export .oex package** writes one file containing the project and all media, with
 checksums. On the exhibit computer:
@@ -153,7 +160,7 @@ The first time someone opens the **operator panel (F10)** on a computer, they ch
 `OPENEXHIBIT_OPERATOR_KEY` through its service manager. Start-at-login, offline updates and
 rollback are in [DEPLOYMENT.md](DEPLOYMENT.md).
 
-## 11. Saving and recovery
+## 12. Saving and recovery
 
 **Ctrl+S** saves; the previous version is kept as `project.oes.json.bak`. Unsaved edits are
 copied to a recovery file within a second; after a crash, Studio offers to restore them. Closing

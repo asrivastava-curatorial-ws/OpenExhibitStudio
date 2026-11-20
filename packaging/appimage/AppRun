@@ -4,6 +4,7 @@
 #   OpenExhibit-Studio.AppImage [exhibit]                         start Studio
 #   OpenExhibit-Studio.AppImage player [exhibit] [--fullscreen] [--kiosk] [--output ID]
 #   OpenExhibit-Studio.AppImage desktop                           add Studio and Player to the app menu
+#   OpenExhibit-Studio.AppImage greenscreen exhibit.oex [--bind 192.168.1.20] [--kiosk]   run a photo booth
 #
 # Live audience and hardware services run with the system's python3 (3.10 or newer); the
 # serial and MQTT libraries they need are bundled in pylib/.
@@ -13,7 +14,7 @@ base="$here/usr/lib/openexhibit"
 role=studio
 case "$(basename "${ARGV0:-$0}")" in *[Pp]layer*) role=player ;; esac
 
-usage() { sed -n '4,6p' "$here/AppRun" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '4,7p' "$here/AppRun" | sed 's/^# \{0,1\}//'; }
 
 add_to_menu() {
   image=${APPIMAGE:-}
@@ -45,6 +46,13 @@ case "${1:-}" in
   player | --player) role=player; shift ;;
   studio | --studio) role=studio; shift ;;
   desktop | --desktop) add_to_menu; exit 0 ;;
+  greenscreen | --greenscreen)
+    shift
+    [ "$#" -ge 1 ] || { usage; exit 2; }
+    project=$(realpath -- "$1")
+    shift
+    exec python3 "$base/tools/greenscreen.py" --project "$project" "$@"
+    ;;
   -h | --help) usage; exit 0 ;;
 esac
 

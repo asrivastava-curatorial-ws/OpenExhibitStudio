@@ -1,0 +1,189 @@
+{
+  "format": "openexhibit",
+  "version": 1,
+  "canvas": [
+    1280,
+    720
+  ],
+  "variables": {},
+  "rules": [],
+  "timelines": [],
+  "devices": [],
+  "title": "Step into another world",
+  "start": "main",
+  "assets": {
+    "space": {
+      "path": "assets/space.webm",
+      "sha256": "83e9a89269f2f9521eb65b129cf152985f3e6345522c4173175be6d9e3d7ae92"
+    },
+    "ocean": {
+      "path": "assets/ocean.webm",
+      "sha256": "2a66326ad7010e583474835c4125013eaec247fa31bf1d55e7ad8ecb77ac0547"
+    },
+    "sunset": {
+      "path": "assets/sunset.jpg",
+      "sha256": "15b6aee1f4b81c9175f987c69553f76090ced73dbf66f9f1312441ae9abd59da"
+    }
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Booth welcome",
+      "background": "#0d1117",
+      "objects": [
+        {
+          "id": "title",
+          "name": "Title",
+          "kind": "text",
+          "rect": [
+            80,
+            180,
+            1120,
+            120
+          ],
+          "text": "Step into another world",
+          "font": 64,
+          "color": "#e6edf3",
+          "align": 1
+        },
+        {
+          "id": "help",
+          "name": "Help",
+          "kind": "text",
+          "rect": [
+            140,
+            330,
+            1000,
+            160
+          ],
+          "text": "Step in front of the green screen, choose a world and take a photo or a short video to keep.",
+          "font": 30,
+          "color": "#8b949e",
+          "align": 1
+        }
+      ]
+    }
+  ],
+  "installation": {
+    "preset": "Kiosk",
+    "surfaces": [
+      {
+        "id": "s1",
+        "name": "Surface 1",
+        "kind": "plane",
+        "width": 3.2,
+        "height": 2.4,
+        "radius": 2.0,
+        "arc": 180.0,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1",
+        "surface": "s1",
+        "scene": "@live",
+        "screen": 0,
+        "size": [
+          1280,
+          720
+        ],
+        "view": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "warp": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "blend": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blend_power": 1.0,
+        "gamma": 1.0,
+        "black": 0.0,
+        "gain": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          0.0,
+          0,
+          4
+        ],
+        "aim": [
+          0.0,
+          0,
+          0
+        ],
+        "throw": 1.1,
+        "shift": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "idle_seconds": 0,
+    "autoplay": ""
+  },
+  "extensions": {
+    "greenscreen": {
+      "title": "Step into another world",
+      "backgrounds": [
+        {
+          "asset": "space",
+          "name": "Deep space",
+          "fit": "cover"
+        },
+        {
+          "asset": "ocean",
+          "name": "Under the sea",
+          "fit": "cover"
+        },
+        {
+          "asset": "sunset",
+          "name": "Sunset hills",
+          "fit": "cover"
+        }
+      ],
+      "photo": true,
+      "clip": true,
+      "clip_seconds": 8,
+      "countdown": 3,
+      "keep_minutes": 30,
+      "cycle_seconds": 20,
+      "mirror": true
+    }
+  }
+}

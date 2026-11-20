@@ -36,13 +36,15 @@ individual commands are:
 | Command | What it checks | Needs |
 | --- | --- | --- |
 | `godot --headless --path app --script res://qa/check_core.gd` | Project model, saving, packages, rules, recovery | Godot |
-| `godot --headless --path app --script res://qa/check_integration.gd -- --examples "$PWD/examples"` | All 15 examples round-trip; Studio editing, undo, workspaces; mapping maths; session behaviour | Godot |
+| `godot --headless --path app --script res://qa/check_integration.gd -- --examples "$PWD/examples"` | All 16 examples round-trip; Studio editing, undo, workspaces; mapping maths; session behaviour | Godot |
 | `bash tests/dual_display.sh godot --audio-driver Dummy --path app --script res://qa/check_integration.gd -- --examples "$PWD/examples"` | The same plus real windows on two X11 heads | Xorg dummy driver, xrandr |
 | `bash tests/dual_display.sh godot --audio-driver Dummy --path app --script res://qa/check_examples.gd -- --examples "$PWD/examples"` | Every example launches in the Player | as above |
 | `bash tests/dual_display.sh python3 tests/projector_pixels.py` | Rendered warp/blend/gamma/sphere/cylinder/dome pixels against an independent implementation | as above, NumPy |
 | `bash tests/dual_display.sh python3 tests/contest_native.py` | Player's live-audience board against a real service | as above |
 | `python3 -m unittest discover -s tests` | Gateway, protocols, calibration maths, deployment, live-audience engine, firmware generator (C++ compile) | NumPy, OpenCV, jsonschema, Node, g++ for some tests |
 | `python3 tests/audience_browser.py --chromium /usr/bin/google-chrome` | Editor, presenter, projector and two phones through every slide type in real Chrome | Playwright, Chrome/Chromium |
+| `python3 tests/greenscreen_browser.py --chromium /usr/bin/google-chrome` | Green-screen booth with Chrome's simulated camera: keyed pixels, backgrounds, overlay, photo and video capture, phone downloads, setup | Playwright, Chrome/Chromium, NumPy, FFmpeg |
+| `godot --headless --path app --script res://qa/check_greenscreen.gd -- --examples "$PWD/examples" --project "$PWD/examples/16-green-screen/project.oes.json"` | Studio starts the booth service, saves its calibration (with undo) and stops it | Godot, Python |
 | `python3 tests/calibration_native_sizes.py` | Structured-light solve at Full HD and UHD | NumPy, OpenCV |
 | `python3 tests/mqtt_broker.py --mosquitto … --passwd …` | Authenticated MQTT exchange with the firmware endpoint | Mosquitto |
 | `python3 tools/soak.py --seconds 28800 --report eight-hours.json` | Memory/descriptor growth over a long run | Godot |

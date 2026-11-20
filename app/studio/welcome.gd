@@ -11,6 +11,11 @@ const TEMPLATES := [
 	["01-solar", "Touchscreen kiosk", "Buttons update a live solar-system model and fact card."],
 	["06-digital-book", "Digital flipbook", "Pages with swipe, arrow-key and on-screen navigation."],
 	["15-live-show", "Live audience talk", "AhaSlides-style polls, quiz, word cloud, Q&A and spinner on phones."],
+	[
+		"16-green-screen",
+		"Green-screen photo booth",
+		"Visitors appear in your videos; photo or video to take home by QR code."
+	],
 	["13-shows", "Timed video show", "Two films sequenced with fades and slides on a timeline."],
 	["08-arduino", "Arduino exhibit", "A dial and button on a board drive a gauge, chart and lamp."],
 	["PROJECTION", ""],

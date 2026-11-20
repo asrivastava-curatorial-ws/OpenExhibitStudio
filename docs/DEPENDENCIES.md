@@ -42,6 +42,7 @@ The quiz implementation contains original code and a locally served user interfa
 | wordcloud2.js 1.2.3 | Vendored in tools/contest/web/vendor; MIT, licence file alongside. Word-cloud layout on the projector. |
 | canvas-confetti 1.9.4 | Vendored; ISC, licence file alongside. Celebration effects. |
 | SortableJS 1.15.7 | Vendored; MIT, licence file alongside. Touch reordering on phones and in the slide editor. |
+| Green-screen booth | No new third-party code: the browser's WebGL, camera (getUserMedia) and MediaRecorder, the QR encoder above and the Python standard library. The sample backgrounds in examples/16-green-screen are drawn by tools/dev/make_booth_samples.py (MIT, like the other examples). |
 | gdtoolkit, ruff, Prettier | Development-only formatters/linters used to format the source; not shipped. |
 | AppImage type-2 runtime | The small loader at the start of the AppImage file that mounts it; MIT. [type2-runtime](https://github.com/AppImage/type2-runtime) |
 | squashfs-tools | Builds the AppImage's file system image; build machine only (GPL-2.0), not shipped. |

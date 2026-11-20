@@ -39,4 +39,6 @@ When extending the schema, preserve unrecognized metadata and use namespaced key
 
 A project can carry a quiz deck in `extensions.contest`. Its shape matches `tools/contest/museum.quiz.json`. Participant names, tokens and answers stay in a separate SQLite event database. Adding a scene object with `kind: "contest"` renders the scoreboard in the editor preview and standalone player. Earlier version 1 projects open without modification.
 
+A green-screen booth lives in `extensions.greenscreen`: `backgrounds` is a list of `{asset, name, fit}` (fit `cover` or `contain`; assets are WebM/MP4 videos or PNG/JPEG/WebP pictures), `overlay` an optional PNG asset id, plus `title`, `photo`, `clip`, `clip_seconds`, `countdown`, `keep_minutes`, `cycle_seconds`, `mirror`, `camera`, `key` (`color`, `tolerance`, `softness`, `spill`) and `person` (`scale`, `x`, `y`, `crop`). `tools/booth/config.py` gives the defaults and clamps every value. Visitors' captures are never stored in the project.
+
 A sphere or dome may set `source_layout` to `cubemap_cross` or `equirectangular`. An output can supply an `up` vector to preserve surveyed roll. A measured planar warp may carry a `capture_check` summary, and calibration reports use separately versioned JSON. The operator-selected room URL is a runtime option. [Calibration formats](CALIBRATION.md)

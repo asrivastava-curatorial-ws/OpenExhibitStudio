@@ -44,7 +44,7 @@ func suite():
 			"portable round trip · " + slug
 		)
 		count += 1
-	check(count >= 15, "all fifteen exhibit examples present")
+	check(count >= 16, "all sixteen exhibit examples present")
 	var editor = Studio.instantiate()
 	root.add_child(editor)
 	await frames()

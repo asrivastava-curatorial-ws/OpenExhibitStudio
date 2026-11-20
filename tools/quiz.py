@@ -11,24 +11,21 @@ import subprocess
 import zipfile
 from xml.etree.ElementTree import ParseError
 import collections
-import functools
-import ipaddress
 import json
-import os
 import secrets
 import signal
 import sys
 import threading
 import time
 import webbrowser
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from contest import deck
 from contest.room import Room, Conflict, Forbidden, dump
-from contest.vendor.qrencoder import QRCode, QRErrorCorrectLevel
+from servicekit import Server, allowed_hosts, lan_address, qr_svg, write_private
 
 ROOT = Path(__file__).resolve().parent
 WEB = ROOT / "contest" / "web"
@@ -49,27 +46,6 @@ ASSETS = {
         ("vendor/Sortable.min.js", "text/javascript; charset=utf-8"),
     ]
 }
-
-
-@functools.lru_cache(maxsize=16)
-def qr_svg(url):
-    qr = QRCode(None, QRErrorCorrectLevel.M)
-    qr.addData(url)
-    qr.make()
-    n = qr.getModuleCount()
-    path = "".join(f"M{x + 4} {y + 4}h1v1h-1z" for y in range(n) for x in range(n) if qr.isDark(y, x))
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{n + 8}" height="{n + 8}" viewBox="0 0 {n + 8} {n + 8}" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="white"/><path d="{path}"/></svg>'
-
-
-class Server(ThreadingHTTPServer):
-    daemon_threads = True
-    request_queue_size = 256
-    allow_reuse_address = True
-
-    def get_request(self):
-        conn, addr = super().get_request()
-        conn.settimeout(8)
-        return conn, addr
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -237,12 +213,9 @@ class Contest:
     def __init__(self, room, address="127.0.0.1", port=8786, operator_port=8787):
         self.room = room
         self.secret = secrets.token_urlsafe(32)
-        ip = ipaddress.IPv4Address(address)
-        if not (ip.is_private and not ip.is_multicast and not ip.is_unspecified and not ip.is_reserved):
-            raise ValueError("Select a local interface address, such as 192.168.1.20.")
         self.lock = threading.Lock()
         self.rates = {}
-        self.public = Server((str(ip), port), Handler)
+        self.public = Server((lan_address(address), port), Handler)
         try:
             self.operator = Server(("127.0.0.1", operator_port), Handler)
         except BaseException:
@@ -250,11 +223,7 @@ class Contest:
             raise
         for srv, private in [(self.public, False), (self.operator, True)]:
             srv.service, srv.operator = self, private
-            hostname, bound = srv.server_address
-            allowed = {f"{hostname}:{bound}"}
-            if hostname == "127.0.0.1":
-                allowed.add(f"localhost:{bound}")
-            srv.http_host_ok = allowed.__contains__
+            srv.http_host_ok = allowed_hosts(srv).__contains__
         root = "http://%s:%d" % self.public.server_address
         self.join_url = root + "/?room=" + room.meta()["code"]
         self.join_host = "%s:%d" % self.public.server_address
@@ -287,14 +256,6 @@ class Contest:
             srv.server_close()
         for thread in self.threads:
             thread.join(3)
-
-
-def write_private(path, info):
-    path.parent.mkdir(exist_ok=True, parents=True)
-    tmp = path.with_name(path.name + "." + secrets.token_hex(6) + ".tmp")
-    with os.fdopen(os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w", encoding="utf-8") as f:
-        json.dump(info, f)
-    os.replace(tmp, path)
 
 
 def main():

@@ -10,6 +10,7 @@ const TEXT = Color("#d9e2f0")
 const MUTED = Color("#92a2b5")
 const MINT = Color("#71e4ca")
 const BLUE = Color("#79b8ff")
+const RED = Color("#ff7b72")
 
 
 static func box(fill: Color, border = Color.TRANSPARENT, radius = 5, pad = 6) -> StyleBoxFlat:

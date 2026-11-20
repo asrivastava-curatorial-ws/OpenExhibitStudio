@@ -72,6 +72,22 @@ unchanged, so 0.2 exhibits and slide decks open as they are.
   resume a saved session; network choice in plain words.
 - New example 15: an interactive science talk using every slide type.
 
+### Green-screen photo booth
+
+- New **Green screen** workspace and booth service (`tools/greenscreen.py`): visitors in front of a
+  green cloth appear live in the exhibit's background videos or pictures, keyed in WebGL in the
+  browser on the booth computer (any webcam or capture card, Linux and Windows).
+- Countdown photos (1920 × 1080 JPEG) and short videos (1280 × 720 MP4, or WebM where the browser
+  cannot record MP4); phones download them by QR code over the local network, and the files are
+  deleted after a set time (30 minutes by default).
+- Booth setup panel (Ctrl+Shift+S): camera, mirror, key colour detection or picking, tolerance,
+  softness, spill removal, matte view, placement and trim; Studio saves it into the exhibit.
+- Optional overlay picture (frame or logo) on the booth and every capture; background changes when
+  nobody is there; keyboard and USB-encoder controls; `--kiosk` launch without Studio and an AppImage
+  `greenscreen` command.
+- Example 16 with three small drawn sample backgrounds; your own media is added in Studio.
+- The live-audience and booth services share `tools/servicekit.py` (server, host checks, QR codes).
+
 ### Packages
 
 - **Linux AppImage** (x86-64): Studio and Player in one file — `player` opens the Player, `desktop`
@@ -90,6 +106,8 @@ unchanged, so 0.2 exhibits and slide decks open as they are.
 
 - `bash tests/run_all.sh` runs every suite the computer supports and reports PASS, FAIL or SKIP
   (with the missing tool) for each.
+- New for the booth: `tests/test_greenscreen.py` (13 service tests), `tests/greenscreen_browser.py`
+  (Chrome with a simulated camera) and `app/qa/check_greenscreen.gd` (Studio starts and stops it).
 - New: `tests/test_audience.py` (11 engine tests), `tests/audience_browser.py` (Chrome: editor,
   presenter, projector and two phones through every slide type), `tests/test_firmware_blocks.py`
   (block-editor sketches compile with g++ against an Arduino API stub).

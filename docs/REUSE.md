@@ -40,10 +40,12 @@ installed and benchmarked here.
 | Open Stage Control (GPL-3.0) | Browser-based OSC control surfaces. | A ready-made option for custom operator panels talking OSC to the gateway. |
 | Linux Show Player (GPL-3.0) | QLab-style cue lists for audio/video. | Not merged; OpenExhibit's timeline covers exhibit-scale cueing. |
 | MapMap (GPL-3.0) | Simple quad/mesh projection mapping. | Overlaps with the built-in corner-pin and mesh warp. |
+| [OBS Studio](https://obsproject.com) (GPL-2.0) | Live production with a chroma-key filter (CbCr distance, similarity, smoothness, spill). | A good choice for broadcast-style green screens, but no visitor takeaway (QR photos and videos), no exhibit packaging and a large desktop install. The booth's keyer uses the same standard technique, written independently; no OBS code is included. |
 
 ## Original in this project
 
 The project format, session engine, mapping shaders and calibration solver, Studio interface,
-live-audience server and pages, gateway and firmware are original code under the MIT licence.
+live-audience server and pages, green-screen booth (service, keyer and pages), gateway and firmware are
+original code under the MIT licence.
 “AhaSlides”, “Kahoot” and similar names identify the products whose public feature lists were
 used as references; no code or assets from them are included.
